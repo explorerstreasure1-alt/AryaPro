@@ -34,7 +34,7 @@ export default async function handler(request) {
       });
     }
 
-    // Token environment variable'dan gelir
+    // Dosyayı Vercel Blob'a yükle
     const blob = await put(file.name, file, {
       access: 'public',
       token: process.env.BLOB_READ_WRITE_TOKEN,
