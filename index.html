@@ -1544,19 +1544,23 @@
       ];
     },
 
-    /* Try to init Firebase from saved config */
+    /* Firebase config — hardcoded, works on every device automatically */
+    _FIREBASE_CFG: {
+      apiKey:            "AIzaSyAHVWHnVbV-bl4sr5C-T87wGKdjnoMvltc",
+      authDomain:        "aryapro-84c3b.firebaseapp.com",
+      projectId:         "aryapro-84c3b",
+      storageBucket:     "aryapro-84c3b.firebasestorage.app",
+      messagingSenderId: "664020657397",
+      appId:             "1:664020657397:web:a69cf1408437cdf19c11bc",
+    },
+
     initFirebase() {
       try {
-        const raw = localStorage.getItem(this.K_FB_CFG);
-        if (!raw) return false;
-        const cfg = JSON.parse(raw);
-        if (!cfg.projectId) return false;
-        // Init only once
         if (!firebase.apps.length) {
-          firebase.initializeApp(cfg);
+          firebase.initializeApp(this._FIREBASE_CFG);
         }
         this._db = firebase.firestore();
-        console.info('[ARYA] Firebase connected:', cfg.projectId);
+        console.info('[ARYA] Firebase connected:', this._FIREBASE_CFG.projectId);
         return true;
       } catch(e) {
         console.warn('[ARYA] Firebase init failed:', e);
