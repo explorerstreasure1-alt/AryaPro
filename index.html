@@ -160,7 +160,6 @@
       position: relative; height: 420px;
       overflow: hidden; flex-shrink: 0;
     }
-    /* ── Hero: cinematic 3-panel ── */
     .hero-bg {
       position: absolute; inset: 0;
       display: grid;
@@ -173,28 +172,22 @@
       position: relative;
     }
 
-    /* Panel 1 — dark suit lapel texture */
     .hero-panel:nth-child(1) {
       background-image: url('https://images.unsplash.com/photo-1617137968427-85924c800a22?w=800&q=90');
       background-position: center 30%;
       filter: brightness(.18) saturate(.4) contrast(1.1);
     }
-
-    /* Panel 2 — dramatic man in black, center focus */
     .hero-panel:nth-child(2) {
       background-image: url('https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=900&q=92');
       background-position: center 12%;
       filter: brightness(.24) saturate(.4) contrast(1.15);
     }
-
-    /* Panel 3 — dark garment/clothes rack / fabric */
     .hero-panel:nth-child(3) {
       background-image: url('https://images.unsplash.com/photo-1558769132-cb1aea458c5e?w=800&q=90');
       background-position: center 20%;
       filter: brightness(.18) saturate(.4) contrast(1.1);
     }
 
-    /* gold seam lines between panels */
     .hero-panel:nth-child(1)::after,
     .hero-panel:nth-child(2)::after {
       content: '';
@@ -209,7 +202,6 @@
       z-index: 3;
     }
 
-    /* central spotlight — lifts the middle panel */
     .hero-bg::before {
       content: '';
       position: absolute; inset: 0; z-index: 2;
@@ -226,7 +218,6 @@
           #07080f          100%);
     }
 
-    /* warm gold glow at bottom center */
     .hero-bg::after {
       content: '';
       position: absolute; inset: 0; z-index: 2;
@@ -246,10 +237,9 @@
       height: 100%;
       display: flex; flex-direction: column;
       align-items: center; justify-content: center;
-      padding-top: 50px; /* offset for switcher */
+      padding-top: 50px;
     }
 
-    /* top micro-label */
     .brand-eyebrow {
       font-size: 8px; letter-spacing: 5.5px;
       text-transform: uppercase; font-weight: 600;
@@ -318,7 +308,7 @@
     .booking-wrap {
       max-width: 900px; margin: 0 auto;
       padding: 0 14px 60px; width: 100%;
-      margin-top: -32px; /* overlap hero bottom */ position: relative; z-index: 3;
+      margin-top: -32px; position: relative; z-index: 3;
     }
 
     .card {
@@ -336,7 +326,6 @@
       opacity: .55;
     }
 
-    /* Card head */
     .card-head {
       padding: 16px 22px;
       display: flex; flex-wrap: wrap;
@@ -352,7 +341,6 @@
     }
     .card-title svg { width: 17px; height: 17px; color: var(--gold); }
 
-    /* Step nav — numbered circles */
     .step-nav {
       display: flex; align-items: center; gap: 6px;
     }
@@ -391,7 +379,6 @@
       background: var(--bdr-s); margin-bottom: 14px;
     }
 
-    /* Payment note */
     .pay-note {
       display: flex; align-items: center; gap: 10px;
       background: var(--gold-t08);
@@ -458,7 +445,6 @@
       box-shadow: 0 0 0 1px rgba(196,151,58,.25), var(--sh-sm);
     }
 
-    /* Checkmark badge */
     .hc-check {
       position: absolute; top: 8px; right: 8px;
       width: 22px; height: 22px;
@@ -471,7 +457,6 @@
     }
     .hizmet-card.sel .hc-check { display: flex; }
     .hc-check svg { width: 11px; height: 11px; color: var(--bg0); }
-    @keyframes spin { to { transform: rotate(360deg); } }
     @keyframes popIn {
       from { transform: scale(.4); opacity: 0; }
       to   { transform: scale(1);  opacity: 1; }
@@ -531,7 +516,6 @@
       color: var(--bg0);
     }
 
-    /* Selected bar */
     .sel-bar {
       margin-top: 18px;
       background: var(--gold-t08);
@@ -1047,6 +1031,10 @@
     #modalLogin .modal-box { text-align: center; }
     #modalLogin .modal-actions { justify-content: center; }
 
+    /* New Set Password Modal */
+    #modalSetPassword .modal-box { text-align: center; }
+    #modalSetPassword .modal-actions { justify-content: center; }
+
     /* ── Image upload zone ── */
     .upload-zone {
       border: 1px dashed var(--bdr);
@@ -1124,12 +1112,10 @@
 <!-- ════════════════════ SWITCHER ════════════════════ -->
 <div class="switcher">
   <button class="sw-btn on" id="swMusteri">
-    <!-- scissors icon -->
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg>
     Müşteri
   </button>
   <button class="sw-btn" id="swAdmin">
-    <!-- gear icon -->
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M4.93 4.93l1.41 1.41M12 2v2M12 20v2M19.07 19.07l-1.41-1.41M4.93 19.07l1.41-1.41M2 12h2M20 12h2"/></svg>
     Yönetim
   </button>
@@ -1145,6 +1131,9 @@
   <!-- Hero -->
   <div class="hero">
     <div class="hero-bg">
+      <div class="hero-panel"></div>
+      <div class="hero-panel"></div>
+      <div class="hero-panel"></div>
       <div class="hero-deco">
         <svg viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
           <circle cx="200" cy="200" r="80"  stroke="#c4973a" stroke-width=".6"/>
@@ -1381,6 +1370,30 @@
   </div>
 </div>
 
+<!-- Set Password (first time) -->
+<div class="modal-bg" id="modalSetPassword">
+  <div class="modal-box">
+    <div style="width:50px;height:50px;border:1px solid var(--bdr);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;background:var(--gold-t08);">
+      <svg viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2" width="22" height="22"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+    </div>
+    <div class="modal-title">Admin Şifresi Belirleyin</div>
+    <div class="modal-sub">İlk giriş için yeni bir şifre oluşturun</div>
+    <div class="err-hint" id="setPassErr">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      Şifreler uyuşmuyor veya geçersiz.
+    </div>
+    <input type="password" class="finput" id="setPass1" placeholder="Yeni şifre" autocomplete="off">
+    <input type="password" class="finput" id="setPass2" placeholder="Şifre tekrar" autocomplete="off" style="margin-top:8px;">
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="setPassCancel">İptal</button>
+      <button class="btn btn-primary" id="setPassSubmit">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+        Kaydet ve Giriş Yap
+      </button>
+    </div>
+  </div>
+</div>
+
 <!-- Reschedule -->
 <div class="modal-bg" id="modalTasi">
   <div class="modal-box">
@@ -1473,6 +1486,24 @@
   </div>
 </div>
 
+<!-- Change Password (in settings) -->
+<div class="modal-bg" id="modalChangePassword">
+  <div class="modal-box">
+    <div class="modal-title">Şifre Değiştir</div>
+    <div class="modal-sub">Yeni şifrenizi belirleyin</div>
+    <div class="err-hint" id="changePassErr"></div>
+    <input type="password" class="finput" id="oldPass" placeholder="Eski şifre" autocomplete="current-password">
+    <input type="password" class="finput" id="newPass1" placeholder="Yeni şifre" autocomplete="new-password" style="margin-top:8px;">
+    <input type="password" class="finput" id="newPass2" placeholder="Yeni şifre tekrar" autocomplete="new-password" style="margin-top:8px;">
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="changePassCancel">İptal</button>
+      <button class="btn btn-primary" id="changePassSubmit">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+        Değiştir
+      </button>
+    </div>
+  </div>
+</div>
 
 <!-- ══════════════════════════════════════════════════════════════
      JAVASCRIPT — IIFE, modular, SOLID-oriented
@@ -1499,6 +1530,19 @@
   };
 
   /* ═══════════════════════════════════════════════
+     HELPER: escape HTML to prevent XSS
+  ═══════════════════════════════════════════════ */
+  const escapeHtml = (unsafe) => {
+    if (unsafe === undefined || unsafe === null) return '';
+    return String(unsafe)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  };
+
+  /* ═══════════════════════════════════════════════
      APPLICATION STATE
   ═══════════════════════════════════════════════ */
   const State = {
@@ -1519,6 +1563,11 @@
       filter:            '',
       pendingApptId:     null,
       pendingServiceId:  null,
+    },
+
+    // Auth
+    auth: {
+      hash: null, // will be loaded from storage
     },
   };
 
@@ -1544,7 +1593,6 @@
       ];
     },
 
-    /* Firebase config — hardcoded, works on every device automatically */
     _FIREBASE_CFG: {
       apiKey:            "AIzaSyAHVWHnVbV-bl4sr5C-T87wGKdjnoMvltc",
       authDomain:        "aryapro-84c3b.firebaseapp.com",
@@ -1568,13 +1616,11 @@
       }
     },
 
-    /* Load from Firestore, fallback localStorage */
     async load() {
       const fbOk = this.initFirebase();
 
       if (fbOk) {
         try {
-          // Services
           const svcDoc = await this._db.collection('arya').doc('services').get();
           if (svcDoc.exists && svcDoc.data().list && svcDoc.data().list.length) {
             State.services = svcDoc.data().list;
@@ -1582,22 +1628,20 @@
             State.services = this._defaults();
             await this._db.collection('arya').doc('services').set({ list: State.services });
           }
-          // Appointments
           const apptDoc = await this._db.collection('arya').doc('appointments').get();
           State.appointments = (apptDoc.exists && apptDoc.data().list) ? apptDoc.data().list : [];
 
-          // Real-time listeners — any change in Firestore updates UI instantly
           this._unsubSvc = this._db.collection('arya').doc('services').onSnapshot(snap => {
             if (snap.exists && snap.data().list) {
               State.services = snap.data().list;
               Booking.renderServices();
             }
-          });
+          }, err => console.warn('Snapshot error (svc):', err));
           this._unsubAppt = this._db.collection('arya').doc('appointments').onSnapshot(snap => {
             if (snap.exists && snap.data().list) {
               State.appointments = snap.data().list;
             }
-          });
+          }, err => console.warn('Snapshot error (appt):', err));
 
           console.info('[ARYA] Data loaded from Firebase');
           return;
@@ -1606,7 +1650,6 @@
         }
       }
 
-      // Fallback: localStorage
       try {
         const s = localStorage.getItem(this.K_SVC);
         State.services = s ? JSON.parse(s) : this._defaults();
@@ -1618,15 +1661,12 @@
       }
     },
 
-    /* Save to Firestore + localStorage */
     async save() {
-      // Always save to localStorage as backup
       try {
         localStorage.setItem(this.K_SVC,  JSON.stringify(State.services));
         localStorage.setItem(this.K_APPT, JSON.stringify(State.appointments));
       } catch(e) { /* storage full */ }
 
-      // Also save to Firestore if connected
       if (this._db) {
         try {
           await this._db.collection('arya').doc('services').set({ list: State.services });
@@ -1660,8 +1700,8 @@
       this._tid = setTimeout(() => { el.className = 'toast'; }, 2900);
     },
 
-    ok(msg)  { this._show(`${IC.check} ${msg}`,  'ok'); },
-    err(msg) { this._show(`${IC.alert} ${msg}`,  'err'); },
+    ok(msg)  { this._show(`${IC.check} ${escapeHtml(msg)}`,  'ok'); },
+    err(msg) { this._show(`${IC.alert} ${escapeHtml(msg)}`,  'err'); },
   };
 
   /* ═══════════════════════════════════════════════
@@ -1682,24 +1722,87 @@
   };
 
   /* ═══════════════════════════════════════════════
-     AUTH
+     AUTH — uses SHA‑256 hash stored in Firestore/localStorage
   ═══════════════════════════════════════════════ */
   const Auth = {
-    PW:  'arya2025',
-    KEY: 'arya_admin_auth',
+    KEY_HASH: 'arya_admin_hash',
     TTL: 30 * 60 * 1000,
+    sessionKey: 'arya_admin_auth',
 
-    check() {
+    async sha256(str) {
+      const encoder = new TextEncoder();
+      const data = encoder.encode(str);
+      const hash = await crypto.subtle.digest('SHA-256', data);
+      return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
+    },
+
+    async getStoredHash() {
+      if (Store._db) {
+        try {
+          const doc = await Store._db.collection('arya').doc('admin').get();
+          if (doc.exists && doc.data().passwordHash) return doc.data().passwordHash;
+        } catch (e) {
+          console.warn('Firestore admin hash read failed, fallback to localStorage', e);
+        }
+      }
+      return localStorage.getItem(this.KEY_HASH);
+    },
+
+    async setStoredHash(hash) {
+      if (Store._db) {
+        try {
+          await Store._db.collection('arya').doc('admin').set({ passwordHash: hash }, { merge: true });
+        } catch (e) {
+          console.warn('Firestore admin hash write failed, fallback to localStorage', e);
+        }
+      }
+      localStorage.setItem(this.KEY_HASH, hash);
+    },
+
+    async checkSession() {
       try {
-        const d = JSON.parse(sessionStorage.getItem(this.KEY) || 'null');
+        const d = JSON.parse(sessionStorage.getItem(this.sessionKey) || 'null');
         if (d && Date.now() - d.t < this.TTL) return true;
-        sessionStorage.removeItem(this.KEY);
+        sessionStorage.removeItem(this.sessionKey);
       } catch { /* */ }
       return false;
     },
 
-    grant() { sessionStorage.setItem(this.KEY, JSON.stringify({ t: Date.now() })); },
-    revoke() { sessionStorage.removeItem(this.KEY); },
+    async login(password) {
+      const stored = await this.getStoredHash();
+      if (!stored) {
+        // No password set yet – redirect to set password
+        return { success: false, needSetup: true };
+      }
+      const inputHash = await this.sha256(password);
+      if (inputHash === stored) {
+        sessionStorage.setItem(this.sessionKey, JSON.stringify({ t: Date.now() }));
+        return { success: true };
+      }
+      return { success: false };
+    },
+
+    async setup(password) {
+      if (!password || password.length < 4) return false;
+      const hash = await this.sha256(password);
+      await this.setStoredHash(hash);
+      sessionStorage.setItem(this.sessionKey, JSON.stringify({ t: Date.now() }));
+      return true;
+    },
+
+    async changePassword(oldPass, newPass) {
+      const stored = await this.getStoredHash();
+      const oldHash = await this.sha256(oldPass);
+      if (oldHash !== stored) return false;
+      const newHash = await this.sha256(newPass);
+      await this.setStoredHash(newHash);
+      // keep session alive
+      return true;
+    },
+
+    logout() {
+      sessionStorage.removeItem(this.sessionKey);
+    },
   };
 
   /* ═══════════════════════════════════════════════
@@ -1719,7 +1822,6 @@
   ═══════════════════════════════════════════════ */
   const Booking = {
 
-    /* Render service grid */
     renderServices() {
       const g = document.getElementById('hizmetGrid');
       if (!State.services.length) {
@@ -1729,18 +1831,18 @@
       g.innerHTML = State.services.map(s => {
         const sel = !!State.selected[s.id];
         return `
-          <div class="hizmet-card ${sel ? 'sel' : ''}" data-hid="${s.id}" role="button" tabindex="0" aria-pressed="${sel}">
+          <div class="hizmet-card ${sel ? 'sel' : ''}" data-hid="${escapeHtml(s.id)}" role="button" tabindex="0" aria-pressed="${sel}">
             <div class="hc-check">${IC.check}</div>
             <div class="hc-img-wrap">
-              <img src="${s.img}" class="hc-img" alt="${s.ad}" loading="lazy">
+              <img src="${escapeHtml(s.img)}" class="hc-img" alt="${escapeHtml(s.ad)}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1591196703216-85c2b8ddb3b0?w=400&q=75'">
             </div>
             <div class="hc-body">
-              <div class="hc-name">${s.ad}</div>
+              <div class="hc-name">${escapeHtml(s.ad)}</div>
               <div class="hc-meta">
-                <span class="hc-dur">${IC.clock} ${s.sure}</span>
-                <span class="hc-price">${s.fiyat} TL</span>
+                <span class="hc-dur">${IC.clock} ${escapeHtml(s.sure)}</span>
+                <span class="hc-price">${Number(s.fiyat) || 0} TL</span>
               </div>
-              <button class="btn-toggle ${sel ? 'on' : ''}" data-hid="${s.id}">
+              <button class="btn-toggle ${sel ? 'on' : ''}" data-hid="${escapeHtml(s.id)}">
                 ${sel ? `${IC.check} Seçildi` : `${IC.plus} Ekle`}
               </button>
             </div>
@@ -1756,7 +1858,7 @@
       if (!ids.length) { bar.classList.remove('show'); return; }
       bar.classList.add('show');
       chips.innerHTML = ids.map(id =>
-        `<span class="chip">${State.selected[id].ad} — ${State.selected[id].fiyat} TL</span>`
+        `<span class="chip">${escapeHtml(State.selected[id].ad)} — ${Number(State.selected[id].fiyat) || 0} TL</span>`
       ).join('');
     },
 
@@ -1769,15 +1871,14 @@
       this.renderServices();
     },
 
-    /* Calendar */
     renderCalendar() {
       const y = State.calMonth.getFullYear();
       const m = State.calMonth.getMonth();
       document.getElementById('calMonth').textContent = Cal.label(State.calMonth);
 
-      const firstDow  = new Date(y, m, 1).getDay();   // 0=Sun
+      const firstDow  = new Date(y, m, 1).getDay();
       const daysTotal = new Date(y, m + 1, 0).getDate();
-      const offset    = (firstDow + 6) % 7;           // Monday-first
+      const offset    = (firstDow + 6) % 7;
 
       let html = '';
       for (let i = 0; i < offset; i++) html += '<div class="day empty"></div>';
@@ -1785,29 +1886,27 @@
         const disabled = Cal.isPast(y, m, d) || new Date(y, m, d).getDay() === 0;
         const today    = Cal.isToday(y, m, d);
         const sel      = State.date === Cal.dateStr(d, Cal.MONTHS[m]);
-        html += `<div class="day${disabled?' disabled':''}${today?' today':''}${sel?' sel':''}" data-d="${d}" data-mo="${Cal.MONTHS[m]}">${d}</div>`;
+        html += `<div class="day${disabled?' disabled':''}${today?' today':''}${sel?' sel':''}" data-d="${d}" data-mo="${escapeHtml(Cal.MONTHS[m])}">${d}</div>`;
       }
       document.getElementById('daysGrid').innerHTML = html;
     },
 
-    /* Time slots */
     renderTimes() {
       const slots = ['09:00','09:30','10:00','10:30','11:00','11:30','13:00','13:30','14:00','14:30','15:00','15:30','16:00','16:30'];
       document.getElementById('timesGrid').innerHTML = slots.map(t =>
-        `<div class="t-slot${State.time===t?' sel':''}" data-t="${t}">${t}</div>`
+        `<div class="t-slot${State.time===t?' sel':''}" data-t="${escapeHtml(t)}">${escapeHtml(t)}</div>`
       ).join('');
     },
 
     updateSummary() {
       const svcs  = Object.values(State.selected);
-      const total = svcs.reduce((a, v) => a + v.fiyat, 0);
+      const total = svcs.reduce((a, v) => a + (Number(v.fiyat) || 0), 0);
       document.getElementById('ozHizmet').textContent = svcs.map(s=>s.ad).join(', ') || '—';
       document.getElementById('ozTarih').textContent  = State.date || '—';
       document.getElementById('ozSaat').textContent   = State.time || '—';
       document.getElementById('ozToplam').textContent = `${total} TL`;
     },
 
-    /* Final booking submission */
     submit() {
       const ad   = document.getElementById('musteriAd').value.trim();
       const tel  = document.getElementById('musteriTel').value.trim();
@@ -1818,7 +1917,7 @@
       if (!V.email(mail))   { Toast.err('Geçerli bir e-posta girin ya da boş bırakın.');       return false; }
 
       const svcs  = Object.values(State.selected);
-      const total = svcs.reduce((a,v) => a + v.fiyat, 0);
+      const total = svcs.reduce((a,v) => a + (Number(v.fiyat) || 0), 0);
       const no    = 'ARY-' + Math.floor(1000 + Math.random() * 9000);
 
       const appt = {
@@ -1836,9 +1935,8 @@
       };
 
       State.appointments.push(appt);
-      Store.save();
+      Store.save().catch(e => console.warn('save failed', e));
 
-      // WhatsApp notification log
       console.info('[ARYA] WhatsApp payload:', {
         to: '+90' + appt.tel,
         body: `🆕 Randevu\nMüşteri: ${ad}\nHizmet: ${svcs.map(s=>s.ad).join(', ')}\nTarih: ${State.date} ${State.time}\nTutar: ${total} TL\nNo: ${no}`,
@@ -1870,17 +1968,14 @@
     },
 
     _render() {
-      // Hide all step content
       document.querySelectorAll('.step-content').forEach(el => el.classList.remove('on'));
       const cid = this._contentMap[State.step];
       if (cid) document.getElementById(cid).classList.add('on');
 
-      // Step nav
       document.querySelectorAll('.step-item').forEach(el => el.classList.remove('on'));
       const nid = this._navMap[State.step];
       if (nid) document.getElementById(nid).classList.add('on');
 
-      // Footer
       const footer = document.getElementById('cardFooter');
       const geri   = document.getElementById('btnGeri');
       if (State.step === 5) {
@@ -1890,7 +1985,6 @@
         geri.style.display = State.step > 1 ? '' : 'none';
       }
 
-      // Per-step lazy renders
       if (State.step === 2) { Booking.renderCalendar(); Booking.renderTimes(); }
       if (State.step === 3) { Booking.updateSummary(); }
     },
@@ -1930,7 +2024,6 @@
       return on ? on.dataset.page : 'dashboard';
     },
 
-    /* ——— Dashboard ——— */
     _dashboard() {
       const A = State.appointments;
       const todayLabel = (() => {
@@ -1940,7 +2033,7 @@
       const todayCnt = A.filter(a => a.tarih === todayLabel).length;
       const paidCnt  = A.filter(a => a.paid).length;
       const pendCnt  = A.filter(a => !a.paid).length;
-      const revenue  = A.filter(a => a.paid).reduce((t,a) => t + a.total, 0);
+      const revenue  = A.filter(a => a.paid).reduce((t,a) => t + (a.total || 0), 0);
       const recent   = [...A].reverse().slice(0, 6);
 
       return `
@@ -1969,9 +2062,9 @@
     _statCard(lbl, icon, val, sub) {
       return `
         <div class="stat">
-          <div class="stat-lbl">${icon} ${lbl}</div>
-          <div class="stat-val">${val}</div>
-          ${sub ? `<div class="stat-sub">${sub}</div>` : ''}
+          <div class="stat-lbl">${icon} ${escapeHtml(lbl)}</div>
+          <div class="stat-val">${escapeHtml(val)}</div>
+          ${sub ? `<div class="stat-sub">${escapeHtml(sub)}</div>` : ''}
         </div>`;
     },
 
@@ -1979,20 +2072,21 @@
       const badge = a.paid
         ? `<span class="badge badge-paid">${IC.check} Ödendi</span>`
         : `<span class="badge badge-pending">${IC.clock} Bekliyor</span>`;
+      const servicesSafe = (a.services || []).map(s => escapeHtml(s.ad)).join(', ');
       return `
         <tr>
-          <td>${a.musteriAd}<small>${a.tel}</small></td>
-          <td>${a.services.map(s=>s.ad).join(', ')}<small>${a.total} TL</small></td>
-          <td>${a.tarih}<small>${a.saat}</small></td>
+          <td>${escapeHtml(a.musteriAd)}<small>${escapeHtml(a.tel)}</small></td>
+          <td>${servicesSafe}<small>${Number(a.total) || 0} TL</small></td>
+          <td>${escapeHtml(a.tarih)}<small>${escapeHtml(a.saat)}</small></td>
           <td>
-            <button class="pay-btn${a.paid?' paid':''}" data-aid="${a.id}">
+            <button class="pay-btn${a.paid?' paid':''}" data-aid="${escapeHtml(a.id)}">
               ${a.paid ? `${IC.check} Ödendi` : 'Ödeme Al'}
             </button>
           </td>
           <td>
             <div class="actions">
-              <button class="icon-btn wa"     data-wa="${a.tel}"    title="WhatsApp">${IC.wa}</button>
-              <button class="icon-btn"        data-move="${a.id}"   title="Taşı">${IC.move}</button>
+              <button class="icon-btn wa"     data-wa="${escapeHtml(a.tel)}"    title="WhatsApp">${IC.wa}</button>
+              <button class="icon-btn"        data-move="${escapeHtml(a.id)}"   title="Taşı">${IC.move}</button>
             </div>
           </td>
         </tr>`;
@@ -2004,12 +2098,11 @@
         <p>Kayıt bulunamadı.</p></div></td></tr>`;
     },
 
-    /* ——— Randevular ——— */
     _randevular() {
       const filter = State.admin.filter.toLowerCase();
       const all    = [...State.appointments]
         .reverse()
-        .filter(a => a.musteriAd.toLowerCase().includes(filter) || a.tel.includes(filter));
+        .filter(a => (a.musteriAd || '').toLowerCase().includes(filter) || (a.tel || '').includes(filter));
       const total  = all.length;
       const pages  = Math.max(1, Math.ceil(total / this.PAGE_SZ));
       const page   = Math.min(Math.max(1, State.admin.page), pages);
@@ -2020,7 +2113,7 @@
           <div class="page-title serif">Randevular</div>
           <div class="search-wrap">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            <input class="finput" id="adminSearch" placeholder="Ara…" value="${State.admin.filter}" autocomplete="off">
+            <input class="finput" id="adminSearch" placeholder="Ara…" value="${escapeHtml(State.admin.filter)}" autocomplete="off">
           </div>
         </div>
         <div class="tbl-wrap">
@@ -2054,7 +2147,6 @@
       });
     },
 
-    /* ——— Hizmetler ——— */
     _hizmetler() {
       return `
         <div class="page-hdr">
@@ -2067,30 +2159,29 @@
           ${State.services.map(s => `
             <div class="hizmet-card" style="cursor:default;">
               <div class="hc-img-wrap">
-                <img src="${s.img}" class="hc-img" alt="${s.ad}" loading="lazy">
+                <img src="${escapeHtml(s.img)}" class="hc-img" alt="${escapeHtml(s.ad)}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1591196703216-85c2b8ddb3b0?w=400&q=75'">
               </div>
               <div class="hc-body">
-                <div class="hc-name">${s.ad}</div>
+                <div class="hc-name">${escapeHtml(s.ad)}</div>
                 <div class="hc-meta">
-                  <span class="hc-dur">${IC.clock} ${s.sure}</span>
-                  <span class="hc-price">${s.fiyat} TL</span>
+                  <span class="hc-dur">${IC.clock} ${escapeHtml(s.sure)}</span>
+                  <span class="hc-price">${Number(s.fiyat) || 0} TL</span>
                 </div>
                 <div style="display:flex;gap:6px;margin-top:8px;">
-                  <button class="icon-btn" data-edit="${s.id}" title="Düzenle" style="flex:1;">${IC.edit}</button>
-                  <button class="icon-btn danger" data-del="${s.id}" title="Sil">${IC.trash}</button>
+                  <button class="icon-btn" data-edit="${escapeHtml(s.id)}" title="Düzenle" style="flex:1;">${IC.edit}</button>
+                  <button class="icon-btn danger" data-del="${escapeHtml(s.id)}" title="Sil">${IC.trash}</button>
                 </div>
               </div>
             </div>`).join('')}
         </div>`;
     },
 
-    /* ——— Müşteriler ——— */
     _musteriler() {
       const map = new Map();
       State.appointments.forEach(a => {
         if (!map.has(a.tel)) map.set(a.tel, { name: a.musteriAd, tel: a.tel, cnt: 0, spent: 0, last: a.tarih });
         const m = map.get(a.tel);
-        m.cnt++; m.spent += a.total; m.last = a.tarih;
+        m.cnt++; m.spent += Number(a.total) || 0; m.last = a.tarih;
       });
       const list = [...map.values()];
       return `
@@ -2104,12 +2195,12 @@
               <tbody>
                 ${list.length ? list.map(m => `
                   <tr>
-                    <td>${m.name}</td>
-                    <td>${m.tel}</td>
-                    <td>${m.last}</td>
+                    <td>${escapeHtml(m.name)}</td>
+                    <td>${escapeHtml(m.tel)}</td>
+                    <td>${escapeHtml(m.last)}</td>
                     <td>${m.cnt}</td>
                     <td style="color:var(--gold);font-weight:600;">${m.spent} TL</td>
-                    <td><button class="icon-btn wa" data-wa="${m.tel}">${IC.wa}</button></td>
+                    <td><button class="icon-btn wa" data-wa="${escapeHtml(m.tel)}">${IC.wa}</button></td>
                   </tr>`).join('') : this._emptyRow(6)}
               </tbody>
             </table>
@@ -2117,7 +2208,6 @@
         </div>`;
     },
 
-    /* ——— Ayarlar ——— */
     _ayarlar() {
       const fbConnected = Store.isFirebaseConnected();
       const fbCfgRaw    = localStorage.getItem('arya_firebase_config') || '';
@@ -2128,7 +2218,6 @@
       return `
         <div class="page-hdr"><div class="page-title serif">Ayarlar</div></div>
 
-        <!-- FIREBASE SETUP -->
         <div class="settings-block" style="margin-bottom:14px; border-color:rgba(196,151,58,.4);">
           <h3 style="display:flex;align-items:center;gap:8px;">
             <svg viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2" width="17" height="17"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
@@ -2136,14 +2225,14 @@
           </h3>
 
           ${fbConnected
-            ? '<div style="display:flex;align-items:center;gap:8px;background:rgba(76,175,80,.08);border:1px solid rgba(76,175,80,.3);border-radius:10px;padding:11px 14px;margin:10px 0;font-size:13px;color:#4caf50;">&#10003; Firebase bagli — <strong>' + fbProjectId + '</strong> &nbsp;|&nbsp; Tum degisiklikler anlik herkese yansir.</div>'
+            ? '<div style="display:flex;align-items:center;gap:8px;background:rgba(76,175,80,.08);border:1px solid rgba(76,175,80,.3);border-radius:10px;padding:11px 14px;margin:10px 0;font-size:13px;color:#4caf50;">&#10003; Firebase bagli — <strong>' + escapeHtml(fbProjectId) + '</strong> &nbsp;|&nbsp; Tum degisiklikler anlik herkese yansir.</div>'
             : '<div style="background:rgba(196,151,58,.07);border:1px solid rgba(196,151,58,.2);border-radius:10px;padding:12px 14px;margin:10px 0 14px;font-size:13px;color:var(--tx2);line-height:1.8;"><strong style=\"color:var(--gold-hi);\">Neden herkes goremez?</strong><br>Uygulama su an bu tarayicinin hafizasini (localStorage) kullaniyor. Telefon, baska bilgisayar bunlari goremez.<br><strong style=\"color:var(--tx1);\">Cozum:</strong> Ucretsiz Firebase ekle — bundan sonra admin panelinden yaptigin her degisiklik anlik olarak Vercel sitende herkese yansir.</div>'
           }
 
           <p style="font-size:11px;color:var(--tx3);margin-bottom:8px;text-transform:uppercase;letter-spacing:1.2px;font-weight:600;">Firebase Config (JSON)</p>
           <textarea class="finput" id="fbConfigInput" rows="6"
             placeholder='{&#10;  "apiKey": "AIza...",&#10;  "authDomain": "proje.firebaseapp.com",&#10;  "projectId": "proje-adi",&#10;  "storageBucket": "proje.appspot.com",&#10;  "messagingSenderId": "1234...",&#10;  "appId": "1:1234..."&#10;}'
-            style="font-family:monospace;font-size:11.5px;resize:vertical;">${fbCfgRaw}</textarea>
+            style="font-family:monospace;font-size:11.5px;resize:vertical;">${escapeHtml(fbCfgRaw)}</textarea>
           <button class="btn btn-primary" id="btnSaveFbConfig" style="width:100%;justify-content:center;margin-top:10px;">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
             Firebase Baglantisini Kaydet &amp; Aktar
@@ -2159,7 +2248,6 @@
           </div>
         </div>
 
-        <!-- IMGBB -->
         <div class="settings-block" style="margin-bottom:14px;">
           <h3 style="display:flex;align-items:center;gap:8px;">
             <svg viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2" width="15" height="15"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
@@ -2167,7 +2255,7 @@
           </h3>
           <p style="font-size:12.5px;color:var(--tx3);margin-bottom:10px;">Gorsel yuklediginde internete (ImgBB) yuklesin, herkese gorunsun.</p>
           <div style="display:flex;gap:8px;">
-            <input type="text" class="finput" id="imgbbKeyInput" placeholder="ImgBB API anahtari..." value="${imgbbKey}" style="font-family:monospace;font-size:12px;">
+            <input type="text" class="finput" id="imgbbKeyInput" placeholder="ImgBB API anahtari..." value="${escapeHtml(imgbbKey)}" style="font-family:monospace;font-size:12px;">
             <button class="btn btn-primary" id="btnSaveImgbbKey" style="white-space:nowrap;">Kaydet</button>
           </div>
           <p style="font-size:11px;color:var(--tx3);margin-top:8px;">
@@ -2176,22 +2264,24 @@
           </p>
         </div>
 
-        <!-- LOGOUT -->
         <div class="settings-block">
-          <h3>Oturum</h3>
-          <button class="btn btn-danger" id="btnLogout" style="margin-top:4px;">
+          <h3>Güvenlik</h3>
+          <button class="btn btn-primary" id="btnChangePassword" style="margin-top:4px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+            Şifre Değiştir
+          </button>
+          <button class="btn btn-danger" id="btnLogout" style="margin-top:8px;">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
             Oturumu Kapat
           </button>
         </div>`;
     },
 
-    /* ——— Actions ——— */
     togglePayment(id) {
       const a = State.appointments.find(a => a.id === +id);
       if (!a) return;
       a.paid = !a.paid;
-      Store.save();
+      Store.save().catch(e => console.warn('save failed', e));
       Toast.ok(a.paid ? 'Ödeme alındı.' : 'Ödeme geri alındı.');
       this.render(this._activePage());
     },
@@ -2210,19 +2300,17 @@
         const d = new Date(tarih);
         a.tarih = `${d.getDate()} ${Cal.MONTHS[d.getMonth()]}`;
         a.saat  = saat;
-        Store.save();
+        Store.save().catch(e => console.warn('save failed', e));
         Toast.ok('Randevu başarıyla taşındı.');
         Modal.close('modalTasi');
         this.render(this._activePage());
       }
     },
 
-    /* ——— ImgBB CDN upload ——— */
     async _uploadToImgbb(base64Data) {
       const key = localStorage.getItem('arya_imgbb_key') || '';
-      if (!key) return null; // no key → skip CDN, keep base64
+      if (!key) return null;
 
-      // Strip data:image/xxx;base64, prefix
       const b64 = base64Data.replace(/^data:image\/[a-z]+;base64,/, '');
       const body = new FormData();
       body.append('key', key);
@@ -2238,11 +2326,10 @@
         throw new Error(json.error?.message || 'Upload failed');
       } catch (e) {
         console.error('[ImgBB]', e);
-        return null; // fallback to base64
+        return null;
       }
     },
 
-    /* ——— Image helper: set preview ——— */
     _setImgPreview(src) {
       const wrap    = document.getElementById('mhPreviewWrap');
       const imgEl   = document.getElementById('mhPreviewImg');
@@ -2261,7 +2348,6 @@
       }
     },
 
-    /* ——— Image helper: reset modal image state ——— */
     _clearImgState() {
       document.getElementById('mhFile').value    = '';
       document.getElementById('mhImgUrl').value  = '';
@@ -2313,7 +2399,7 @@
         State.services.push({ id: newId, ad, fiyat, sure, img });
       }
 
-      Store.save();
+      Store.save().catch(e => console.warn('save failed', e));
       Modal.close('modalHizmet');
       Toast.ok('Hizmet kaydedildi.');
       this.render('hizmetler');
@@ -2323,7 +2409,7 @@
     deleteService(id) {
       if (!confirm('Bu hizmeti silmek istediğinizden emin misiniz?')) return;
       State.services = State.services.filter(s => s.id !== +id);
-      Store.save();
+      Store.save().catch(e => console.warn('save failed', e));
       Toast.ok('Hizmet silindi.');
       this.render('hizmetler');
       Booking.renderServices();
@@ -2334,7 +2420,7 @@
     },
 
     logout() {
-      Auth.revoke();
+      Auth.logout();
       UI.show('musteri');
       Toast.ok('Oturum güvenli şekilde kapatıldı.');
     },
@@ -2357,28 +2443,39 @@
   ═══════════════════════════════════════════════ */
   function bindEvents() {
 
-    /* —— Switcher —— */
     document.getElementById('swMusteri').addEventListener('click', () => UI.show('musteri'));
 
-    document.getElementById('swAdmin').addEventListener('click', () => {
-      if (Auth.check()) {
+    document.getElementById('swAdmin').addEventListener('click', async () => {
+      if (await Auth.checkSession()) {
         UI.show('admin');
         Admin.render('dashboard');
       } else {
-        document.getElementById('loginPass').value = '';
-        document.getElementById('loginErr').classList.remove('show');
-        Modal.open('modalLogin');
+        const storedHash = await Auth.getStoredHash();
+        if (!storedHash) {
+          // No password set – show set password modal
+          document.getElementById('setPass1').value = '';
+          document.getElementById('setPass2').value = '';
+          document.getElementById('setPassErr').classList.remove('show');
+          Modal.open('modalSetPassword');
+        } else {
+          document.getElementById('loginPass').value = '';
+          document.getElementById('loginErr').classList.remove('show');
+          Modal.open('modalLogin');
+        }
       }
     });
 
-    /* —— Login modal —— */
-    document.getElementById('loginSubmit').addEventListener('click', () => {
+    // Login modal
+    document.getElementById('loginSubmit').addEventListener('click', async () => {
       const pw = document.getElementById('loginPass').value;
-      if (pw === Auth.PW) {
-        Auth.grant();
+      const result = await Auth.login(pw);
+      if (result.success) {
         Modal.close('modalLogin');
         UI.show('admin');
         Admin.render('dashboard');
+      } else if (result.needSetup) {
+        Modal.close('modalLogin');
+        Modal.open('modalSetPassword');
       } else {
         document.getElementById('loginErr').classList.add('show');
         document.getElementById('loginPass').value = '';
@@ -2391,11 +2488,58 @@
     });
     document.getElementById('loginCancel').addEventListener('click', () => Modal.close('modalLogin'));
 
-    /* —— Booking navigation —— */
+    // Set password modal
+    document.getElementById('setPassSubmit').addEventListener('click', async () => {
+      const p1 = document.getElementById('setPass1').value;
+      const p2 = document.getElementById('setPass2').value;
+      if (p1 !== p2 || p1.length < 4) {
+        document.getElementById('setPassErr').classList.add('show');
+        return;
+      }
+      const ok = await Auth.setup(p1);
+      if (ok) {
+        Modal.close('modalSetPassword');
+        UI.show('admin');
+        Admin.render('dashboard');
+      } else {
+        Toast.err('Şifre kaydedilemedi.');
+      }
+    });
+    document.getElementById('setPassCancel').addEventListener('click', () => Modal.close('modalSetPassword'));
+
+    // Change password
+    document.getElementById('adminContent').addEventListener('click', async e => {
+      if (e.target.closest('#btnChangePassword')) {
+        document.getElementById('oldPass').value = '';
+        document.getElementById('newPass1').value = '';
+        document.getElementById('newPass2').value = '';
+        document.getElementById('changePassErr').textContent = '';
+        Modal.open('modalChangePassword');
+      }
+    });
+
+    document.getElementById('changePassSubmit').addEventListener('click', async () => {
+      const old = document.getElementById('oldPass').value;
+      const n1 = document.getElementById('newPass1').value;
+      const n2 = document.getElementById('newPass2').value;
+      if (n1 !== n2 || n1.length < 4) {
+        document.getElementById('changePassErr').textContent = 'Şifreler uyuşmuyor veya çok kısa.';
+        return;
+      }
+      const ok = await Auth.changePassword(old, n1);
+      if (ok) {
+        Modal.close('modalChangePassword');
+        Toast.ok('Şifre değiştirildi.');
+      } else {
+        document.getElementById('changePassErr').textContent = 'Eski şifre yanlış.';
+      }
+    });
+    document.getElementById('changePassCancel').addEventListener('click', () => Modal.close('modalChangePassword'));
+
+    // Booking navigation
     document.getElementById('btnDevam').addEventListener('click', () => Steps.next());
     document.getElementById('btnGeri').addEventListener('click',  () => Steps.prev());
 
-    /* —— New appointment reset —— */
     document.getElementById('btnYeniRandevu').addEventListener('click', () => {
       State.selected = {};
       State.date     = null;
@@ -2409,7 +2553,6 @@
       Steps._render();
     });
 
-    /* —— Service cards (delegation) —— */
     document.getElementById('hizmetGrid').addEventListener('click', e => {
       const btn  = e.target.closest('[data-hid]');
       const card = e.target.closest('.hizmet-card[data-hid]');
@@ -2423,7 +2566,6 @@
       }
     });
 
-    /* —— Calendar —— */
     document.getElementById('calPrev').addEventListener('click', () => {
       State.calMonth.setMonth(State.calMonth.getMonth() - 1);
       Booking.renderCalendar();
@@ -2441,40 +2583,31 @@
       if (s) { State.time = s.dataset.t; Booking.renderTimes(); }
     });
 
-    /* —— Admin nav (delegation) —— */
-    document.getElementById('adminNav').addEventListener('click', e => {
+    document.getElementById('adminNav').addEventListener('click', async e => {
       const item = e.target.closest('.nav-item[data-page]');
       if (!item) return;
-      if (!Auth.check()) { Modal.open('modalLogin'); return; }
+      if (!await Auth.checkSession()) { Modal.open('modalLogin'); return; }
       Admin.render(item.dataset.page);
     });
 
-    /* —— Admin content (event delegation) —— */
-    document.getElementById('adminContent').addEventListener('click', e => {
-      // Payment toggle
+    document.getElementById('adminContent').addEventListener('click', async e => {
       const pay = e.target.closest('[data-aid]');
       if (pay) { Admin.togglePayment(pay.dataset.aid); return; }
 
-      // WhatsApp
       const wa = e.target.closest('[data-wa]');
       if (wa) { Admin.whatsapp(wa.dataset.wa); return; }
 
-      // Reschedule
       const move = e.target.closest('[data-move]');
       if (move) { Admin.openReschedule(move.dataset.move); return; }
 
-      // Edit service
       const edit = e.target.closest('[data-edit]');
       if (edit) { Admin.openEdit(edit.dataset.edit); return; }
 
-      // Delete service
       const del = e.target.closest('[data-del]');
       if (del) { Admin.deleteService(del.dataset.del); return; }
 
-      // New service button
       if (e.target.closest('#btnYeniHizmet')) { Admin.openAdd(); return; }
 
-      // Pagination
       const pg = e.target.closest('[data-pg]:not([disabled])');
       if (pg && !e.target.closest('button[disabled]')) {
         State.admin.page = +pg.dataset.pg;
@@ -2482,42 +2615,38 @@
         return;
       }
 
-      // Sync export/import
-      if (e.target.closest('#btnExport'))       { Admin.exportData();  return; }
-      if (e.target.closest('#btnImport'))       { Admin.importData();  return; }
-      if (e.target.closest('#btnImportApply'))  { Admin.applyImport(); return; }
-      if (e.target.closest('#btnImportCancel')) {
-        const a = document.getElementById('importArea');
-        if (a) a.style.display = 'none'; return;
+      if (e.target.closest('#btnSaveFbConfig')) {
+        // handle Firebase config save (simplified – just store and reload)
+        try {
+          const cfg = JSON.parse(document.getElementById('fbConfigInput').value);
+          localStorage.setItem(Store.K_FB_CFG, JSON.stringify(cfg));
+          Toast.ok('Config kaydedildi. Sayfayı yenileyin.');
+        } catch {
+          Toast.err('Geçersiz JSON');
+        }
+        return;
       }
 
-      // Save ImgBB API key
       if (e.target.closest('#btnSaveImgbbKey')) {
         const k = document.getElementById('imgbbKeyInput')?.value.trim() || '';
-        if (!k) { Toast.err('API anahtarı boş olamaz.'); return; }
         localStorage.setItem('arya_imgbb_key', k);
-        Toast.ok('API anahtari kaydedildi! Artik gorseller CDN ye yuklenir.');
+        Toast.ok('API anahtari kaydedildi!');
         Admin.render('ayarlar'); return;
       }
 
-      // Logout
       if (e.target.closest('#btnLogout')) { Admin.logout(); return; }
     });
 
-    /* —— Reschedule modal —— */
     document.getElementById('tasiConfirm').addEventListener('click', () => Admin.confirmReschedule());
     document.getElementById('tasiCancel').addEventListener('click',  () => Modal.close('modalTasi'));
 
-    /* —— Service modal —— */
     document.getElementById('mhSave').addEventListener('click',   () => Admin.saveService());
     document.getElementById('mhCancel').addEventListener('click', () => Modal.close('modalHizmet'));
 
-    /* ——— Shared: read file → try CDN upload, fallback base64 ——— */
     async function handleImageFile(file) {
       if (!file || !file.type.startsWith('image/')) { Toast.err('Lütfen bir görsel dosyası seçin.'); return; }
       if (file.size > 8 * 1024 * 1024) { Toast.err('Dosya 8 MB den buyuk olamaz.'); return; }
 
-      // Show upload indicator
       const zone = document.getElementById('mhUploadZone');
       const origHTML = zone.innerHTML;
       zone.innerHTML = '<div style="padding:8px;color:var(--gold);font-size:12px;text-align:center;">' +
@@ -2532,9 +2661,8 @@
         const key = localStorage.getItem('arya_imgbb_key') || '';
 
         if (key) {
-          // Try CDN upload
           const url = await Admin._uploadToImgbb(b64);
-          zone.innerHTML = origHTML; // restore
+          zone.innerHTML = origHTML;
           if (url) {
             Admin._setImgPreview(url);
             Toast.ok('Gorsel CDN ye yuklendi — tum cihazlarda gorunur!');
@@ -2552,12 +2680,10 @@
       reader.readAsDataURL(file);
     }
 
-    /* —— Image: file pick —— */
     document.getElementById('mhFile').addEventListener('change', e => {
       handleImageFile(e.target.files[0]);
     });
 
-    /* —— Image: drag-over highlight —— */
     const zone = document.getElementById('mhUploadZone');
     zone.addEventListener('dragover',  e => { e.preventDefault(); zone.classList.add('drag'); });
     zone.addEventListener('dragleave', ()  => zone.classList.remove('drag'));
@@ -2566,44 +2692,35 @@
       handleImageFile(e.dataTransfer.files[0]);
     });
 
-    /* —— Image: URL load button —— */
     document.getElementById('mhUrlLoad').addEventListener('click', () => {
       const url = document.getElementById('mhImgUrl').value.trim();
       if (!url) { Toast.err('Lütfen bir URL girin.'); return; }
-      // Quick test: create an img element, on load set preview
       const tester = new Image();
       tester.onload  = () => Admin._setImgPreview(url);
       tester.onerror = () => Toast.err('URL den gorsel yuklenemedi. Adresi kontrol edin.');
       tester.src = url;
     });
 
-    /* —— Image: remove preview —— */
     document.getElementById('mhImgRemove').addEventListener('click', () => Admin._clearImgState());
 
-    /* —— Close modal on overlay click (except login) —— */
     document.querySelectorAll('.modal-bg').forEach(overlay => {
       overlay.addEventListener('click', e => {
-        if (e.target === overlay && overlay.id !== 'modalLogin') Modal.close(overlay.id);
+        if (e.target === overlay && overlay.id !== 'modalLogin' && overlay.id !== 'modalSetPassword') Modal.close(overlay.id);
       });
     });
 
-    /* —— Escape key closes modals —— */
     document.addEventListener('keydown', e => {
       if (e.key === 'Escape') {
         document.querySelectorAll('.modal-bg.open').forEach(m => {
-          if (m.id !== 'modalLogin') Modal.close(m.id);
+          if (m.id !== 'modalLogin' && m.id !== 'modalSetPassword') Modal.close(m.id);
         });
       }
     });
   }
 
-  /* ═══════════════════════════════════════════════
-     BOOT
-  ═══════════════════════════════════════════════ */
   async function boot() {
     try {
       await Store.load();
-      // Refresh images if they still point to old placeholder
       const OLD_IMGS = [
         'photo-1591196703216','photo-1598033128079',
         'photo-1601924638867','photo-1544620347',
@@ -2620,7 +2737,7 @@
       Booking.renderServices();
       Steps._render();
       bindEvents();
-      console.info('%c ARYA Atelier OS v2.0 ', 'background:#c4973a;color:#07080f;font-weight:700;padding:4px 14px;border-radius:20px;font-size:13px;');
+      console.info('%c ARYA Atelier OS v2.1 ', 'background:#c4973a;color:#07080f;font-weight:700;padding:4px 14px;border-radius:20px;font-size:13px;');
     } catch (e) {
       console.error('[ARYA] Boot failed:', e);
       document.body.insertAdjacentHTML('afterbegin',
@@ -2637,50 +2754,5 @@
 
 })();
 </script>
-</body>
-</html>
-<script type="module">
-  // Vercel Blob kütüphanesini dışarıdan çağırıyoruz
-  import { put } from 'https://esm.sh/@vercel/blob';
-
-  // Senin resim seçtiğin inputun ID'si 'resim-sec' olsun (bunu kendi inputuna göre düzelt)
-  const input = document.querySelector('input[type="file"]');
-  const buton = document.querySelector('button'); // Yükle butonun
-
-  buton.addEventListener('click', async () => {
-    const file = input.files[0];
-    if (!file) {
-      alert("Lütfen önce bir resim seç!");
-      return;
-    }
-
-    try {
-      buton.innerText = "Yükleniyor...";
-      buton.disabled = true;
-
-      // KOPYALADIĞIN TOKEN'I BURAYA YAPIŞTIR
-      const token = "PROJEDEN_KOPYALADIGIN_BLOB_READ_WRITE_TOKEN_BURADA";
-
-      const blob = await put(file.name, file, {
-        access: 'public',
-        token: token,
-      });
-
-      console.log("Başarıyla yüklendi:", blob.url);
-      alert("Resim başarıyla yüklendi! Link: " + blob.url);
-      
-      // Resim yüklendikten sonra sayfada önizleme yapmak istersen:
-      // document.getElementById('sonuc-resim').src = blob.url;
-
-    } catch (error) {
-      console.error("Hata oluştu:", error);
-      alert("Yükleme başarısız oldu!");
-    } finally {
-      buton.innerText = "Yükle";
-      buton.disabled = false;
-    }
-  });
-</script>
-
 </body>
 </html>
