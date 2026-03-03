@@ -1,2514 +1,2435 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>ARYA — Haute Couture & Kuru Temizleme</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
-<style>
-/* ════════════════════════════════════════════
-   ROOT DESIGN TOKENS
-════════════════════════════════════════════ */
-:root {
-  --bg-void:    #070709;
-  --bg-deep:    #0d0d10;
-  --bg-card:    #111115;
-  --bg-glass:   rgba(255,255,255,0.035);
-  --bg-glass2:  rgba(255,255,255,0.06);
-  --bg-input:   rgba(255,255,255,0.04);
-
-  --gold:       #c8a96e;
-  --gold-light: #e2c98a;
-  --gold-glow:  rgba(200,169,110,0.25);
-  --gold-faint: rgba(200,169,110,0.08);
-
-  --text-primary:  #f2ede6;
-  --text-secondary: #9a9285;
-  --text-muted:    #5a544e;
-
-  --border:     rgba(200,169,110,0.18);
-  --border-sub: rgba(255,255,255,0.06);
-  --border-inp: rgba(255,255,255,0.09);
-
-  --red:   #e05252;
-  --green: #52c87a;
-  --wa:    #25D366;
-
-  --radius-sm:  10px;
-  --radius-md:  18px;
-  --radius-lg:  28px;
-  --radius-xl:  40px;
-
-  --shadow-card: 0 32px 64px rgba(0,0,0,0.7), 0 1px 0 rgba(255,255,255,0.04) inset;
-  --shadow-gold: 0 8px 32px rgba(200,169,110,0.3);
-  --transition:  0.22s cubic-bezier(0.4,0,0.2,1);
-}
-
-/* ════════════════════════════════════════════
-   RESET & BASE
-════════════════════════════════════════════ */
-*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
-html { scroll-behavior:smooth; }
-body {
-  font-family:'DM Sans',sans-serif;
-  background: var(--bg-void);
-  color: var(--text-primary);
-  min-height:100vh;
-  overflow-x:hidden;
-  -webkit-font-smoothing:antialiased;
-}
-::selection { background:var(--gold-glow); color:var(--gold-light); }
-::-webkit-scrollbar { width:4px; height:4px; }
-::-webkit-scrollbar-track { background:var(--bg-deep); }
-::-webkit-scrollbar-thumb { background:var(--border); border-radius:99px; }
-img { display:block; width:100%; }
-
-/* ════════════════════════════════════════════
-   GLOBAL COMPONENTS
-════════════════════════════════════════════ */
-
-/* Grain overlay */
-body::before {
-  content:'';
-  position:fixed;
-  inset:0;
-  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-  pointer-events:none;
-  z-index:9999;
-  opacity:0.5;
-}
-
-.btn {
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  gap:8px;
-  padding:12px 28px;
-  border-radius:var(--radius-xl);
-  border:none;
-  font-family:'DM Sans',sans-serif;
-  font-size:14px;
-  font-weight:500;
-  cursor:pointer;
-  transition:var(--transition);
-  text-decoration:none;
-  white-space:nowrap;
-  position:relative;
-  overflow:hidden;
-}
-.btn::after {
-  content:'';
-  position:absolute;
-  inset:0;
-  background:rgba(255,255,255,0);
-  transition:var(--transition);
-}
-.btn:hover::after { background:rgba(255,255,255,0.06); }
-.btn:active { transform:scale(0.97); }
-
-.btn-gold {
-  background:linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
-  color:#0d0b07;
-  font-weight:600;
-  box-shadow: var(--shadow-gold);
-  letter-spacing:0.02em;
-}
-.btn-gold:hover { box-shadow:0 12px 40px rgba(200,169,110,0.45); transform:translateY(-1px); }
-
-.btn-ghost {
-  background:var(--bg-glass);
-  border:1px solid var(--border-sub);
-  color:var(--text-secondary);
-  backdrop-filter:blur(8px);
-}
-.btn-ghost:hover { border-color:var(--border); color:var(--text-primary); }
-
-.btn-sm { padding:7px 16px; font-size:12px; border-radius:30px; }
-.btn-icon { padding:9px; border-radius:50%; width:36px; height:36px; }
-
-.finput {
-  width:100%;
-  background:var(--bg-input);
-  border:1px solid var(--border-inp);
-  border-radius:var(--radius-sm);
-  padding:13px 16px;
-  color:var(--text-primary);
-  font-family:'DM Sans',sans-serif;
-  font-size:14px;
-  transition:var(--transition);
-  outline:none;
-}
-.finput:focus {
-  border-color:var(--gold);
-  background:rgba(200,169,110,0.05);
-  box-shadow:0 0 0 3px var(--gold-faint);
-}
-.finput::placeholder { color:var(--text-muted); }
-
-/* Gold rule */
-.gold-rule {
-  height:1px;
-  background:linear-gradient(90deg,transparent,var(--border),transparent);
-  border:none;
-  margin:0;
-}
-
-/* Section label */
-.section-label {
-  font-family:'DM Mono',monospace;
-  font-size:10px;
-  letter-spacing:3px;
-  text-transform:uppercase;
-  color:var(--text-muted);
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-.section-label::after {
-  content:'';
-  flex:1;
-  height:1px;
-  background:var(--border-sub);
-}
-
-/* ════════════════════════════════════════════
-   TAB SWITCHER
-════════════════════════════════════════════ */
-#tab-switcher {
-  position:fixed;
-  top:16px;
-  left:50%;
-  transform:translateX(-50%);
-  z-index:1000;
-  background:rgba(13,13,16,0.85);
-  backdrop-filter:blur(20px) saturate(1.5);
-  border:1px solid var(--border);
-  border-radius:var(--radius-xl);
-  padding:5px;
-  display:flex;
-  gap:4px;
-  box-shadow:0 16px 48px rgba(0,0,0,0.6), 0 1px 0 rgba(255,255,255,0.06) inset;
-}
-.sw-btn {
-  padding:8px 20px;
-  border:none;
-  border-radius:30px;
-  font-family:'DM Sans',sans-serif;
-  font-size:13px;
-  font-weight:500;
-  background:transparent;
-  color:var(--text-muted);
-  cursor:pointer;
-  transition:var(--transition);
-  display:flex;
-  align-items:center;
-  gap:7px;
-  letter-spacing:0.01em;
-}
-.sw-btn.active {
-  background:linear-gradient(135deg,var(--gold),var(--gold-light));
-  color:#0d0b07;
-  font-weight:600;
-  box-shadow:var(--shadow-gold);
-}
-.sw-btn svg { width:14px;height:14px; flex-shrink:0; }
-
-/* ════════════════════════════════════════════
-   SCREENS
-════════════════════════════════════════════ */
-.screen { display:none; min-height:100vh; flex-direction:column; }
-.screen.active { display:flex; }
-
-/* ════════════════════════════════════════════
-   HERO
-════════════════════════════════════════════ */
-.hero {
-  position:relative;
-  height:clamp(260px, 38vh, 380px);
-  overflow:hidden;
-  flex-shrink:0;
-}
-#hero-canvas {
-  position:absolute;
-  inset:0;
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  filter:brightness(0.28) saturate(0.6);
-  transition:opacity 1.2s ease;
-}
-.hero-gradient {
-  position:absolute;
-  inset:0;
-  background:linear-gradient(
-    180deg,
-    rgba(7,7,9,0.05) 0%,
-    rgba(7,7,9,0.3) 50%,
-    var(--bg-void) 100%
-  );
-}
-.hero-content {
-  position:relative;
-  z-index:2;
-  height:100%;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  padding:0 20px;
-  text-align:center;
-}
-.brand-mark {
-  font-family:'DM Mono',monospace;
-  font-size:10px;
-  letter-spacing:5px;
-  color:rgba(200,169,110,0.5);
-  text-transform:uppercase;
-  margin-bottom:12px;
-  animation: fadeUp 0.8s ease both;
-}
-.brand-name {
-  font-family:'Playfair Display',serif;
-  font-size:clamp(64px, 12vw, 96px);
-  font-weight:300;
-  letter-spacing:clamp(14px, 3vw, 24px);
-  color:var(--text-primary);
-  line-height:1;
-  animation: fadeUp 0.8s 0.1s ease both;
-}
-.brand-name em {
-  font-style:normal;
-  color:var(--gold);
-  font-weight:400;
-}
-.brand-tagline {
-  margin-top:10px;
-  font-family:'DM Mono',monospace;
-  font-size:9px;
-  letter-spacing:4px;
-  color:rgba(240,233,221,0.25);
-  text-transform:uppercase;
-  animation: fadeUp 0.8s 0.2s ease both;
-}
-.hero-service-badge {
-  margin-top:20px;
-  background:rgba(200,169,110,0.1);
-  border:1px solid rgba(200,169,110,0.2);
-  border-radius:30px;
-  padding:6px 16px;
-  font-size:11px;
-  color:var(--gold);
-  letter-spacing:1px;
-  animation: fadeUp 0.8s 0.3s ease both;
-  backdrop-filter:blur(8px);
-  transition:var(--transition);
-  opacity:0.8;
-}
-@keyframes fadeUp {
-  from { opacity:0; transform:translateY(14px); }
-  to   { opacity:1; transform:translateY(0); }
-}
-
-/* ════════════════════════════════════════════
-   BOOKING WRAPPER
-════════════════════════════════════════════ */
-.booking-wrap {
-  flex:1;
-  max-width:1100px;
-  width:100%;
-  margin:0 auto;
-  padding:0 16px 60px;
-}
-
-/* ════════════════════════════════════════════
-   BOOKING CARD
-════════════════════════════════════════════ */
-.booking-card {
-  background:var(--bg-card);
-  border:1px solid var(--border-sub);
-  border-radius:var(--radius-lg);
-  box-shadow:var(--shadow-card);
-  overflow:hidden;
-  position:relative;
-}
-.booking-card::before {
-  content:'';
-  position:absolute;
-  top:0; left:0; right:0; height:1px;
-  background:linear-gradient(90deg,transparent,var(--border),transparent);
-}
-
-/* Card Header */
-.card-header {
-  padding:20px 24px;
-  display:flex;
-  flex-wrap:wrap;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
-  background:rgba(255,255,255,0.015);
-  border-bottom:1px solid var(--border-sub);
-}
-.card-title-wrap { display:flex; align-items:center; gap:10px; }
-.card-title {
-  font-family:'Playfair Display',serif;
-  font-size:20px;
-  font-weight:400;
-  color:var(--text-primary);
-}
-
-/* Steps Progress */
-.step-track {
-  display:flex;
-  align-items:center;
-  gap:0;
-}
-.step-dot-wrap {
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:3px;
-  cursor:pointer;
-  padding:0 2px;
-}
-.step-dot {
-  width:28px; height:28px;
-  border-radius:50%;
-  background:var(--bg-glass);
-  border:1px solid var(--border-sub);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:11px;
-  font-weight:600;
-  color:var(--text-muted);
-  transition:var(--transition);
-  position:relative;
-}
-.step-dot.active {
-  background:var(--gold-faint);
-  border-color:var(--gold);
-  color:var(--gold);
-  box-shadow:0 0 12px var(--gold-glow);
-}
-.step-dot.done {
-  background:var(--gold);
-  border-color:var(--gold);
-  color:#0d0b07;
-}
-.step-dot-label {
-  font-size:9px;
-  color:var(--text-muted);
-  letter-spacing:0.5px;
-  white-space:nowrap;
-}
-.step-dot.active + .step-dot-label,
-.step-dot-wrap.active .step-dot-label { color:var(--gold); }
-.step-connector {
-  width:24px; height:1px;
-  background:var(--border-sub);
-  margin-bottom:14px;
-}
-.step-connector.done { background:var(--gold); opacity:0.4; }
-@media(max-width:480px) {
-  .step-dot-label { display:none; }
-  .step-connector { width:14px; }
-}
-
-/* Payment Notice */
-.payment-banner {
-  display:flex;
-  align-items:center;
-  gap:12px;
-  padding:12px 24px;
-  background:rgba(200,169,110,0.06);
-  border-bottom:1px solid rgba(200,169,110,0.1);
-  font-size:12.5px;
-  color:var(--text-secondary);
-}
-.payment-banner svg { color:var(--gold); flex-shrink:0; width:16px; height:16px; }
-.payment-banner strong { color:var(--gold); font-weight:500; }
-
-/* ════════════════════════════════════════════
-   STEP CONTENT
-════════════════════════════════════════════ */
-.step-panel { display:none; padding:24px; animation:slideIn 0.25s ease; }
-.step-panel.active { display:block; }
-@keyframes slideIn {
-  from { opacity:0; transform:translateY(6px); }
-  to   { opacity:1; transform:translateY(0); }
-}
-
-/* ════════════════════════════════════════════
-   STEP 1 — SERVICES
-════════════════════════════════════════════ */
-.service-grid {
-  display:grid;
-  grid-template-columns:repeat(2, 1fr);
-  gap:12px;
-  margin-top:18px;
-}
-@media(min-width:560px) { .service-grid { grid-template-columns:repeat(3, 1fr); } }
-@media(min-width:900px) { .service-grid { grid-template-columns:repeat(3, 1fr); } }
-
-.service-card {
-  background:var(--bg-deep);
-  border:1px solid var(--border-sub);
-  border-radius:var(--radius-md);
-  overflow:hidden;
-  cursor:pointer;
-  transition:var(--transition);
-  position:relative;
-  user-select:none;
-}
-.service-card:hover { border-color:rgba(200,169,110,0.3); transform:translateY(-2px); box-shadow:0 12px 32px rgba(0,0,0,0.5); }
-.service-card.selected {
-  border-color:var(--gold);
-  box-shadow:0 0 0 1px var(--gold), 0 12px 32px rgba(200,169,110,0.15);
-}
-
-.service-img-wrap {
-  position:relative;
-  height:110px;
-  overflow:hidden;
-}
-.service-img-wrap img {
-  height:100%;
-  object-fit:cover;
-  transition:transform 0.5s ease;
-  filter:brightness(0.7) saturate(0.7);
-}
-.service-card:hover .service-img-wrap img { transform:scale(1.05); }
-.service-card.selected .service-img-wrap img { filter:brightness(0.65) saturate(0.6); }
-
-.service-check {
-  position:absolute;
-  top:8px; right:8px;
-  width:22px; height:22px;
-  background:var(--gold);
-  border-radius:50%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  opacity:0;
-  transform:scale(0.5);
-  transition:var(--transition);
-}
-.service-card.selected .service-check { opacity:1; transform:scale(1); }
-
-.service-body { padding:12px; }
-.service-name { font-size:14px; font-weight:500; line-height:1.3; }
-.service-meta {
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-top:7px;
-}
-.service-duration { font-size:11px; color:var(--text-muted); display:flex; align-items:center; gap:4px; }
-.service-price { font-size:15px; font-weight:600; color:var(--gold); }
-
-.service-add-btn {
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:5px;
-  margin-top:10px;
-  padding:6px;
-  border-radius:30px;
-  border:1px solid var(--border-sub);
-  background:transparent;
-  color:var(--text-muted);
-  font-size:11px;
-  font-weight:500;
-  cursor:pointer;
-  transition:var(--transition);
-  width:100%;
-  font-family:'DM Sans',sans-serif;
-}
-.service-card.selected .service-add-btn {
-  background:var(--gold);
-  color:#0d0b07;
-  border-color:var(--gold);
-  font-weight:600;
-}
-.service-add-btn:hover { opacity:0.85; }
-
-/* Selected chips */
-.selected-summary {
-  margin-top:20px;
-  padding:14px 16px;
-  background:var(--gold-faint);
-  border:1px solid rgba(200,169,110,0.15);
-  border-radius:var(--radius-md);
-  display:none;
-}
-.selected-summary.visible { display:block; }
-.selected-chips { display:flex; flex-wrap:wrap; gap:7px; margin-top:10px; }
-.chip {
-  padding:4px 13px;
-  background:rgba(200,169,110,0.1);
-  border:1px solid rgba(200,169,110,0.25);
-  border-radius:30px;
-  font-size:11px;
-  color:var(--gold);
-  display:flex;
-  align-items:center;
-  gap:5px;
-}
-.chip-remove {
-  cursor:pointer;
-  opacity:0.6;
-  transition:var(--transition);
-  line-height:1;
-}
-.chip-remove:hover { opacity:1; }
-
-/* ════════════════════════════════════════════
-   STEP 2 — DATE & TIME
-════════════════════════════════════════════ */
-.calendar-layout {
-  display:grid;
-  grid-template-columns:1fr;
-  gap:24px;
-  margin-top:16px;
-}
-@media(min-width:600px) { .calendar-layout { grid-template-columns:1fr 1fr; } }
-
-.cal-header {
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  margin-bottom:16px;
-}
-.cal-month-name {
-  font-family:'Playfair Display',serif;
-  font-size:16px;
-  font-weight:400;
-}
-.cal-nav-btn {
-  width:32px; height:32px;
-  border-radius:50%;
-  border:1px solid var(--border-sub);
-  background:var(--bg-glass);
-  color:var(--text-secondary);
-  cursor:pointer;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  transition:var(--transition);
-}
-.cal-nav-btn:hover { border-color:var(--border); color:var(--text-primary); }
-
-.day-labels {
-  display:grid;
-  grid-template-columns:repeat(7,1fr);
-  gap:3px;
-  margin-bottom:4px;
-}
-.day-label {
-  text-align:center;
-  font-size:10px;
-  font-family:'DM Mono',monospace;
-  color:var(--text-muted);
-  padding:4px 0;
-  letter-spacing:0.5px;
-}
-
-.days-grid {
-  display:grid;
-  grid-template-columns:repeat(7,1fr);
-  gap:3px;
-}
-.cal-day {
-  aspect-ratio:1;
-  border-radius:8px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:13px;
-  cursor:pointer;
-  background:var(--bg-glass);
-  transition:var(--transition);
-  position:relative;
-}
-.cal-day:hover:not(.empty):not(.disabled):not(.selected) { background:var(--bg-glass2); }
-.cal-day.empty { background:transparent; pointer-events:none; }
-.cal-day.disabled { opacity:0.2; pointer-events:none; }
-.cal-day.today::after {
-  content:'';
-  position:absolute;
-  bottom:3px;
-  width:4px; height:4px;
-  border-radius:50%;
-  background:var(--gold);
-}
-.cal-day.selected {
-  background:var(--gold);
-  color:#0d0b07;
-  font-weight:700;
-  box-shadow:0 4px 16px var(--gold-glow);
-}
-
-.time-section-label {
-  font-family:'Playfair Display',serif;
-  font-size:16px;
-  font-weight:400;
-  margin-bottom:14px;
-}
-.time-grid {
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:8px;
-}
-@media(min-width:600px) { .time-grid { grid-template-columns:repeat(2,1fr); } }
-.time-slot {
-  padding:11px 8px;
-  background:var(--bg-glass);
-  border:1px solid var(--border-sub);
-  border-radius:var(--radius-sm);
-  text-align:center;
-  font-size:13px;
-  font-family:'DM Mono',monospace;
-  cursor:pointer;
-  transition:var(--transition);
-  color:var(--text-secondary);
-}
-.time-slot:hover { border-color:var(--border); color:var(--text-primary); }
-.time-slot.selected {
-  background:rgba(200,169,110,0.12);
-  border-color:var(--gold);
-  color:var(--gold);
-  font-weight:500;
-  box-shadow:0 0 16px var(--gold-faint);
-}
-
-/* ════════════════════════════════════════════
-   STEP 3 — CUSTOMER INFO
-════════════════════════════════════════════ */
-.info-layout {
-  display:grid;
-  grid-template-columns:1fr;
-  gap:24px;
-  margin-top:16px;
-}
-@media(min-width:640px) { .info-layout { grid-template-columns:1fr 1fr; } }
-
-.form-group { display:flex; flex-direction:column; gap:6px; }
-.form-label { font-size:11px; color:var(--text-muted); letter-spacing:0.5px; text-transform:uppercase; font-family:'DM Mono',monospace; }
-
-.order-summary {
-  background:var(--bg-deep);
-  border:1px solid var(--border-sub);
-  border-radius:var(--radius-md);
-  overflow:hidden;
-}
-.order-summary-head {
-  padding:14px 16px;
-  background:rgba(255,255,255,0.02);
-  border-bottom:1px solid var(--border-sub);
-  font-size:12px;
-  color:var(--text-muted);
-  letter-spacing:1px;
-  text-transform:uppercase;
-  font-family:'DM Mono',monospace;
-}
-.order-row {
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:10px 16px;
-  border-bottom:1px solid var(--border-sub);
-  font-size:13px;
-}
-.order-row:last-child { border-bottom:none; }
-.order-row-label { color:var(--text-secondary); display:flex; align-items:center; gap:7px; }
-.order-row-value { color:var(--text-primary); text-align:right; font-size:12px; max-width:55%; }
-.order-total {
-  padding:14px 16px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  border-top:1px solid var(--border);
-  background:var(--gold-faint);
-}
-.order-total-label { font-size:13px; color:var(--text-secondary); }
-.order-total-value { font-size:22px; font-weight:600; color:var(--gold); font-family:'Playfair Display',serif; }
-
-.payment-info-box {
-  margin-top:12px;
-  padding:12px 14px;
-  background:rgba(200,169,110,0.05);
-  border:1px solid rgba(200,169,110,0.12);
-  border-radius:var(--radius-sm);
-  font-size:12px;
-  color:var(--text-muted);
-  display:flex;
-  align-items:center;
-  gap:8px;
-}
-
-/* ════════════════════════════════════════════
-   STEP SUCCESS
-════════════════════════════════════════════ */
-.success-panel {
-  text-align:center;
-  padding:40px 20px;
-}
-.success-icon {
-  width:80px;
-  height:80px;
-  border-radius:50%;
-  background:rgba(200,169,110,0.1);
-  border:1px solid rgba(200,169,110,0.3);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  margin:0 auto 24px;
-  animation:pulse 2s ease-in-out infinite;
-}
-@keyframes pulse {
-  0%,100% { box-shadow: 0 0 0 0 var(--gold-glow); }
-  50%      { box-shadow: 0 0 0 16px transparent; }
-}
-.success-title {
-  font-family:'Playfair Display',serif;
-  font-size:28px;
-  font-weight:300;
-  margin-bottom:8px;
-}
-.success-sub { color:var(--text-secondary); font-size:14px; margin-bottom:28px; }
-
-.booking-number-card {
-  background:var(--bg-deep);
-  border:1px solid var(--border);
-  border-radius:var(--radius-md);
-  padding:24px;
-  margin:0 auto 24px;
-  max-width:320px;
-}
-.booking-number-label {
-  font-size:10px;
-  letter-spacing:3px;
-  color:var(--text-muted);
-  text-transform:uppercase;
-  margin-bottom:10px;
-}
-.booking-number {
-  font-family:'DM Mono',monospace;
-  font-size:36px;
-  font-weight:300;
-  color:var(--gold);
-  letter-spacing:4px;
-}
-
-/* ════════════════════════════════════════════
-   CARD FOOTER
-════════════════════════════════════════════ */
-.card-footer {
-  display:flex;
-  align-items:center;
-  justify-content:flex-end;
-  gap:10px;
-  padding:16px 24px;
-  border-top:1px solid var(--border-sub);
-  background:rgba(255,255,255,0.01);
-}
-
-/* ════════════════════════════════════════════
-   TOAST
-════════════════════════════════════════════ */
-#toast {
-  position:fixed;
-  bottom:24px; right:24px;
-  background:var(--bg-card);
-  border:1px solid var(--border);
-  border-radius:var(--radius-xl);
-  padding:12px 20px;
-  font-size:13px;
-  display:flex;
-  align-items:center;
-  gap:9px;
-  box-shadow:0 16px 40px rgba(0,0,0,0.7);
-  transform:translateY(100px);
-  opacity:0;
-  transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1), opacity 0.25s;
-  z-index:99999;
-  max-width:300px;
-}
-#toast.visible { transform:translateY(0); opacity:1; }
-#toast.success { border-color:var(--gold); color:var(--gold); }
-#toast.error   { border-color:var(--red);  color:var(--red); }
-
-/* ════════════════════════════════════════════
-   MODALS
-════════════════════════════════════════════ */
-.modal-overlay {
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,0.82);
-  backdrop-filter:blur(12px);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  z-index:10000;
-  opacity:0;
-  pointer-events:none;
-  transition:opacity 0.2s;
-  padding:16px;
-}
-.modal-overlay.open {
-  opacity:1;
-  pointer-events:all;
-}
-.modal-box {
-  background:var(--bg-card);
-  border:1px solid var(--border);
-  border-radius:var(--radius-lg);
-  padding:28px;
-  width:100%;
-  max-width:420px;
-  position:relative;
-  transform:scale(0.95) translateY(10px);
-  transition:transform 0.25s cubic-bezier(0.34,1.56,0.64,1);
-  box-shadow:var(--shadow-card);
-}
-.modal-overlay.open .modal-box { transform:scale(1) translateY(0); }
-.modal-box::before {
-  content:'';
-  position:absolute;
-  top:0; left:0; right:0; height:1px;
-  background:linear-gradient(90deg,transparent,var(--border),transparent);
-}
-.modal-title {
-  font-family:'Playfair Display',serif;
-  font-size:22px;
-  font-weight:400;
-  margin-bottom:6px;
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-.modal-sub { color:var(--text-secondary); font-size:13px; margin-bottom:22px; }
-.modal-actions { display:flex; gap:10px; justify-content:flex-end; margin-top:20px; }
-.error-inline { font-size:12px; color:var(--red); margin-bottom:12px; display:none; }
-
-/* ════════════════════════════════════════════
-   ADMIN SCREEN
-════════════════════════════════════════════ */
-#admin-screen { flex-direction:column; }
-
-/* Admin top bar */
-.admin-topbar {
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  flex-wrap:wrap;
-  gap:12px;
-  margin-bottom:24px;
-}
-.admin-page-title {
-  font-family:'Playfair Display',serif;
-  font-size:clamp(22px,4vw,32px);
-  font-weight:300;
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-
-/* Admin nav */
-.admin-nav {
-  display:flex;
-  overflow-x:auto;
-  gap:4px;
-  padding:10px 16px;
-  background:rgba(13,13,16,0.9);
-  backdrop-filter:blur(16px);
-  border-bottom:1px solid var(--border-sub);
-  scrollbar-width:none;
-  -webkit-overflow-scrolling:touch;
-  flex-shrink:0;
-}
-.admin-nav::-webkit-scrollbar { display:none; }
-.admin-nav-item {
-  display:inline-flex;
-  align-items:center;
-  gap:7px;
-  padding:8px 16px;
-  border-radius:30px;
-  color:var(--text-muted);
-  cursor:pointer;
-  transition:var(--transition);
-  font-size:13px;
-  font-weight:500;
-  white-space:nowrap;
-  border:1px solid transparent;
-}
-.admin-nav-item:hover { color:var(--text-primary); }
-.admin-nav-item.active {
-  background:var(--gold-faint);
-  border-color:rgba(200,169,110,0.2);
-  color:var(--gold);
-}
-.admin-nav-item svg { width:15px; height:15px; flex-shrink:0; }
-
-/* Admin content */
-.admin-content { flex:1; padding:20px 16px 60px; overflow-x:hidden; }
-
-/* Stats row */
-.stats-row {
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:12px;
-  margin-bottom:24px;
-}
-@media(min-width:600px) { .stats-row { grid-template-columns:repeat(4,1fr); } }
-
-.stat-card {
-  background:var(--bg-card);
-  border:1px solid var(--border-sub);
-  border-radius:var(--radius-md);
-  padding:16px;
-  position:relative;
-  overflow:hidden;
-}
-.stat-card::before {
-  content:'';
-  position:absolute;
-  top:0; left:0; right:0; height:1px;
-  background:linear-gradient(90deg,transparent,var(--border),transparent);
-}
-.stat-label {
-  font-size:10px;
-  letter-spacing:2px;
-  text-transform:uppercase;
-  color:var(--text-muted);
-  font-family:'DM Mono',monospace;
-  margin-bottom:8px;
-}
-.stat-value {
-  font-family:'Playfair Display',serif;
-  font-size:32px;
-  font-weight:300;
-  color:var(--gold);
-  line-height:1;
-}
-.stat-icon {
-  position:absolute;
-  bottom:12px; right:14px;
-  width:24px; height:24px;
-  color:var(--border);
-}
-
-/* Data table */
-.data-table-wrap {
-  background:var(--bg-card);
-  border:1px solid var(--border-sub);
-  border-radius:var(--radius-md);
-  overflow:hidden;
-}
-.data-table-head {
-  display:grid;
-  padding:12px 20px;
-  background:rgba(255,255,255,0.02);
-  border-bottom:1px solid var(--border-sub);
-  font-size:10px;
-  letter-spacing:2px;
-  text-transform:uppercase;
-  color:var(--text-muted);
-  font-family:'DM Mono',monospace;
-}
-.data-table-row {
-  display:grid;
-  padding:14px 20px;
-  border-bottom:1px solid var(--border-sub);
-  align-items:center;
-  font-size:13px;
-  transition:var(--transition);
-}
-.data-table-row:last-child { border-bottom:none; }
-.data-table-row:hover { background:var(--bg-glass); }
-
-.tbl-randevu { grid-template-columns: 1.5fr 1.5fr 1.2fr 1fr 1fr; }
-.tbl-musteri { grid-template-columns: 1.5fr 1.2fr 1.2fr 1fr 40px; }
-
-@media(max-width:700px) {
-  .tbl-randevu { grid-template-columns:1fr 1fr 1fr; }
-  .tbl-randevu .col-hide { display:none; }
-  .tbl-musteri { grid-template-columns:1fr 1fr 40px; }
-  .tbl-musteri .col-hide { display:none; }
-}
-
-.badge {
-  display:inline-flex;
-  align-items:center;
-  gap:5px;
-  padding:3px 10px;
-  border-radius:30px;
-  font-size:11px;
-  font-weight:500;
-}
-.badge-success { background:rgba(82,200,122,0.1); color:var(--green); border:1px solid rgba(82,200,122,0.2); }
-.badge-pending { background:rgba(224,82,82,0.1); color:var(--red); border:1px solid rgba(224,82,82,0.2); }
-
-.action-btn {
-  width:30px; height:30px;
-  border-radius:50%;
-  border:1px solid var(--border-sub);
-  background:var(--bg-glass);
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  cursor:pointer;
-  transition:var(--transition);
-  color:var(--text-muted);
-  margin-right:4px;
-}
-.action-btn:hover { border-color:var(--border); color:var(--text-primary); }
-.action-btn.wa:hover { border-color:var(--wa); color:var(--wa); }
-.action-btn.danger:hover { border-color:var(--red); color:var(--red); }
-.action-btn svg { width:13px; height:13px; }
-
-/* Hizmetler grid admin */
-.hizmet-admin-grid {
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:12px;
-}
-@media(min-width:600px) { .hizmet-admin-grid { grid-template-columns:repeat(3,1fr); } }
-
-.hizmet-admin-card {
-  background:var(--bg-card);
-  border:1px solid var(--border-sub);
-  border-radius:var(--radius-md);
-  overflow:hidden;
-  transition:var(--transition);
-}
-.hizmet-admin-card:hover { border-color:var(--border); }
-.hizmet-admin-img { height:90px; object-fit:cover; filter:brightness(0.6); transition:filter 0.3s; }
-.hizmet-admin-card:hover .hizmet-admin-img { filter:brightness(0.75); }
-.hizmet-admin-body { padding:12px; }
-.hizmet-admin-name { font-size:14px; font-weight:500; margin-bottom:6px; }
-.hizmet-admin-meta { display:flex; justify-content:space-between; align-items:center; font-size:12px; }
-.hizmet-admin-meta span:first-child { color:var(--text-muted); }
-.hizmet-admin-price { color:var(--gold); font-weight:600; }
-.hizmet-admin-actions { display:flex; gap:6px; margin-top:10px; }
-
-/* Search input */
-.search-wrap { position:relative; }
-.search-wrap svg { position:absolute; left:12px; top:50%; transform:translateY(-50%); width:15px; height:15px; color:var(--text-muted); }
-.search-input {
-  width:100%;
-  max-width:240px;
-  padding:9px 12px 9px 36px;
-  background:var(--bg-input);
-  border:1px solid var(--border-inp);
-  border-radius:30px;
-  color:var(--text-primary);
-  font-family:'DM Sans',sans-serif;
-  font-size:13px;
-  transition:var(--transition);
-  outline:none;
-}
-.search-input:focus { border-color:var(--gold); box-shadow:0 0 0 3px var(--gold-faint); }
-.search-input::placeholder { color:var(--text-muted); }
-
-/* Pagination */
-.pagination {
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:8px;
-  margin-top:20px;
-}
-.page-btn {
-  width:34px; height:34px;
-  border-radius:8px;
-  border:1px solid var(--border-sub);
-  background:var(--bg-glass);
-  color:var(--text-secondary);
-  cursor:pointer;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  transition:var(--transition);
-  font-size:13px;
-}
-.page-btn:hover:not(:disabled) { border-color:var(--border); color:var(--text-primary); }
-.page-btn:disabled { opacity:0.3; cursor:default; }
-.page-info { font-size:12px; color:var(--text-muted); padding:0 4px; font-family:'DM Mono',monospace; }
-
-/* File upload */
-.file-drop {
-  border:1px dashed var(--border-inp);
-  border-radius:var(--radius-sm);
-  padding:20px;
-  text-align:center;
-  cursor:pointer;
-  transition:var(--transition);
-  color:var(--text-muted);
-  font-size:13px;
-}
-.file-drop:hover { border-color:var(--gold); background:var(--gold-faint); }
-.file-drop svg { width:24px; height:24px; margin:0 auto 8px; color:var(--text-muted); }
-.preview-img {
-  width:100%;
-  max-height:120px;
-  object-fit:cover;
-  border-radius:var(--radius-sm);
-  margin-top:10px;
-  display:none;
-}
-
-/* Ayarlar */
-.settings-card {
-  background:var(--bg-card);
-  border:1px solid var(--border-sub);
-  border-radius:var(--radius-md);
-  overflow:hidden;
-  margin-bottom:16px;
-}
-.settings-head {
-  padding:14px 20px;
-  border-bottom:1px solid var(--border-sub);
-  font-size:12px;
-  font-family:'DM Mono',monospace;
-  letter-spacing:1.5px;
-  text-transform:uppercase;
-  color:var(--text-muted);
-}
-.settings-body { padding:20px; }
-.settings-row {
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:12px 0;
-  border-bottom:1px solid var(--border-sub);
-  gap:16px;
-}
-.settings-row:last-child { border-bottom:none; }
-.settings-row-label { font-size:13px; color:var(--text-secondary); }
-.settings-row-value { font-size:13px; color:var(--text-primary); font-family:'DM Mono',monospace; }
-
-/* ════════════════════════════════════════════
-   INLINE SVGS — Icons
-════════════════════════════════════════════ */
-.ico { display:inline-block; vertical-align:middle; }
-
-/* Responsive tweaks */
-@media(max-width:480px) {
-  .booking-wrap { padding:0 8px 60px; }
-  .step-panel { padding:16px; }
-  .card-header { padding:14px 16px; }
-  .card-footer { padding:12px 16px; }
-  .payment-banner { padding:10px 16px; }
-  .admin-content { padding:16px 12px 60px; }
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ARYA — Atelier &amp; Kuru Temizleme</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    /* ═══════════════════════════════════════════════════════════════
+       RESET & CSS CUSTOM PROPERTIES
+    ═══════════════════════════════════════════════════════════════ */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      /* — Background palette */
+      --bg0: #07080f;
+      --bg1: #0e0f18;
+      --bg2: #15161f;
+      --bg3: #1c1d28;
+      --bg4: #252636;
+
+      /* — Gold accent system */
+      --gold:      #c4973a;
+      --gold-hi:   #ddb55a;
+      --gold-lo:   #9a7428;
+      --gold-t08:  rgba(196,151,58,.08);
+      --gold-t15:  rgba(196,151,58,.15);
+      --gold-t30:  rgba(196,151,58,.30);
+
+      /* — Text */
+      --tx1: #f0e8db;
+      --tx2: #a89e8e;
+      --tx3: #5e5a52;
+
+      /* — Borders */
+      --bdr:   rgba(196,151,58,.2);
+      --bdr-s: rgba(255,255,255,.05);
+      --bdr-m: rgba(255,255,255,.08);
+
+      /* — Radius */
+      --r-xs:   6px;
+      --r-sm:  10px;
+      --r-md:  16px;
+      --r-lg:  22px;
+      --r-xl:  30px;
+      --r-pill: 999px;
+
+      /* — Shadows */
+      --sh-sm:  0 2px 8px  rgba(0,0,0,.45);
+      --sh-md:  0 8px 28px rgba(0,0,0,.55);
+      --sh-lg:  0 20px 56px rgba(0,0,0,.75);
+      --sh-gold: 0 0 40px rgba(196,151,58,.18);
+
+      /* — Motion */
+      --ease:     cubic-bezier(.4,0,.2,1);
+      --ease-out: cubic-bezier(0,0,.2,1);
+      --t1: 130ms;
+      --t2: 260ms;
+      --t3: 460ms;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════
+       BASE
+    ═══════════════════════════════════════════════════════════════ */
+    html { font-size: 16px; scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', system-ui, sans-serif;
+      background: var(--bg0);
+      color: var(--tx1);
+      min-height: 100vh;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Grain overlay */
+    body::after {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='.035'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 9998; opacity: .6;
+    }
+
+    /* Typography helpers */
+    .serif { font-family: 'Playfair Display', Georgia, serif; }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 4px; height: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--bg4); border-radius: 4px; }
+
+    /* ═══════════════════════════════════════════════════════════════
+       SWITCHER
+    ═══════════════════════════════════════════════════════════════ */
+    .switcher {
+      position: fixed; top: 14px; left: 50%;
+      transform: translateX(-50%);
+      z-index: 9999;
+      background: rgba(14,15,24,.92);
+      backdrop-filter: blur(20px) saturate(1.4);
+      -webkit-backdrop-filter: blur(20px) saturate(1.4);
+      border: 1px solid var(--bdr);
+      border-radius: var(--r-pill);
+      padding: 4px;
+      display: flex; gap: 2px;
+      box-shadow: var(--sh-md), 0 0 0 1px rgba(255,255,255,.03);
+    }
+
+    .sw-btn {
+      display: flex; align-items: center; gap: 6px;
+      padding: 7px 18px;
+      border: none; border-radius: var(--r-pill);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12.5px; font-weight: 500;
+      background: transparent; color: var(--tx3);
+      cursor: pointer;
+      transition: color var(--t1) var(--ease), background var(--t2) var(--ease), box-shadow var(--t2) var(--ease);
+      white-space: nowrap; letter-spacing: .3px;
+    }
+    .sw-btn svg { width: 13px; height: 13px; flex-shrink: 0; }
+    .sw-btn.on {
+      background: linear-gradient(135deg, var(--gold), var(--gold-hi));
+      color: var(--bg0); font-weight: 600;
+      box-shadow: 0 4px 18px rgba(196,151,58,.42);
+    }
+
+    /* ═══════════════════════════════════════════════════════════════
+       TOAST
+    ═══════════════════════════════════════════════════════════════ */
+    #toast {
+      position: fixed; bottom: 22px; right: 22px; z-index: 99999;
+      background: var(--bg2);
+      border-radius: var(--r-pill);
+      padding: 11px 18px;
+      font-size: 13px; font-weight: 500;
+      display: flex; align-items: center; gap: 9px;
+      box-shadow: var(--sh-lg);
+      transform: translateY(70px) scale(.92);
+      opacity: 0;
+      transition: all var(--t2) var(--ease);
+      pointer-events: none;
+      max-width: 300px;
+    }
+    #toast.show { transform: translateY(0) scale(1); opacity: 1; }
+    #toast.ok  { border: 1px solid var(--bdr); color: var(--gold); }
+    #toast.err { border: 1px solid rgba(224,80,80,.5); color: #e05050; }
+    #toast svg { width: 15px; height: 15px; flex-shrink: 0; }
+
+    /* ═══════════════════════════════════════════════════════════════
+       SCREENS
+    ═══════════════════════════════════════════════════════════════ */
+    .screen { display: none; flex-direction: column; min-height: 100vh; }
+    .screen.on { display: flex; }
+
+    /* ═══════════════════════════════════════════════════════════════
+       CUSTOMER — HERO
+    ═══════════════════════════════════════════════════════════════ */
+    .hero {
+      position: relative; height: 420px;
+      overflow: hidden; flex-shrink: 0;
+    }
+    /* ── Hero: cinematic 3-panel ── */
+    .hero-bg {
+      position: absolute; inset: 0;
+      display: grid;
+      grid-template-columns: 1fr 1.3fr 1fr;
+    }
+    .hero-panel {
+      height: 100%;
+      background-size: cover;
+      background-repeat: no-repeat;
+      position: relative;
+    }
+
+    /* Panel 1 — dark suit lapel texture */
+    .hero-panel:nth-child(1) {
+      background-image: url('https://images.unsplash.com/photo-1617137968427-85924c800a22?w=800&q=90');
+      background-position: center 30%;
+      filter: brightness(.18) saturate(.4) contrast(1.1);
+    }
+
+    /* Panel 2 — dramatic man in black, center focus */
+    .hero-panel:nth-child(2) {
+      background-image: url('https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=900&q=92');
+      background-position: center 12%;
+      filter: brightness(.24) saturate(.4) contrast(1.15);
+    }
+
+    /* Panel 3 — dark garment/clothes rack / fabric */
+    .hero-panel:nth-child(3) {
+      background-image: url('https://images.unsplash.com/photo-1558769132-cb1aea458c5e?w=800&q=90');
+      background-position: center 20%;
+      filter: brightness(.18) saturate(.4) contrast(1.1);
+    }
+
+    /* gold seam lines between panels */
+    .hero-panel:nth-child(1)::after,
+    .hero-panel:nth-child(2)::after {
+      content: '';
+      position: absolute; top: 8%; right: 0; bottom: 8%;
+      width: 1px;
+      background: linear-gradient(180deg,
+        transparent 0%,
+        rgba(196,151,58,.5) 35%,
+        rgba(196,151,58,.7) 50%,
+        rgba(196,151,58,.5) 65%,
+        transparent 100%);
+      z-index: 3;
+    }
+
+    /* central spotlight — lifts the middle panel */
+    .hero-bg::before {
+      content: '';
+      position: absolute; inset: 0; z-index: 2;
+      background:
+        radial-gradient(ellipse 50% 75% at 50% 45%,
+          rgba(7,8,15,0) 0%,
+          rgba(7,8,15,.1) 40%,
+          rgba(7,8,15,.72) 100%),
+        linear-gradient(180deg,
+          rgba(7,8,15,.6)  0%,
+          rgba(7,8,15,.08) 28%,
+          rgba(7,8,15,.08) 55%,
+          rgba(7,8,15,.82) 80%,
+          #07080f          100%);
+    }
+
+    /* warm gold glow at bottom center */
+    .hero-bg::after {
+      content: '';
+      position: absolute; inset: 0; z-index: 2;
+      background:
+        radial-gradient(ellipse 45% 30% at 50% 110%,
+          rgba(196,151,58,.3) 0%, transparent 65%);
+    }
+    .hero-deco {
+      position: absolute; inset: 0; z-index: 3;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden; pointer-events: none;
+    }
+    .hero-deco svg { width: 580px; height: 580px; opacity: .05; }
+
+    .hero-cnt {
+      position: relative; z-index: 4;
+      height: 100%;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding-top: 50px; /* offset for switcher */
+    }
+
+    /* top micro-label */
+    .brand-eyebrow {
+      font-size: 8px; letter-spacing: 5.5px;
+      text-transform: uppercase; font-weight: 600;
+      color: rgba(196,151,58,.9);
+      background: rgba(7,8,15,.55);
+      border: 1px solid rgba(196,151,58,.28);
+      border-radius: var(--r-pill);
+      padding: 5px 16px; margin-bottom: 18px;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    .brand {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(72px, 14vw, 120px);
+      font-weight: 400;
+      letter-spacing: clamp(20px, 4vw, 34px);
+      text-transform: uppercase;
+      line-height: 1; text-align: center;
+      color: var(--tx1);
+      text-shadow: 0 2px 30px rgba(0,0,0,.8), 0 8px 60px rgba(0,0,0,.5);
+    }
+    .brand em {
+      background: linear-gradient(135deg, var(--gold-lo), var(--gold-hi) 55%, var(--gold));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-style: italic;
+      filter: drop-shadow(0 0 20px rgba(196,151,58,.45));
+    }
+
+    .brand-divider {
+      width: 50px; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      margin: 14px auto;
+      opacity: .8;
+    }
+    .brand-sub {
+      font-size: 8.5px; letter-spacing: 6px;
+      color: rgba(240,232,219,.45); text-transform: uppercase; font-weight: 500;
+      margin-bottom: 22px;
+    }
+    .brand-cta {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 10px 24px;
+      background: rgba(7,8,15,.62);
+      border: 1px solid rgba(196,151,58,.32);
+      border-radius: var(--r-pill);
+      color: rgba(240,232,219,.75); font-size: 11.5px; font-weight: 500;
+      letter-spacing: .8px; text-transform: uppercase;
+      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      cursor: default;
+      box-shadow: 0 8px 24px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.05);
+    }
+    .brand-cta span {
+      width: 4px; height: 4px; border-radius: 50%;
+      background: var(--gold);
+      display: inline-block;
+      box-shadow: 0 0 6px var(--gold);
+    }
+
+
+    /* ═══════════════════════════════════════════════════════════════
+       BOOKING WRAPPER & CARD
+    ═══════════════════════════════════════════════════════════════ */
+    .booking-wrap {
+      max-width: 900px; margin: 0 auto;
+      padding: 0 14px 60px; width: 100%;
+      margin-top: -32px; /* overlap hero bottom */ position: relative; z-index: 3;
+    }
+
+    .card {
+      background: rgba(14,15,24,.97);
+      border: 1px solid var(--bdr);
+      border-radius: var(--r-xl);
+      box-shadow: var(--sh-lg), 0 0 0 1px rgba(255,255,255,.025);
+      overflow: hidden; position: relative;
+      backdrop-filter: blur(2px);
+    }
+    .card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      opacity: .55;
+    }
+
+    /* Card head */
+    .card-head {
+      padding: 16px 22px;
+      display: flex; flex-wrap: wrap;
+      align-items: center; justify-content: space-between; gap: 12px;
+      border-bottom: 1px solid var(--bdr-s);
+      background: rgba(21,22,31,.6);
+    }
+    .card-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 19px; font-weight: 400;
+      color: var(--tx1);
+      display: flex; align-items: center; gap: 9px;
+    }
+    .card-title svg { width: 17px; height: 17px; color: var(--gold); }
+
+    /* Step nav — numbered circles */
+    .step-nav {
+      display: flex; align-items: center; gap: 6px;
+    }
+    .step-item {
+      display: flex; flex-direction: column; align-items: center; gap: 3px;
+      cursor: default; transition: all var(--t2) var(--ease);
+    }
+    .step-num {
+      width: 28px; height: 28px; border-radius: 50%;
+      border: 1px solid var(--bdr-s);
+      background: var(--bg3);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 600; color: var(--tx3);
+      transition: all var(--t2) var(--ease);
+    }
+    .step-lbl {
+      font-size: 9px; font-weight: 500; letter-spacing: .5px;
+      text-transform: uppercase; color: var(--tx3);
+      transition: color var(--t2) var(--ease);
+    }
+    .step-item.on .step-num {
+      background: var(--gold);
+      border-color: var(--gold);
+      color: var(--bg0);
+      box-shadow: 0 0 14px rgba(196,151,58,.45);
+    }
+    .step-item.on .step-lbl { color: var(--gold); }
+    .step-item.done .step-num {
+      background: var(--gold-t08);
+      border-color: var(--gold-t30);
+      color: var(--gold);
+    }
+    .step-item.done .step-lbl { color: var(--tx3); }
+    .step-sep {
+      width: 18px; height: 1px;
+      background: var(--bdr-s); margin-bottom: 14px;
+    }
+
+    /* Payment note */
+    .pay-note {
+      display: flex; align-items: center; gap: 10px;
+      background: var(--gold-t08);
+      border-left: 2px solid var(--gold);
+      margin: 14px 22px 0;
+      padding: 9px 14px;
+      border-radius: 0 var(--r-xs) var(--r-xs) 0;
+      font-size: 12px; color: var(--tx2);
+    }
+    .pay-note svg { width: 14px; height: 14px; color: var(--gold); flex-shrink: 0; }
+    .pay-note strong { color: var(--gold-hi); font-weight: 600; }
+
+    /* ═══════════════════════════════════════════════════════════════
+       STEP CONTENT
+    ═══════════════════════════════════════════════════════════════ */
+    .step-content { display: none; padding: 22px; }
+    .step-content.on {
+      display: block;
+      animation: fadeUp var(--t2) var(--ease-out);
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .sec-label {
+      font-size: 9.5px; text-transform: uppercase; letter-spacing: 3px;
+      color: var(--tx3); font-weight: 600;
+      margin-bottom: 16px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .sec-label::after {
+      content: ''; flex: 1; height: 1px; background: var(--bdr-s);
+    }
+
+    /* ═══════════════════════════════════════════════════════════════
+       SERVICE CARDS
+    ═══════════════════════════════════════════════════════════════ */
+    .hizmet-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+    @media (min-width: 520px) {
+      .hizmet-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    .hizmet-card {
+      background: var(--bg2);
+      border: 1px solid var(--bdr-s);
+      border-radius: var(--r-lg);
+      overflow: hidden; cursor: pointer; position: relative;
+      transition: transform var(--t2) var(--ease),
+                  border-color var(--t2) var(--ease),
+                  box-shadow var(--t2) var(--ease);
+    }
+    .hizmet-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--bdr-m);
+      box-shadow: var(--sh-sm);
+    }
+    .hizmet-card.sel {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 1px rgba(196,151,58,.25), var(--sh-sm);
+    }
+
+    /* Checkmark badge */
+    .hc-check {
+      position: absolute; top: 8px; right: 8px;
+      width: 22px; height: 22px;
+      background: var(--gold);
+      border-radius: 50%;
+      display: none; align-items: center; justify-content: center;
+      box-shadow: 0 2px 8px rgba(196,151,58,.5);
+      animation: popIn var(--t1) var(--ease);
+      z-index: 2;
+    }
+    .hizmet-card.sel .hc-check { display: flex; }
+    .hc-check svg { width: 11px; height: 11px; color: var(--bg0); }
+    @keyframes popIn {
+      from { transform: scale(.4); opacity: 0; }
+      to   { transform: scale(1);  opacity: 1; }
+    }
+
+    .hc-img-wrap {
+      position: relative; height: 115px; overflow: hidden;
+    }
+    .hc-img {
+      width: 100%; height: 100%; object-fit: cover;
+      filter: brightness(.65) saturate(.8);
+      transition: filter var(--t2) var(--ease), transform var(--t3) var(--ease);
+    }
+    .hizmet-card:hover .hc-img {
+      filter: brightness(.82) saturate(.9);
+      transform: scale(1.06);
+    }
+    .hc-img-wrap::after {
+      content: '';
+      position: absolute; bottom: 0; left: 0; right: 0; height: 45%;
+      background: linear-gradient(0deg, var(--bg2), transparent);
+    }
+
+    .hc-body { padding: 10px 12px 12px; }
+    .hc-name {
+      font-family: 'Playfair Display', serif;
+      font-weight: 400; font-size: 14px; color: var(--tx1); line-height: 1.3;
+    }
+    .hc-meta {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-top: 5px;
+    }
+    .hc-dur {
+      font-size: 11px; color: var(--tx3);
+      display: flex; align-items: center; gap: 3px;
+    }
+    .hc-dur svg { width: 9px; height: 9px; }
+    .hc-price { font-size: 14px; color: var(--gold); font-weight: 700; letter-spacing: .3px; }
+
+    .btn-toggle {
+      width: 100%; margin-top: 8px;
+      padding: 5px;
+      border: 1px solid var(--bdr-s);
+      background: transparent; color: var(--tx3);
+      border-radius: var(--r-pill);
+      cursor: pointer; font-family: 'DM Sans', sans-serif;
+      font-size: 10.5px; font-weight: 600; letter-spacing: .8px;
+      text-transform: uppercase;
+      display: flex; align-items: center; justify-content: center; gap: 5px;
+      transition: all var(--t1) var(--ease);
+    }
+    .btn-toggle svg { width: 9px; height: 9px; }
+    .btn-toggle:hover { border-color: var(--bdr-m); color: var(--tx2); }
+    .btn-toggle.on {
+      background: var(--gold);
+      border-color: var(--gold);
+      color: var(--bg0);
+    }
+
+    /* Selected bar */
+    .sel-bar {
+      margin-top: 18px;
+      background: var(--gold-t08);
+      border: 1px solid var(--bdr);
+      border-radius: var(--r-md);
+      padding: 12px 14px;
+      display: none;
+    }
+    .sel-bar.show { display: block; }
+    .sel-bar-lbl {
+      font-size: 9px; text-transform: uppercase; letter-spacing: 2px;
+      color: var(--tx3); font-weight: 600; margin-bottom: 8px;
+    }
+    .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+    .chip {
+      background: var(--gold-t15);
+      border: 1px solid var(--gold-t30);
+      border-radius: var(--r-pill);
+      padding: 3px 10px;
+      font-size: 11px; color: var(--gold); font-weight: 500;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════
+       CALENDAR & TIME SLOTS
+    ═══════════════════════════════════════════════════════════════ */
+    .takvim-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 22px;
+    }
+    @media (min-width: 520px) {
+      .takvim-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    .cal-nav {
+      display: flex; align-items: center;
+      justify-content: space-between; margin-bottom: 12px;
+    }
+    .cal-month {
+      font-family: 'Playfair Display', serif;
+      font-size: 16px; font-weight: 400;
+    }
+    .cal-arr {
+      width: 30px; height: 30px;
+      border: 1px solid var(--bdr-m);
+      border-radius: 8px;
+      background: transparent; color: var(--tx2);
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all var(--t1) var(--ease);
+    }
+    .cal-arr:hover {
+      border-color: var(--bdr); color: var(--tx1); background: var(--bg3);
+    }
+    .cal-arr svg { width: 13px; height: 13px; }
+
+    .day-names {
+      display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px;
+      margin-bottom: 6px;
+    }
+    .day-name {
+      text-align: center; font-size: 8.5px;
+      text-transform: uppercase; letter-spacing: 1px;
+      color: var(--tx3); font-weight: 600; padding: 4px 0;
+    }
+
+    .days-grid {
+      display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px;
+    }
+    .day {
+      aspect-ratio: 1;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 7px; cursor: pointer;
+      font-size: 12.5px; font-weight: 400; color: var(--tx2);
+      transition: all var(--t1) var(--ease);
+      border: 1px solid transparent;
+    }
+    .day:hover:not(.empty):not(.disabled) {
+      background: var(--bg3); border-color: var(--bdr-m);
+    }
+    .day.empty    { pointer-events: none; }
+    .day.disabled { opacity: .22; pointer-events: none; }
+    .day.today    { border-color: var(--gold-t30); color: var(--gold); }
+    .day.sel {
+      background: var(--gold); color: var(--bg0);
+      font-weight: 700; border-color: var(--gold);
+      box-shadow: 0 3px 12px rgba(196,151,58,.42);
+    }
+
+    .time-sec-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 16px; margin-bottom: 12px; color: var(--tx1);
+    }
+    .times-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px;
+    }
+    @media (min-width: 360px) {
+      .times-grid { grid-template-columns: repeat(4, 1fr); }
+    }
+
+    .t-slot {
+      padding: 9px 4px;
+      background: var(--bg2);
+      border: 1px solid var(--bdr-s);
+      border-radius: 8px;
+      text-align: center; cursor: pointer;
+      font-size: 12px; font-weight: 500; color: var(--tx2);
+      transition: all var(--t1) var(--ease);
+    }
+    .t-slot:hover { background: var(--bg3); border-color: var(--bdr-m); color: var(--tx1); }
+    .t-slot.sel {
+      background: var(--gold-t15);
+      border-color: var(--gold);
+      color: var(--gold); font-weight: 600;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════
+       FORM INPUTS & SUMMARY
+    ═══════════════════════════════════════════════════════════════ */
+    .finput {
+      width: 100%; padding: 13px 15px;
+      background: var(--bg2);
+      border: 1px solid var(--bdr-s);
+      border-radius: var(--r-md);
+      color: var(--tx1);
+      font-family: 'DM Sans', sans-serif; font-size: 14px;
+      transition: border-color var(--t1) var(--ease), box-shadow var(--t1) var(--ease);
+      outline: none; appearance: none;
+    }
+    .finput:focus {
+      border-color: rgba(196,151,58,.45);
+      box-shadow: 0 0 0 3px rgba(196,151,58,.07);
+    }
+    .finput::placeholder { color: var(--tx3); }
+    select.finput { cursor: pointer; }
+
+    .field-stack { display: flex; flex-direction: column; gap: 10px; }
+
+    .summary-card {
+      background: var(--bg2);
+      border: 1px solid var(--bdr-s);
+      border-radius: var(--r-lg);
+      padding: 16px; margin-top: 16px;
+    }
+    .sum-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 7px 0; font-size: 13px;
+    }
+    .sum-row:not(:last-child) { border-bottom: 1px solid var(--bdr-s); }
+    .sum-lbl {
+      display: flex; align-items: center; gap: 6px; color: var(--tx3);
+    }
+    .sum-lbl svg { width: 11px; height: 11px; }
+    .sum-val { color: var(--tx1); font-weight: 500; }
+    .sum-row.total .sum-val { color: var(--gold); font-size: 16px; font-weight: 600; }
+    .sum-note {
+      margin-top: 10px; padding-top: 10px;
+      border-top: 1px dashed var(--bdr);
+      font-size: 11px; color: var(--tx3);
+      display: flex; align-items: center; gap: 6px;
+    }
+    .sum-note svg { width: 11px; height: 11px; color: var(--gold); }
+
+    /* ═══════════════════════════════════════════════════════════════
+       SUCCESS SCREEN
+    ═══════════════════════════════════════════════════════════════ */
+    .success-wrap {
+      text-align: center; padding: 36px 16px;
+    }
+    .success-ring {
+      width: 74px; height: 74px; margin: 0 auto 20px;
+      border: 1px solid var(--bdr);
+      border-radius: 50%;
+      background: var(--gold-t08);
+      display: flex; align-items: center; justify-content: center;
+      animation: glow 2s ease-in-out infinite alternate;
+    }
+    .success-ring svg { width: 34px; height: 34px; color: var(--gold); }
+    @keyframes glow {
+      from { box-shadow: 0 0 0 0 rgba(196,151,58,.3); }
+      to   { box-shadow: 0 0 24px 8px rgba(196,151,58,.12); }
+    }
+
+    .success-no-card {
+      background: var(--bg2); border: 1px solid var(--bdr);
+      border-radius: var(--r-lg);
+      padding: 18px 24px; margin: 20px auto;
+      max-width: 240px;
+    }
+    .success-no-lbl {
+      font-size: 9.5px; text-transform: uppercase; letter-spacing: 2px;
+      color: var(--tx3); margin-bottom: 6px;
+    }
+    .success-no {
+      font-family: 'Playfair Display', serif;
+      font-size: 30px; color: var(--gold); letter-spacing: 2px;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════
+       CARD FOOTER
+    ═══════════════════════════════════════════════════════════════ */
+    .card-footer {
+      padding: 14px 22px; border-top: 1px solid var(--bdr-s);
+      display: flex; align-items: center;
+      justify-content: flex-end; gap: 10px;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════
+       BUTTONS
+    ═══════════════════════════════════════════════════════════════ */
+    .btn {
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 10px 22px;
+      border-radius: var(--r-pill); border: none;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 600; font-size: 13px;
+      cursor: pointer;
+      transition: all var(--t2) var(--ease);
+      letter-spacing: .2px;
+    }
+    .btn svg { width: 13px; height: 13px; flex-shrink: 0; }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--gold), var(--gold-hi));
+      color: var(--bg0);
+      box-shadow: 0 6px 20px rgba(196,151,58,.28);
+    }
+    .btn-primary:hover {
+      box-shadow: 0 8px 28px rgba(196,151,58,.44);
+      transform: translateY(-1px);
+    }
+    .btn-primary:active { transform: none; box-shadow: none; }
+
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid var(--bdr-m);
+      color: var(--tx3);
+    }
+    .btn-ghost:hover { border-color: var(--bdr); color: var(--tx2); background: var(--bg2); }
+
+    .btn-danger {
+      background: transparent;
+      border: 1px solid rgba(224,80,80,.25);
+      color: #e05050;
+    }
+    .btn-danger:hover { background: rgba(224,80,80,.08); }
+
+    /* ═══════════════════════════════════════════════════════════════
+       ADMIN LAYOUT
+    ═══════════════════════════════════════════════════════════════ */
+    .admin-shell { display: flex; flex-direction: column; min-height: 100vh; }
+
+    .admin-topbar {
+      display: flex; overflow-x: auto; gap: 3px;
+      background: rgba(10,11,20,.95);
+      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--bdr-s);
+      padding: 10px 14px;
+      flex-shrink: 0;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+    .admin-topbar::-webkit-scrollbar { display: none; }
+
+    .nav-item {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 7px 14px; border-radius: var(--r-pill);
+      color: var(--tx3); cursor: pointer;
+      font-size: 12px; font-weight: 500; letter-spacing: .2px;
+      border: 1px solid transparent; white-space: nowrap;
+      transition: all var(--t1) var(--ease);
+    }
+    .nav-item svg { width: 12px; height: 12px; }
+    .nav-item.on {
+      background: var(--gold-t08);
+      color: var(--gold);
+      border-color: var(--gold-t30);
+    }
+    .nav-item:hover:not(.on) { background: var(--bg2); color: var(--tx2); }
+
+    .admin-main { flex: 1; padding: 22px 18px; overflow-x: hidden; }
+
+    .page-hdr {
+      display: flex; flex-wrap: wrap; align-items: center;
+      justify-content: space-between; gap: 12px; margin-bottom: 22px;
+    }
+    .page-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 26px; font-weight: 400; color: var(--tx1);
+    }
+
+    /* Stats */
+    .stats-row {
+      display: flex; gap: 10px; overflow-x: auto;
+      padding-bottom: 4px; margin-bottom: 26px;
+      scrollbar-width: none;
+    }
+    .stats-row::-webkit-scrollbar { display: none; }
+
+    .stat {
+      background: var(--bg1);
+      border: 1px solid var(--bdr-s);
+      border-radius: var(--r-lg);
+      padding: 15px 18px; min-width: 124px; flex-shrink: 0;
+      position: relative; overflow: hidden;
+      transition: border-color var(--t1) var(--ease);
+    }
+    .stat::after {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      opacity: 0;
+      transition: opacity var(--t2) var(--ease);
+    }
+    .stat:hover { border-color: var(--bdr); }
+    .stat:hover::after { opacity: .6; }
+
+    .stat-lbl {
+      font-size: 9.5px; text-transform: uppercase; letter-spacing: 1.5px;
+      color: var(--tx3); font-weight: 600; margin-bottom: 6px;
+      display: flex; align-items: center; gap: 5px;
+    }
+    .stat-lbl svg { width: 10px; height: 10px; }
+    .stat-val {
+      font-family: 'Playfair Display', serif;
+      font-size: 30px; color: var(--gold); line-height: 1;
+    }
+    .stat-sub { font-size: 10px; color: var(--tx3); margin-top: 3px; }
+
+    /* Table */
+    .tbl-wrap {
+      background: var(--bg1);
+      border: 1px solid var(--bdr-s);
+      border-radius: var(--r-lg);
+      overflow: hidden;
+    }
+    .tbl-scroll { overflow-x: auto; }
+
+    .tbl {
+      width: 100%; min-width: 560px; border-collapse: collapse;
+    }
+    .tbl thead th {
+      padding: 11px 15px; text-align: left;
+      font-size: 9.5px; text-transform: uppercase; letter-spacing: 1.5px;
+      color: var(--tx3); font-weight: 600;
+      background: var(--bg2); border-bottom: 1px solid var(--bdr-s);
+    }
+    .tbl tbody tr {
+      border-bottom: 1px solid var(--bdr-s);
+      transition: background var(--t1) var(--ease);
+    }
+    .tbl tbody tr:last-child { border-bottom: none; }
+    .tbl tbody tr:hover { background: rgba(255,255,255,.015); }
+    .tbl td {
+      padding: 11px 15px; font-size: 13px;
+      color: var(--tx1); vertical-align: middle;
+    }
+    .tbl td small { color: var(--tx3); font-size: 11px; display: block; margin-top: 2px; }
+
+    /* Badges */
+    .badge {
+      display: inline-flex; align-items: center; gap: 3px;
+      padding: 3px 9px; border-radius: var(--r-pill);
+      font-size: 11px; font-weight: 600;
+    }
+    .badge svg { width: 9px; height: 9px; }
+    .badge-paid    { background: var(--gold-t08); color: var(--gold);   border: 1px solid var(--gold-t30); }
+    .badge-pending { background: rgba(224,80,80,.08); color: #e05050; border: 1px solid rgba(224,80,80,.18); }
+
+    /* Icon buttons */
+    .icon-btn {
+      width: 29px; height: 29px;
+      border: 1px solid var(--bdr-s);
+      border-radius: 8px; background: transparent;
+      cursor: pointer; display: inline-flex;
+      align-items: center; justify-content: center;
+      color: var(--tx3);
+      transition: all var(--t1) var(--ease);
+    }
+    .icon-btn svg { width: 12px; height: 12px; }
+    .icon-btn:hover { border-color: var(--bdr); color: var(--tx2); background: var(--bg3); }
+    .icon-btn.wa    { border-color: rgba(37,211,102,.25); color: #25d366; }
+    .icon-btn.wa:hover { background: rgba(37,211,102,.08); }
+    .icon-btn.danger { border-color: rgba(224,80,80,.25); color: #e05050; }
+    .icon-btn.danger:hover { background: rgba(224,80,80,.08); }
+
+    .actions { display: flex; align-items: center; gap: 4px; }
+
+    /* Pay button */
+    .pay-btn {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 4px 10px; border-radius: var(--r-pill);
+      font-size: 11px; font-weight: 600;
+      cursor: pointer; border: 1px solid var(--bdr-s);
+      background: transparent; color: var(--tx3);
+      font-family: 'DM Sans', sans-serif;
+      transition: all var(--t1) var(--ease);
+    }
+    .pay-btn:hover { border-color: var(--gold); color: var(--gold); background: var(--gold-t08); }
+    .pay-btn.paid  { border-color: var(--gold-t30); color: var(--gold); background: var(--gold-t08); }
+
+    /* Search bar */
+    .search-wrap { position: relative; width: 200px; }
+    .search-wrap svg {
+      position: absolute; left: 10px; top: 50%;
+      transform: translateY(-50%);
+      width: 12px; height: 12px; color: var(--tx3); pointer-events: none;
+    }
+    .search-wrap .finput { padding-left: 30px; font-size: 13px; }
+
+    /* Pagination */
+    .pagination {
+      display: flex; align-items: center; justify-content: center;
+      gap: 6px; padding: 14px;
+      border-top: 1px solid var(--bdr-s);
+    }
+    .pg-btn {
+      width: 30px; height: 30px;
+      border: 1px solid var(--bdr-s); border-radius: 7px;
+      background: transparent; color: var(--tx2);
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-family: 'DM Sans', sans-serif;
+      transition: all var(--t1) var(--ease);
+    }
+    .pg-btn:disabled { opacity: .25; cursor: default; pointer-events: none; }
+    .pg-btn:not(:disabled):hover {
+      border-color: var(--bdr); color: var(--tx1); background: var(--bg3);
+    }
+    .pg-btn svg { width: 12px; height: 12px; }
+    .pg-info { font-size: 11.5px; color: var(--tx3); padding: 0 4px; }
+
+    /* Section sub-title */
+    .sec-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 17px; margin-bottom: 14px; color: var(--tx1);
+    }
+
+    /* Empty state */
+    .empty-state {
+      text-align: center; padding: 40px 20px; color: var(--tx3);
+    }
+    .empty-state svg { width: 36px; height: 36px; margin: 0 auto 10px; opacity: .25; }
+    .empty-state p { font-size: 13px; }
+
+    /* Settings block */
+    .settings-block {
+      background: var(--bg1); border: 1px solid var(--bdr-s);
+      border-radius: var(--r-lg); padding: 22px;
+    }
+    .settings-block h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 16px; margin-bottom: 12px; color: var(--tx1);
+    }
+    .settings-block p { font-size: 13px; color: var(--tx2); margin-bottom: 6px; }
+    .settings-block strong { color: var(--tx1); font-weight: 600; }
+
+    /* ═══════════════════════════════════════════════════════════════
+       MODALS
+    ═══════════════════════════════════════════════════════════════ */
+    .modal-bg {
+      position: fixed; inset: 0;
+      background: rgba(7,8,15,.87);
+      backdrop-filter: blur(14px) saturate(1.3);
+      -webkit-backdrop-filter: blur(14px) saturate(1.3);
+      z-index: 10000;
+      display: flex; align-items: center; justify-content: center;
+      padding: 16px;
+      opacity: 0; pointer-events: none;
+      transition: opacity var(--t2) var(--ease);
+    }
+    .modal-bg.open { opacity: 1; pointer-events: all; }
+
+    .modal-box {
+      background: var(--bg1);
+      border: 1px solid var(--bdr);
+      border-radius: var(--r-xl);
+      padding: 26px;
+      width: 100%; max-width: 400px;
+      box-shadow: var(--sh-lg), var(--sh-gold);
+      transform: scale(.95) translateY(10px);
+      transition: transform var(--t2) var(--ease);
+      position: relative; overflow: hidden;
+    }
+    .modal-box::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      opacity: .5;
+    }
+    .modal-bg.open .modal-box { transform: scale(1) translateY(0); }
+
+    .modal-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 21px; font-weight: 400; margin-bottom: 5px;
+    }
+    .modal-sub { font-size: 12.5px; color: var(--tx3); margin-bottom: 18px; }
+    .modal-actions {
+      display: flex; gap: 8px; justify-content: flex-end; margin-top: 18px;
+    }
+
+    .err-hint {
+      background: rgba(224,80,80,.07);
+      border: 1px solid rgba(224,80,80,.2);
+      border-radius: var(--r-xs);
+      color: #e05050; font-size: 12px;
+      padding: 8px 12px; margin-bottom: 12px;
+      display: none; align-items: center; gap: 6px;
+    }
+    .err-hint.show { display: flex; }
+    .err-hint svg { width: 12px; height: 12px; flex-shrink: 0; }
+
+    /* Login modal centering */
+    #modalLogin .modal-box { text-align: center; }
+    #modalLogin .modal-actions { justify-content: center; }
+
+    /* ── Image upload zone ── */
+    .upload-zone {
+      border: 1px dashed var(--bdr);
+      border-radius: var(--r-md);
+      padding: 18px 12px;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color var(--t1) var(--ease), background var(--t1) var(--ease);
+      position: relative;
+    }
+    .upload-zone:hover,
+    .upload-zone.drag { border-color: var(--gold); background: var(--gold-t08); }
+    .upload-zone input[type=file] {
+      position: absolute; inset: 0; opacity: 0;
+      cursor: pointer; width: 100%; height: 100%;
+    }
+    .upload-zone-icon { color: var(--gold); margin-bottom: 6px; }
+    .upload-zone-icon svg { width: 26px; height: 26px; }
+    .upload-zone p   { font-size: 12px; color: var(--tx3); line-height: 1.5; }
+    .upload-zone strong { color: var(--tx2); }
+
+    .img-preview-wrap {
+      display: none;
+      border-radius: var(--r-md);
+      overflow: hidden;
+      position: relative;
+      height: 130px;
+    }
+    .img-preview-wrap.show { display: block; }
+    .img-preview-wrap img {
+      width: 100%; height: 100%; object-fit: cover;
+      filter: brightness(.75);
+    }
+    .img-preview-remove {
+      position: absolute; top: 7px; right: 7px;
+      width: 26px; height: 26px;
+      background: rgba(7,8,15,.85);
+      border: 1px solid rgba(255,255,255,.15);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; color: var(--tx2);
+      transition: color var(--t1) var(--ease), border-color var(--t1) var(--ease);
+    }
+    .img-preview-remove:hover { color: #e05050; border-color: rgba(224,80,80,.5); }
+    .img-preview-remove svg { width: 12px; height: 12px; }
+
+    .url-input-row { display: flex; gap: 6px; align-items: center; }
+    .url-input-row .finput { font-size: 12px; }
+    .url-load-btn {
+      flex-shrink: 0; padding: 0 12px; height: 44px;
+      border: 1px solid var(--bdr-m); border-radius: var(--r-md);
+      background: var(--bg3); color: var(--tx2);
+      font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 600;
+      cursor: pointer; white-space: nowrap;
+      transition: all var(--t1) var(--ease);
+    }
+    .url-load-btn:hover { border-color: var(--bdr); color: var(--tx1); background: var(--bg4); }
+
+    .img-src-divider {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 10px; color: var(--tx3); text-transform: uppercase;
+      letter-spacing: 1.5px; margin: 2px 0;
+    }
+    .img-src-divider::before, .img-src-divider::after {
+      content: ''; flex: 1; height: 1px; background: var(--bdr-s);
+    }
+  </style>
 </head>
+
 <body>
 
-<!-- Tab Switcher -->
-<div id="tab-switcher">
-  <button class="sw-btn active" data-tab="musteri" onclick="UI.switchTab('musteri',this)">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 4.5C14 3.1 12.9 2 11.5 2S9 3.1 9 4.5s1.1 2.5 2.5 2.5S14 5.9 14 4.5z"/><path d="M5 9c0-2 3-3 6.5-3S18 7 18 9l-1 8H8z"/></svg>
-    Randevu Al
+<!-- ════════════════════ SWITCHER ════════════════════ -->
+<div class="switcher">
+  <button class="sw-btn on" id="swMusteri">
+    <!-- scissors icon -->
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg>
+    Müşteri
   </button>
-  <button class="sw-btn" data-tab="admin" onclick="UI.switchTab('admin',this)">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+  <button class="sw-btn" id="swAdmin">
+    <!-- gear icon -->
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M4.93 4.93l1.41 1.41M12 2v2M12 20v2M19.07 19.07l-1.41-1.41M4.93 19.07l1.41-1.41M2 12h2M20 12h2"/></svg>
     Yönetim
   </button>
 </div>
 
-<!-- Toast -->
+<!-- ════════════════════ TOAST ════════════════════ -->
 <div id="toast"></div>
 
-<!-- ═══════════ MÜŞTERİ EKRANI ═══════════ -->
-<div id="musteri-screen" class="screen active">
-
+<!-- ══════════════════════════════════════════════════════════════
+     CUSTOMER SCREEN
+══════════════════════════════════════════════════════════════ -->
+<div class="screen on" id="musteri-screen">
   <!-- Hero -->
   <div class="hero">
-    <img id="hero-canvas" src="" alt="">
-    <div class="hero-gradient"></div>
-    <div class="hero-content">
-      <div class="brand-mark">Bursa · Est. 2018</div>
-      <div class="brand-name">A<em>R</em>YA</div>
-      <div class="brand-tagline">Haute Couture & Kuru Temizleme</div>
-      <div class="hero-service-badge" id="hero-badge">✦ Premium Tekstil Bakımı</div>
+    <div class="hero-bg">
+      <div class="hero-deco">
+        <svg viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="200" cy="200" r="80"  stroke="#c4973a" stroke-width=".6"/>
+          <circle cx="200" cy="200" r="130" stroke="#c4973a" stroke-width=".4"/>
+          <circle cx="200" cy="200" r="180" stroke="#c4973a" stroke-width=".3"/>
+          <circle cx="200" cy="200" r="230" stroke="#c4973a" stroke-width=".2"/>
+          <line x1="0" y1="200" x2="400" y2="200" stroke="#c4973a" stroke-width=".5"/>
+          <line x1="200" y1="0" x2="200" y2="400" stroke="#c4973a" stroke-width=".5"/>
+          <line x1="0" y1="0"   x2="400" y2="400" stroke="#c4973a" stroke-width=".3"/>
+          <line x1="400" y1="0" x2="0"   y2="400" stroke="#c4973a" stroke-width=".3"/>
+        </svg>
+      </div>
+    </div>
+    <div class="hero-cnt">
+      <div class="brand-eyebrow">Bursa'nın Prestij Atölyesi</div>
+      <div class="brand">A<em>R</em>YA</div>
+      <div class="brand-divider"></div>
+      <div class="brand-sub">Haute Couture &amp; Kuru Temizleme</div>
+      <div class="brand-cta">
+        <span></span>
+        Premium Tekstil Bakımı
+      </div>
     </div>
   </div>
 
-  <!-- Booking -->
+  <!-- Booking card -->
   <div class="booking-wrap">
-    <div class="booking-card">
-
-      <!-- Header -->
-      <div class="card-header">
-        <div class="card-title-wrap">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-          <span class="card-title">Randevu Al</span>
+    <div class="card">
+      <!-- Head -->
+      <div class="card-head">
+        <div class="card-title" style="font-size:17px;letter-spacing:.5px;">
+          Randevu Al
         </div>
-        <div class="step-track" id="step-track">
-          <!-- Rendered by JS -->
+        <div class="step-nav">
+          <div class="step-item on" id="sn1">
+            <div class="step-num">1</div>
+            <div class="step-lbl">Hizmet</div>
+          </div>
+          <div class="step-sep"></div>
+          <div class="step-item" id="sn2">
+            <div class="step-num">2</div>
+            <div class="step-lbl">Zaman</div>
+          </div>
+          <div class="step-sep"></div>
+          <div class="step-item" id="sn3">
+            <div class="step-num">3</div>
+            <div class="step-lbl">Bilgi</div>
+          </div>
+          <div class="step-sep"></div>
+          <div class="step-item" id="sn5">
+            <div class="step-num">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="11" height="11"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div class="step-lbl">Tamam</div>
+          </div>
         </div>
       </div>
 
-      <!-- Payment Banner -->
-      <div class="payment-banner">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <!-- Payment note -->
+      <div class="pay-note">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
         <span><strong>Ödeme bilgisi:</strong> Tüm ödemeler hizmet tesliminde nakit veya kart ile alınır. Ön ödeme talep edilmez.</span>
       </div>
 
-      <!-- Step 1: Services -->
-      <div class="step-panel active" id="panel-1">
-        <div class="section-label">Hizmet Seçin</div>
-        <div class="service-grid" id="service-grid"></div>
-        <div class="selected-summary" id="selected-summary">
-          <div class="section-label" style="margin-bottom:8px;">Seçilenler</div>
-          <div class="selected-chips" id="selected-chips"></div>
+      <!-- Step 1 — Services -->
+      <div class="step-content on" id="s1">
+        <div class="sec-label">Hizmet Seçin</div>
+        <div class="hizmet-grid" id="hizmetGrid"></div>
+        <div class="sel-bar" id="selBar">
+          <div class="sel-bar-lbl">Seçilenler</div>
+          <div class="chips" id="selChips"></div>
         </div>
       </div>
 
-      <!-- Step 2: Date & Time -->
-      <div class="step-panel" id="panel-2">
-        <div class="section-label">Tarih & Saat Seçin</div>
-        <div class="calendar-layout">
+      <!-- Step 2 — Date & Time -->
+      <div class="step-content" id="s2">
+        <div class="sec-label">Tarih &amp; Saat Seçin</div>
+        <div class="takvim-grid">
           <div>
-            <div class="cal-header">
-              <button class="cal-nav-btn" onclick="Cal.prevMonth()">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+            <div class="cal-nav">
+              <button class="cal-arr" id="calPrev" aria-label="Önceki ay">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
               </button>
-              <div class="cal-month-name" id="cal-month-name">—</div>
-              <button class="cal-nav-btn" onclick="Cal.nextMonth()">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+              <span class="cal-month serif" id="calMonth">Ocak 2025</span>
+              <button class="cal-arr" id="calNext" aria-label="Sonraki ay">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
               </button>
             </div>
-            <div class="day-labels" id="day-labels"></div>
-            <div class="days-grid" id="days-grid"></div>
+            <div class="day-names">
+              <div class="day-name">Pt</div><div class="day-name">Sa</div>
+              <div class="day-name">Ça</div><div class="day-name">Pe</div>
+              <div class="day-name">Cu</div><div class="day-name">Ct</div>
+              <div class="day-name">Pz</div>
+            </div>
+            <div class="days-grid" id="daysGrid"></div>
           </div>
           <div>
-            <div class="time-section-label">Müsait Saatler</div>
-            <div class="time-grid" id="time-grid"></div>
+            <div class="time-sec-title serif">Müsait Saatler</div>
+            <div class="times-grid" id="timesGrid"></div>
           </div>
         </div>
       </div>
 
-      <!-- Step 3: Info -->
-      <div class="step-panel" id="panel-3">
-        <div class="section-label">Bilgileriniz</div>
-        <div class="info-layout">
-          <div style="display:flex;flex-direction:column;gap:14px;">
-            <div class="form-group">
-              <label class="form-label">Ad Soyad *</label>
-              <input type="text" class="finput" id="f-name" placeholder="Adınızı ve soyadınızı girin">
-            </div>
-            <div class="form-group">
-              <label class="form-label">Telefon *</label>
-              <input type="tel" class="finput" id="f-phone" placeholder="05xxxxxxxxx">
-            </div>
-            <div class="form-group">
-              <label class="form-label">E-posta <span style="color:var(--text-muted);font-size:10px;">(isteğe bağlı)</span></label>
-              <input type="email" class="finput" id="f-email" placeholder="ornek@mail.com">
-            </div>
-            <div class="form-group">
-              <label class="form-label">Not <span style="color:var(--text-muted);font-size:10px;">(isteğe bağlı)</span></label>
-              <textarea class="finput" id="f-note" placeholder="Özel bir isteğiniz var mı?" rows="3" style="resize:none;"></textarea>
-            </div>
+      <!-- Step 3 — Contact -->
+      <div class="step-content" id="s3">
+        <div class="sec-label">İletişim Bilgileri</div>
+        <div class="field-stack">
+          <input type="text"  class="finput" id="musteriAd"   placeholder="Ad Soyad *"             autocomplete="name">
+          <input type="tel"   class="finput" id="musteriTel"  placeholder="Telefon (05xxxxxxxxx) *" autocomplete="tel">
+          <input type="email" class="finput" id="musteriMail" placeholder="E-posta (isteğe bağlı)" autocomplete="email">
+        </div>
+        <div class="summary-card">
+          <div class="sum-row">
+            <span class="sum-lbl">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg>
+              Hizmetler
+            </span>
+            <span class="sum-val" id="ozHizmet">—</span>
           </div>
-          <div>
-            <div class="order-summary">
-              <div class="order-summary-head">Sipariş Özeti</div>
-              <div id="order-rows"></div>
-              <div class="order-total">
-                <span class="order-total-label">Toplam Tutar</span>
-                <span class="order-total-value" id="order-total">0 ₺</span>
-              </div>
-            </div>
-            <div class="payment-info-box">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
-              Ödeme hizmet tesliminde elden alınır
-            </div>
+          <div class="sum-row">
+            <span class="sum-lbl">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              Tarih
+            </span>
+            <span class="sum-val" id="ozTarih">—</span>
+          </div>
+          <div class="sum-row">
+            <span class="sum-lbl">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              Saat
+            </span>
+            <span class="sum-val" id="ozSaat">—</span>
+          </div>
+          <div class="sum-row total">
+            <span class="sum-lbl">Toplam Tutar</span>
+            <span class="sum-val" id="ozToplam">0 TL</span>
+          </div>
+          <div class="sum-note">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+            Ödeme hizmet tesliminde yapılır. Şu an tahsilat alınmaz.
           </div>
         </div>
       </div>
 
-      <!-- Step Success -->
-      <div class="step-panel" id="panel-5">
-        <div class="success-panel">
-          <div class="success-icon">
-            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5"><polyline points="20 6 9 17 4 12"/></svg>
+      <!-- Step 5 — Success -->
+      <div class="step-content" id="s5">
+        <div class="success-wrap">
+          <div class="success-ring">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
           </div>
-          <h2 class="success-title">Randevunuz Oluşturuldu</h2>
-          <p class="success-sub">Ekibimiz en kısa sürede sizinle iletişime geçecek.</p>
-          <div class="booking-number-card">
-            <div class="booking-number-label">Randevu Numaranız</div>
-            <div class="booking-number" id="booking-number">ARY-0000</div>
+          <h2 class="serif" style="font-size:25px;font-weight:400;margin-bottom:6px;">Randevu Oluşturuldu</h2>
+          <p style="color:var(--tx3);font-size:13px;">Bilgileriniz WhatsApp üzerinden iletildi.</p>
+          <div class="success-no-card">
+            <div class="success-no-lbl">Randevu Numaranız</div>
+            <div class="success-no" id="randevuNo">ARY-0000</div>
           </div>
-          <p style="font-size:13px;color:var(--text-muted);margin-bottom:24px;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--wa)" stroke-width="2" style="display:inline;vertical-align:middle;margin-right:4px;"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
-            Randevu detayları WhatsApp üzerinden gönderildi.
-          </p>
-          <button class="btn btn-gold" onclick="Booking.reset()">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.13"/></svg>
-            Yeni Randevu
+          <button class="btn btn-primary" id="btnYeniRandevu">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>
+            Yeni Randevu Al
           </button>
         </div>
       </div>
 
       <!-- Footer -->
-      <div class="card-footer" id="booking-footer">
-        <button class="btn btn-ghost" id="btn-back" onclick="Booking.prevStep()" style="display:none;">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+      <div class="card-footer" id="cardFooter">
+        <button class="btn btn-ghost" id="btnGeri" style="display:none;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
           Geri
         </button>
-        <button class="btn btn-gold" id="btn-next" onclick="Booking.nextStep()">
+        <button class="btn btn-primary" id="btnDevam">
           Devam
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
         </button>
       </div>
-
     </div>
   </div>
-</div>
+</div><!-- /musteri-screen -->
 
-<!-- ═══════════ ADMIN EKRANI ═══════════ -->
-<div id="admin-screen" class="screen">
-  <div class="admin-nav" id="admin-nav">
-    <div class="admin-nav-item active" data-page="dashboard" onclick="Admin.nav('dashboard',this)">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-      Pano
-    </div>
-    <div class="admin-nav-item" data-page="randevular" onclick="Admin.nav('randevular',this)">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-      Randevular
-    </div>
-    <div class="admin-nav-item" data-page="hizmetler" onclick="Admin.nav('hizmetler',this)">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"/><line x1="16" y1="8" x2="2" y2="22"/><line x1="17.5" y1="15" x2="9" y2="15"/></svg>
-      Hizmetler
-    </div>
-    <div class="admin-nav-item" data-page="musteriler" onclick="Admin.nav('musteriler',this)">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-      Müşteriler
-    </div>
-    <div class="admin-nav-item" data-page="ayarlar" onclick="Admin.nav('ayarlar',this)">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-      Ayarlar
-    </div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     ADMIN SCREEN
+══════════════════════════════════════════════════════════════ -->
+<div class="screen" id="admin-screen">
+  <div class="admin-shell">
+    <nav class="admin-topbar" id="adminNav">
+      <div class="nav-item on" data-page="dashboard">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Pano
+      </div>
+      <div class="nav-item" data-page="randevular">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Randevular
+      </div>
+      <div class="nav-item" data-page="hizmetler">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg>
+        Hizmetler
+      </div>
+      <div class="nav-item" data-page="musteriler">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+        Müşteriler
+      </div>
+      <div class="nav-item" data-page="ayarlar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M4.93 4.93l1.41 1.41M12 2v2M12 20v2M19.07 19.07l-1.41-1.41M4.93 19.07l1.41-1.41M2 12h2M20 12h2"/></svg>
+        Ayarlar
+      </div>
+    </nav>
+    <div class="admin-main" id="adminContent"></div>
   </div>
-  <div class="admin-content" id="admin-content"></div>
-</div>
+</div><!-- /admin-screen -->
 
-<!-- ═══════════ MODALS ═══════════ -->
+
+<!-- ════════════════════ MODALS ════════════════════ -->
 
 <!-- Admin Login -->
-<div class="modal-overlay" id="modal-login">
-  <div class="modal-box" style="max-width:360px;text-align:center;">
-    <div style="margin:0 auto 20px;width:56px;height:56px;border-radius:50%;background:var(--gold-faint);border:1px solid rgba(200,169,110,0.3);display:flex;align-items:center;justify-content:center;">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+<div class="modal-bg" id="modalLogin">
+  <div class="modal-box">
+    <div style="width:50px;height:50px;border:1px solid var(--bdr);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;background:var(--gold-t08);">
+      <svg viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2" width="22" height="22"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
     </div>
-    <div class="modal-title" style="justify-content:center;">Yönetici Girişi</div>
-    <p class="modal-sub">Devam etmek için şifrenizi girin</p>
-    <div class="form-group" style="text-align:left;margin-bottom:8px;">
-      <input type="password" class="finput" id="admin-pw" placeholder="Şifre" onkeydown="if(event.key==='Enter')Admin.loginCheck()">
+    <div class="modal-title">Admin Girişi</div>
+    <div class="modal-sub">Yönetim paneline erişmek için şifrenizi girin</div>
+    <div class="err-hint" id="loginErr">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      Hatalı şifre, lütfen tekrar deneyin.
     </div>
-    <div class="error-inline" id="login-error">Hatalı şifre. Lütfen tekrar deneyin.</div>
-    <div class="modal-actions" style="justify-content:center;">
-      <button class="btn btn-ghost" onclick="Admin.loginCancel()">İptal</button>
-      <button class="btn btn-gold" onclick="Admin.loginCheck()">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
-        Giriş
+    <input type="password" class="finput" id="loginPass" placeholder="Şifre" autocomplete="current-password">
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="loginCancel">İptal</button>
+      <button class="btn btn-primary" id="loginSubmit">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4M10 17l5-5-5-5M15 12H3"/></svg>
+        Giriş Yap
       </button>
     </div>
   </div>
 </div>
 
-<!-- Move Appointment -->
-<div class="modal-overlay" id="modal-move">
+<!-- Reschedule -->
+<div class="modal-bg" id="modalTasi">
   <div class="modal-box">
-    <div class="modal-title">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-      Randevu Taşı
-    </div>
-    <p class="modal-sub">Yeni tarih ve saat seçin</p>
-    <div class="form-group" style="margin-bottom:14px;">
-      <label class="form-label">Yeni Tarih</label>
-      <input type="date" class="finput" id="move-date">
-    </div>
-    <div class="form-group">
-      <label class="form-label">Yeni Saat</label>
-      <select class="finput" id="move-time">
-        <option>09:00</option><option>09:30</option><option>10:00</option><option>10:30</option>
-        <option>11:00</option><option>11:30</option><option>13:00</option><option>13:30</option>
-        <option>14:00</option><option>14:30</option><option>15:00</option><option>15:30</option>
-        <option>16:00</option><option>16:30</option>
+    <div class="modal-title">Randevu Taşı</div>
+    <div class="modal-sub">Yeni tarih ve saat seçin</div>
+    <div class="field-stack">
+      <input type="date" id="tasiTarih" class="finput">
+      <select id="tasiSaat" class="finput">
+        <option>09:00</option><option>09:30</option><option>10:00</option>
+        <option>10:30</option><option>11:00</option><option>11:30</option>
+        <option>13:00</option><option>13:30</option><option>14:00</option>
+        <option>14:30</option><option>15:00</option><option>15:30</option>
       </select>
     </div>
     <div class="modal-actions">
-      <button class="btn btn-ghost" onclick="Modals.close('modal-move')">İptal</button>
-      <button class="btn btn-gold" onclick="Admin.moveConfirm()">Taşı</button>
+      <button class="btn btn-ghost" id="tasiCancel">İptal</button>
+      <button class="btn btn-primary" id="tasiConfirm">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v14a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+        Taşı
+      </button>
     </div>
   </div>
 </div>
 
-<!-- Add/Edit Service -->
-<div class="modal-overlay" id="modal-service">
-  <div class="modal-box">
-    <div class="modal-title" id="modal-service-title">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.8"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-      Yeni Hizmet
-    </div>
-    <p class="modal-sub">Hizmet bilgilerini doldurun</p>
-    <div style="display:flex;flex-direction:column;gap:12px;">
-      <div class="form-group"><label class="form-label">Hizmet Adı *</label><input type="text" class="finput" id="svc-name" placeholder="Hizmet adı"></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-        <div class="form-group"><label class="form-label">Fiyat (₺) *</label><input type="number" class="finput" id="svc-price" placeholder="0"></div>
-        <div class="form-group"><label class="form-label">Süre *</label><input type="text" class="finput" id="svc-duration" placeholder="45 dk"></div>
+<!-- Service add/edit -->
+<div class="modal-bg" id="modalHizmet">
+  <div class="modal-box" style="max-width:440px;">
+    <div class="modal-title" id="mhTitle">Yeni Hizmet</div>
+    <div class="modal-sub">Hizmet bilgilerini eksiksiz doldurun</div>
+
+    <div class="field-stack">
+      <div>
+        <div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;color:var(--tx3);font-weight:600;margin-bottom:6px;">HİZMET ADI *</div>
+        <input type="text" class="finput" id="mhAd" placeholder="örn: Paça Boyu">
       </div>
-      <div class="form-group">
-        <label class="form-label">Görsel</label>
-        <div class="file-drop" onclick="document.getElementById('svc-file').click()">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
-          <div>Görsel yükle veya URL gir</div>
-        </div>
-        <input type="file" id="svc-file" accept="image/*" style="display:none;" onchange="Admin.handleImageUpload(event)">
-        <img id="svc-preview" class="preview-img" src="#" alt="">
-        <input type="text" class="finput" id="svc-img-url" placeholder="veya görsel URL'si" style="margin-top:8px;" oninput="Admin.handleImageUrl(this.value)">
-        <input type="hidden" id="svc-img-data">
-        <input type="hidden" id="svc-id">
-      </div>
-    </div>
-    <div class="modal-actions">
-      <button class="btn btn-ghost" onclick="Modals.close('modal-service')">İptal</button>
-      <button class="btn btn-gold" onclick="Admin.saveService()">Kaydet</button>
-    </div>
-  </div>
-</div>
-
-<script>
-/* ════════════════════════════════════════════════════════════════
-   ARYA — Terzi & Kuru Temizleme App
-   Architecture: IIFE modules, no global pollution
-   Version: 2.0 — Full rewrite
-════════════════════════════════════════════════════════════════ */
-(function() {
-'use strict';
-
-/* ─────────────────────────────────────────
-   SERVICE IMAGES — contextually matched to each service
-───────────────────────────────────────────*/
-const SERVICE_IMAGES = {
-  tailor: 'https://images.unsplash.com/photo-1558769132-cb1aea458c5e?w=600&q=80',
-  suit:   'https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=600&q=80',
-  clean:  'https://images.unsplash.com/photo-1545173168-9f1947eebb7f?w=600&q=80',
-  curtain:'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=600&q=80',
-  iron:   'https://images.unsplash.com/photo-1601924638867-3a6de6b7a500?w=600&q=80',
-  wash:   'https://images.unsplash.com/photo-1582735689369-4fe89db7114c?w=600&q=80',
-};
-
-/* ─────────────────────────────────────────
-   STATE — Single source of truth
-───────────────────────────────────────────*/
-const State = {
-  step: 1,
-  selectedServices: {},   // { id: {ad, fiyat} }
-  selectedDate: null,
-  selectedTime: null,
-  calMonth: new Date(),
-  appointments: [],
-  services: [],
-  adminPage: 1,
-  adminFilter: '',
-  movingId: null,
-  editingServiceId: null,
-  adminAuthed: false,
-};
-
-/* ─────────────────────────────────────────
-   BLOB SERVICE — Vercel Blob API entegrasyonu
-   Görseller /api/upload-image üzerinden Blob'a yüklenir.
-   Dönen kalıcı CDN URL'si hizmet kaydına yazılır.
-───────────────────────────────────────────*/
-const BlobService = {
-  UPLOAD_URL: '/api/upload-image',
-  DELETE_URL: '/api/delete-image',
-
-  async upload(base64, serviceId) {
-    const res = await fetch(this.UPLOAD_URL, {
-      method:  'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body:    JSON.stringify({ base64, serviceId, filename: `service-${serviceId}.jpg` }),
-    });
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
-      throw new Error(err.error || `HTTP ${res.status}`);
-    }
-    const data = await res.json();
-    return data.url;
-  },
-
-  async delete(url) {
-    if (!url || (!url.includes('vercel-storage.com') && !url.includes('blob.vercel-storage'))) return;
-    try {
-      await fetch(this.DELETE_URL, {
-        method:  'DELETE',
-        headers: { 'Content-Type': 'application/json' },
-        body:    JSON.stringify({ url }),
-      });
-    } catch(e) { console.warn('[BlobService.delete]', e); }
-  }
-};
-
-/* ─────────────────────────────────────────
-   STORAGE — localStorage (meta) + Vercel Blob (görseller)
-   Görsel yükleme akışı:
-   1) PC'den seçilir → canvas sıkıştırılır → State._pendingImg
-   2) Kaydet → /api/upload-image POST (base64 gönderilir)
-   3) Vercel Blob CDN URL döner → hizmet kaydına yazılır
-   4) localStorage'a sadece URL kaydedilir (küçük)
-   5) Sayfa yenilenince URL doğrudan <img src> olur
-───────────────────────────────────────────*/
-const Store = {
-  async load() {
-    try {
-      const s = localStorage.getItem('arya_services');
-      const a = localStorage.getItem('arya_appointments');
-      State.services     = s ? JSON.parse(s) : Store._defaultServices();
-      State.appointments = a ? JSON.parse(a) : [];
-    } catch(e) {
-      console.error('[Store.load]', e);
-      State.services     = Store._defaultServices();
-      State.appointments = [];
-    }
-  },
-
-  saveMeta() {
-    try {
-      localStorage.setItem('arya_services',     JSON.stringify(State.services));
-      localStorage.setItem('arya_appointments', JSON.stringify(State.appointments));
-    } catch(e) { console.error('[Store.saveMeta]', e); }
-  },
-
-  async saveImage(serviceId, base64Data) {
-    const url = await BlobService.upload(base64Data, serviceId);
-    const svc = State.services.find(s => s.id === serviceId);
-    if (svc) svc.img = url;
-    return url;
-  },
-
-  async deleteImage(serviceId) {
-    const svc = State.services.find(s => s.id === serviceId);
-    if (svc && svc.img) await BlobService.delete(svc.img);
-  },
-
-  save() { this.saveMeta(); },
-
-  _defaultServices() {
-    return [
-      { id:1, name:'Paça Boyu',           price:30,  duration:'45 dk', img: SERVICE_IMAGES.tailor  },
-      { id:2, name:'Bel Daraltma',         price:40,  duration:'60 dk', img: SERVICE_IMAGES.tailor  },
-      { id:3, name:'Takım Kuru Temizleme', price:120, duration:'2 gün', img: SERVICE_IMAGES.suit    },
-      { id:4, name:'Perde Kuru Temizleme', price:90,  duration:'3 gün', img: SERVICE_IMAGES.curtain },
-      { id:5, name:'Ütüleme',              price:20,  duration:'30 dk', img: SERVICE_IMAGES.iron    },
-      { id:6, name:'Yıkama',               price:35,  duration:'1 gün', img: SERVICE_IMAGES.wash    },
-    ];
-  }
-};
-
-/* ─────────────────────────────────────────
-   AUTH
-───────────────────────────────────────────*/
-const Auth = {
-  PASS: 'arya2025',
-  SESSION_KEY: 'arya_admin_session',
-  SESSION_TTL: 30 * 60 * 1000,
-
-  check() {
-    try {
-      const d = JSON.parse(sessionStorage.getItem(this.SESSION_KEY) || 'null');
-      if (d && Date.now() - d.t < this.SESSION_TTL) { State.adminAuthed = true; return true; }
-    } catch(e) {}
-    State.adminAuthed = false;
-    return false;
-  },
-  grant() {
-    sessionStorage.setItem(this.SESSION_KEY, JSON.stringify({ t: Date.now() }));
-    State.adminAuthed = true;
-  },
-  revoke() {
-    sessionStorage.removeItem(this.SESSION_KEY);
-    State.adminAuthed = false;
-  }
-};
-
-/* ─────────────────────────────────────────
-   TOAST
-───────────────────────────────────────────*/
-const Toast = (() => {
-  let timer;
-  return {
-    show(msg, type = 'success') {
-      const el = document.getElementById('toast');
-      el.className = 'visible ' + type;
-      el.innerHTML = (type === 'success'
-        ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>'
-        : '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>'
-      ) + ' ' + msg;
-      clearTimeout(timer);
-      timer = setTimeout(() => el.className = '', 2600);
-    }
-  };
-})();
-
-/* ─────────────────────────────────────────
-   MODALS
-───────────────────────────────────────────*/
-const Modals = {
-  open(id) { document.getElementById(id).classList.add('open'); },
-  close(id) { document.getElementById(id).classList.remove('open'); }
-};
-
-/* ─────────────────────────────────────────
-   UI — Tab switching
-───────────────────────────────────────────*/
-const UI = {
-  switchTab(tab, btn) {
-    if (tab === 'admin' && !Auth.check()) {
-      Admin.loginOpen();
-      return;
-    }
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    document.getElementById(tab + '-screen').classList.add('active');
-    document.querySelectorAll('.sw-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    if (tab === 'admin') Admin.render('dashboard');
-  }
-};
-
-/* ─────────────────────────────────────────
-   HERO IMAGE — changes based on selected services
-───────────────────────────────────────────*/
-const Hero = {
-  IMAGES: [
-    'https://images.unsplash.com/photo-1558769132-cb1aea458c5e?w=1400&q=80',
-    'https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=1400&q=80',
-    'https://images.unsplash.com/photo-1545173168-9f1947eebb7f?w=1400&q=80',
-    'https://images.unsplash.com/photo-1582735689369-4fe89db7114c?w=1400&q=80',
-  ],
-  idx: 0,
-  timer: null,
-  start() {
-    this.set(this.idx);
-    this.timer = setInterval(() => {
-      this.idx = (this.idx + 1) % this.IMAGES.length;
-      this.set(this.idx);
-    }, 5000);
-  },
-  set(i) {
-    document.getElementById('hero-canvas').src = this.IMAGES[i];
-  },
-  setForService(name) {
-    clearInterval(this.timer);
-    if (/perde/i.test(name)) this.set(3);
-    else if (/kuru|temizleme/i.test(name)) this.set(2);
-    else if (/takım|suit|elbise/i.test(name)) this.set(1);
-    else this.set(0);
-  }
-};
-
-/* ─────────────────────────────────────────
-   STEP MANAGER
-───────────────────────────────────────────*/
-const Steps = {
-  DEFS: [
-    { id:1, label:'Hizmet' },
-    { id:2, label:'Zaman'  },
-    { id:3, label:'Bilgi'  },
-  ],
-  renderTrack() {
-    const track = document.getElementById('step-track');
-    let html = '';
-    this.DEFS.forEach((s, i) => {
-      const isDone   = State.step > s.id;
-      const isActive = State.step === s.id;
-      const dotClass = isDone ? 'done' : isActive ? 'active' : '';
-      html += `
-        <div class="step-dot-wrap${isActive?' active':''}" onclick="Booking.goTo(${s.id})" title="${s.label}">
-          <div class="step-dot ${dotClass}">
-            ${isDone ? '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>' : s.id}
-          </div>
-          <div class="step-dot-label">${s.label}</div>
-        </div>`;
-      if (i < this.DEFS.length - 1) {
-        html += `<div class="step-connector${isDone?' done':''}"></div>`;
-      }
-    });
-    track.innerHTML = html;
-  },
-  showPanel(id) {
-    document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
-    const panel = document.getElementById('panel-' + id);
-    if (panel) panel.classList.add('active');
-  }
-};
-
-/* ─────────────────────────────────────────
-   CALENDAR MODULE
-───────────────────────────────────────────*/
-const Cal = {
-  TR_MONTHS: ['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'],
-  TR_DAYS:   ['Pt','Sa','Ça','Pe','Cu','Ct','Pz'],
-
-  prevMonth() { State.calMonth.setMonth(State.calMonth.getMonth() - 1); this.render(); },
-  nextMonth() { State.calMonth.setMonth(State.calMonth.getMonth() + 1); this.render(); },
-
-  render() {
-    const m = State.calMonth;
-    document.getElementById('cal-month-name').textContent = `${this.TR_MONTHS[m.getMonth()]} ${m.getFullYear()}`;
-
-    // Day labels
-    document.getElementById('day-labels').innerHTML = this.TR_DAYS.map(d => `<div class="day-label">${d}</div>`).join('');
-
-    const firstDay  = new Date(m.getFullYear(), m.getMonth(), 1);
-    const lastDay   = new Date(m.getFullYear(), m.getMonth() + 1, 0);
-    const startDow  = (firstDay.getDay() + 6) % 7; // Monday=0
-    const today     = new Date(); today.setHours(0,0,0,0);
-
-    let html = '';
-    for (let i = 0; i < startDow; i++) html += '<div class="cal-day empty"></div>';
-    for (let d = 1; d <= lastDay.getDate(); d++) {
-      const dt = new Date(m.getFullYear(), m.getMonth(), d);
-      const isPast   = dt < today;
-      const isSun    = dt.getDay() === 0;
-      const isToday  = dt.toDateString() === today.toDateString();
-      const label    = `${d} ${this.TR_MONTHS[m.getMonth()]}`;
-      const selected = State.selectedDate === label;
-      const cls = [
-        'cal-day',
-        (isPast || isSun) ? 'disabled' : '',
-        isToday ? 'today' : '',
-        selected ? 'selected' : '',
-      ].filter(Boolean).join(' ');
-      html += `<div class="${cls}" onclick="Cal.selectDay(${d},'${this.TR_MONTHS[m.getMonth()]}')">${d}</div>`;
-    }
-    document.getElementById('days-grid').innerHTML = html;
-
-    // Times
-    const SLOTS = ['09:00','09:30','10:00','10:30','11:00','11:30','13:00','13:30','14:00','14:30','15:00','15:30','16:00','16:30'];
-    document.getElementById('time-grid').innerHTML = SLOTS.map(s =>
-      `<div class="time-slot${State.selectedTime===s?' selected':''}" onclick="Cal.selectTime('${s}')">${s}</div>`
-    ).join('');
-  },
-
-  selectDay(d, month) {
-    State.selectedDate = `${d} ${month}`;
-    this.render();
-  },
-  selectTime(t) {
-    State.selectedTime = t;
-    this.render();
-  }
-};
-
-/* ─────────────────────────────────────────
-   BOOKING MODULE
-───────────────────────────────────────────*/
-const Booking = {
-  renderServices() {
-    const grid = document.getElementById('service-grid');
-    grid.innerHTML = State.services.map(s => {
-      const sel = !!State.selectedServices[s.id];
-      return `
-        <div class="service-card${sel?' selected':''}" onclick="Booking.toggleService(${s.id})">
-          <div class="service-img-wrap">
-            <img src="${s.img}" alt="${s.name}" loading="lazy">
-            <div class="service-check">
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#0d0b07" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
-            </div>
-          </div>
-          <div class="service-body">
-            <div class="service-name">${s.name}</div>
-            <div class="service-meta">
-              <span class="service-duration">
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                ${s.duration}
-              </span>
-              <span class="service-price">${s.price} ₺</span>
-            </div>
-            <button class="service-add-btn" onclick="event.stopPropagation();Booking.toggleService(${s.id})">
-              ${sel
-                ? '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Eklendi'
-                : '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Ekle'}
-            </button>
-          </div>
-        </div>`;
-    }).join('');
-    this._renderChips();
-  },
-
-  _renderChips() {
-    const ids = Object.keys(State.selectedServices);
-    const summary = document.getElementById('selected-summary');
-    const chips   = document.getElementById('selected-chips');
-    if (!ids.length) { summary.classList.remove('visible'); return; }
-    summary.classList.add('visible');
-    chips.innerHTML = ids.map(id => {
-      const s = State.selectedServices[id];
-      return `<span class="chip">
-        ${s.name} · ${s.price} ₺
-        <span class="chip-remove" onclick="Booking.toggleService(${id})">✕</span>
-      </span>`;
-    }).join('');
-  },
-
-  toggleService(id) {
-    if (State.selectedServices[id]) {
-      delete State.selectedServices[id];
-    } else {
-      const s = State.services.find(sv => sv.id === id);
-      if (s) { State.selectedServices[id] = { name: s.name, price: s.price }; }
-    }
-    // Update hero image
-    const names = Object.values(State.selectedServices).map(s => s.name).join(' ');
-    if (names) Hero.setForService(names);
-    this.renderServices();
-  },
-
-  renderOrderSummary() {
-    const rows = document.getElementById('order-rows');
-    const ids  = Object.keys(State.selectedServices);
-    let total  = 0;
-
-    const svcs = ids.map(id => {
-      const s = State.selectedServices[id];
-      total += s.price;
-      return `<div class="order-row">
-        <span class="order-row-label">
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-          ${s.name}
-        </span>
-        <span class="order-row-value">${s.price} ₺</span>
-      </div>`;
-    }).join('');
-
-    rows.innerHTML = `
-      ${svcs}
-      <div class="order-row">
-        <span class="order-row-label">
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-          Tarih / Saat
-        </span>
-        <span class="order-row-value">${State.selectedDate || '—'} · ${State.selectedTime || '—'}</span>
-      </div>`;
-
-    document.getElementById('order-total').textContent = total + ' ₺';
-  },
-
-  goTo(step) {
-    if (step >= State.step) return; // only go back
-    State.step = step;
-    this._update();
-  },
-
-  prevStep() {
-    if (State.step > 1) { State.step--; this._update(); }
-  },
-
-  nextStep() {
-    // Validate
-    if (State.step === 1 && !Object.keys(State.selectedServices).length) {
-      Toast.show('Lütfen en az bir hizmet seçin', 'error'); return;
-    }
-    if (State.step === 2 && (!State.selectedDate || !State.selectedTime)) {
-      Toast.show('Lütfen tarih ve saat seçin', 'error'); return;
-    }
-    if (State.step === 3) {
-      const name  = document.getElementById('f-name').value.trim();
-      const phone = document.getElementById('f-phone').value.trim().replace(/\D/g,'');
-      if (!name)  { Toast.show('Ad Soyad zorunludur', 'error'); return; }
-      if (!/^05\d{9}$/.test(phone)) { Toast.show('Geçerli telefon numarası giriniz (05xxxxxxxxx)', 'error'); return; }
-      this._createAppointment(name, phone);
-      return;
-    }
-    State.step++;
-    this._update();
-  },
-
-  _createAppointment(name, phone) {
-    const total = Object.values(State.selectedServices).reduce((t,s) => t + s.price, 0);
-    const no    = 'ARY-' + Math.floor(1000 + Math.random() * 9000);
-    const appt  = {
-      id:       Date.now(),
-      no,
-      name,
-      phone,
-      email:    document.getElementById('f-email').value.trim(),
-      note:     document.getElementById('f-note').value.trim(),
-      services: Object.values(State.selectedServices),
-      total,
-      date:     State.selectedDate,
-      time:     State.selectedTime,
-      paid:     false,
-      createdAt: new Date().toISOString(),
-    };
-    State.appointments.push(appt);
-    Store.save();
-
-    // WhatsApp log (console; real integration would call API)
-    const waMsg = `🆕 ARYA Randevu\nMüşteri: ${name} (${phone})\nHizmetler: ${appt.services.map(s=>s.name).join(', ')}\nTarih: ${State.selectedDate} ${State.selectedTime}\nTutar: ${total} ₺\nNo: ${no}`;
-    console.log('[WhatsApp]', waMsg);
-
-    document.getElementById('booking-number').textContent = no;
-    Toast.show('Randevunuz oluşturuldu!');
-    State.step = 5;
-    this._update();
-  },
-
-  _update() {
-    Steps.renderTrack();
-    Steps.showPanel(State.step);
-    const backBtn  = document.getElementById('btn-back');
-    const nextBtn  = document.getElementById('btn-next');
-    const footer   = document.getElementById('booking-footer');
-    const showBack = State.step > 1 && State.step !== 5;
-    backBtn.style.display = showBack ? 'inline-flex' : 'none';
-    footer.style.display  = State.step === 5 ? 'none' : 'flex';
-    if (State.step === 2) Cal.render();
-    if (State.step === 3) this.renderOrderSummary();
-  },
-
-  reset() {
-    State.step = 1;
-    State.selectedServices = {};
-    State.selectedDate = null;
-    State.selectedTime = null;
-    this.renderServices();
-    this._update();
-    Hero.idx = 0; Hero.start();
-  }
-};
-
-/* ─────────────────────────────────────────
-   ADMIN MODULE
-───────────────────────────────────────────*/
-const Admin = {
-  currentPage: 'dashboard',
-
-  loginOpen() {
-    document.getElementById('admin-pw').value = '';
-    document.getElementById('login-error').style.display = 'none';
-    Modals.open('modal-login');
-  },
-  loginCheck() {
-    const pw = document.getElementById('admin-pw').value;
-    if (pw === Auth.PASS) {
-      Auth.grant();
-      Modals.close('modal-login');
-      // Switch to admin screen properly
-      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-      document.getElementById('admin-screen').classList.add('active');
-      document.querySelectorAll('.sw-btn').forEach(b => {
-        b.classList.toggle('active', b.dataset.tab === 'admin');
-      });
-      this.render('dashboard');
-    } else {
-      document.getElementById('login-error').style.display = 'block';
-      document.getElementById('admin-pw').value = '';
-      document.getElementById('admin-pw').focus();
-    }
-  },
-  loginCancel() {
-    Modals.close('modal-login');
-  },
-
-  nav(page, el) {
-    if (!Auth.check()) { this.loginOpen(); return; }
-    document.querySelectorAll('.admin-nav-item').forEach(i => i.classList.remove('active'));
-    el.classList.add('active');
-    this.render(page);
-  },
-
-  render(page) {
-    this.currentPage = page;
-    const content = document.getElementById('admin-content');
-    switch(page) {
-      case 'dashboard':   content.innerHTML = this._dashboard();   break;
-      case 'randevular':  content.innerHTML = this._randevular();  this._bindSearch(); break;
-      case 'hizmetler':   content.innerHTML = this._hizmetler();   break;
-      case 'musteriler':  content.innerHTML = this._musteriler();  break;
-      case 'ayarlar':     content.innerHTML = this._ayarlar();     break;
-    }
-  },
-
-  _dashboard() {
-    const now    = new Date();
-    const todayStr = now.toLocaleDateString('tr-TR', {day:'numeric',month:'long'}).replace('. ',' ');
-    const today  = State.appointments.filter(a => a.date && a.date.toLowerCase() === todayStr.toLowerCase()).length;
-    const paid   = State.appointments.filter(a => a.paid).length;
-    const waiting= State.appointments.filter(a => !a.paid).length;
-    const revenue= State.appointments.filter(a => a.paid).reduce((t,a)=>t+a.total,0);
-    const recent = State.appointments.slice(-6).reverse();
-
-    return `
-      <div class="admin-topbar">
-        <div class="admin-page-title">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-          Yönetim Panosu
-        </div>
-      </div>
-      <div class="stats-row">
-        <div class="stat-card"><div class="stat-label">Bugün</div><div class="stat-value">${today}</div></div>
-        <div class="stat-card"><div class="stat-label">Ödendi</div><div class="stat-value">${paid}</div></div>
-        <div class="stat-card"><div class="stat-label">Bekleyen</div><div class="stat-value">${waiting}</div></div>
-        <div class="stat-card"><div class="stat-label">Toplam Gelir</div><div class="stat-value" style="font-size:24px;">${revenue} ₺</div></div>
-      </div>
-      <div class="section-label" style="margin-bottom:14px;">Son Randevular</div>
-      <div class="data-table-wrap">
-        <div class="data-table-head tbl-randevu">
-          <div>Müşteri</div><div>Hizmetler</div><div>Tarih / Saat</div><div class="col-hide">Tutar</div><div>İşlem</div>
-        </div>
-        ${recent.length ? recent.map(a => this._appointmentRow(a)).join('') : '<div style="padding:32px;text-align:center;color:var(--text-muted);">Henüz randevu yok</div>'}
-      </div>`;
-  },
-
-  _randevular() {
-    const q = State.adminFilter.toLowerCase();
-    const filtered = State.appointments.filter(a =>
-      a.name.toLowerCase().includes(q) || a.phone.includes(q)
-    ).reverse();
-    const PAGE_SIZE = 8;
-    const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
-    const page = Math.min(State.adminPage, totalPages);
-    const pageData = filtered.slice((page-1)*PAGE_SIZE, page*PAGE_SIZE);
-
-    return `
-      <div class="admin-topbar">
-        <div class="admin-page-title">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-          Randevular
-        </div>
-        <div class="search-wrap">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          <input class="search-input" id="admin-search" placeholder="Ara..." value="${State.adminFilter}">
-        </div>
-      </div>
-      <div class="data-table-wrap">
-        <div class="data-table-head tbl-randevu">
-          <div>Müşteri</div><div>Hizmetler</div><div>Tarih / Saat</div><div class="col-hide">Durum</div><div>İşlem</div>
-        </div>
-        ${pageData.length ? pageData.map(a => this._appointmentRow(a)).join('') : '<div style="padding:32px;text-align:center;color:var(--text-muted);">Kayıt bulunamadı</div>'}
-      </div>
-      <div class="pagination">
-        <button class="page-btn" onclick="Admin.changePage(${page-1})" ${page<=1?'disabled':''}><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></button>
-        <span class="page-info">${page} / ${totalPages}</span>
-        <button class="page-btn" onclick="Admin.changePage(${page+1})" ${page>=totalPages?'disabled':''}><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></button>
-      </div>`;
-  },
-
-  _appointmentRow(a) {
-    return `
-      <div class="data-table-row tbl-randevu">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
         <div>
-          <div style="font-weight:500;">${a.name}</div>
-          <div style="font-size:11px;color:var(--text-muted);font-family:'DM Mono',monospace;">${a.phone}</div>
+          <div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;color:var(--tx3);font-weight:600;margin-bottom:6px;">FİYAT (₺) *</div>
+          <input type="number" class="finput" id="mhFiyat" placeholder="0" min="0">
         </div>
-        <div style="font-size:12px;color:var(--text-secondary);">${a.services.map(s=>s.name).join(', ')}</div>
-        <div style="font-size:12px;font-family:'DM Mono',monospace;">${a.date}<br>${a.time}</div>
-        <div class="col-hide">
-          <span class="badge ${a.paid?'badge-success':'badge-pending'}">${a.paid?'Ödendi':'Bekliyor'}</span>
+        <div>
+          <div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;color:var(--tx3);font-weight:600;margin-bottom:6px;">SÜRE *</div>
+          <input type="text" class="finput" id="mhSure" placeholder="45 dk">
         </div>
-        <div style="display:flex;flex-wrap:wrap;gap:4px;align-items:center;">
-          <button class="action-btn wa" title="WhatsApp" onclick="Admin.whatsapp('${a.phone}')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
-          </button>
-          <button class="action-btn" title="Ödeme Al" onclick="Admin.togglePaid(${a.id})" style="${a.paid?'border-color:var(--green);color:var(--green);':''}">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
-          </button>
-          <button class="action-btn" title="Taşı" onclick="Admin.moveOpen(${a.id})">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="5 9 2 12 5 15"/><polyline points="9 5 12 2 15 5"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="12" y1="2" x2="12" y2="22"/></svg>
-          </button>
-          <button class="action-btn danger" title="Sil" onclick="Admin.deleteAppt(${a.id})">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
-          </button>
-        </div>
-      </div>`;
-  },
-
-  _hizmetler() {
-    return `
-      <div class="admin-topbar">
-        <div class="admin-page-title">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5"><path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"/><line x1="16" y1="8" x2="2" y2="22"/></svg>
-          Hizmetler
-        </div>
-        <button class="btn btn-gold btn-sm" onclick="Admin.serviceModal()">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          Yeni Hizmet
-        </button>
       </div>
-      <div class="hizmet-admin-grid">
-        ${State.services.map(s => `
-          <div class="hizmet-admin-card">
-            <img class="hizmet-admin-img" src="${s.img}" alt="${s.name}" style="width:100%;height:90px;object-fit:cover;">
-            <div class="hizmet-admin-body">
-              <div class="hizmet-admin-name">${s.name}</div>
-              <div class="hizmet-admin-meta">
-                <span>${s.duration}</span>
-                <span class="hizmet-admin-price">${s.price} ₺</span>
-              </div>
-              <div class="hizmet-admin-actions">
-                <button class="btn btn-ghost btn-sm" onclick="Admin.serviceModal(${s.id})">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-                  Düzenle
-                </button>
-                <button class="btn btn-sm" style="border:1px solid rgba(224,82,82,0.3);color:var(--red);background:rgba(224,82,82,0.06);" onclick="Admin.deleteService(${s.id})">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>
-                  Sil
-                </button>
-              </div>
+
+      <!-- Image section -->
+      <div>
+        <div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;color:var(--tx3);font-weight:600;margin-bottom:8px;">GÖRSEL</div>
+
+        <!-- Preview -->
+        <div class="img-preview-wrap" id="mhPreviewWrap">
+          <img id="mhPreviewImg" src="" alt="Önizleme">
+          <button type="button" class="img-preview-remove" id="mhImgRemove" title="Görseli kaldır">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+
+        <!-- Upload zone (hidden when preview shown) -->
+        <div class="upload-zone" id="mhUploadZone">
+          <input type="file" id="mhFile" accept="image/*">
+          <div class="upload-zone-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0018 9h-1.26A8 8 0 103 16.3"/></svg>
+          </div>
+          <p><strong>Dosya seçin</strong> veya buraya sürükleyin</p>
+          <p style="margin-top:3px;font-size:10.5px;">JPG, PNG, WEBP — maks 4 MB</p>
+        </div>
+
+        <div class="img-src-divider">veya URL gir</div>
+
+        <!-- URL fallback -->
+        <div class="url-input-row">
+          <input type="url" class="finput" id="mhImgUrl" placeholder="https://…">
+          <button type="button" class="url-load-btn" id="mhUrlLoad">Yükle</button>
+        </div>
+      </div>
+    </div>
+
+    <input type="hidden" id="mhId">
+    <!-- Stores final image (base64 or URL) -->
+    <input type="hidden" id="mhImgData">
+
+    <div class="modal-actions">
+      <button class="btn btn-ghost"   id="mhCancel">İptal</button>
+      <button class="btn btn-primary" id="mhSave">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v14a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+        Kaydet
+      </button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════════
+     JAVASCRIPT — IIFE, modular, SOLID-oriented
+══════════════════════════════════════════════════════════════ -->
+<script>
+(function () {
+  'use strict';
+
+  /* ═══════════════════════════════════════════════
+     INLINE SVG ICONS (used in dynamic HTML)
+  ═══════════════════════════════════════════════ */
+  const IC = {
+    check:   `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="12" height="12"><polyline points="20 6 9 17 4 12"/></svg>`,
+    plus:    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="10" height="10"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>`,
+    trash:   `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6m3 0V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg>`,
+    edit:    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>`,
+    move:    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="5 9 2 12 5 15"/><polyline points="9 5 12 2 15 5"/><line x1="2" y1="12" x2="22" y2="12"/><polyline points="15 19 12 22 9 19"/><polyline points="19 9 22 12 19 15"/><line x1="12" y1="2" x2="12" y2="22"/></svg>`,
+    clock:   `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="10" height="10"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`,
+    wa:      `<svg viewBox="0 0 24 24" fill="currentColor" width="13" height="13"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M11.99 2C6.468 2 2 6.467 2 11.99c0 1.975.578 3.837 1.594 5.414L2.05 22l4.694-1.497C8.213 21.437 10.064 22 11.99 22c5.523 0 9.99-4.468 9.99-9.99C21.98 6.467 17.513 2 11.99 2z"/></svg>`,
+    cal:     `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="10" height="10"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>`,
+    dollar:  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="10" height="10"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>`,
+    users:   `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="10" height="10"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>`,
+    alert:   `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`,
+  };
+
+  /* ═══════════════════════════════════════════════
+     APPLICATION STATE
+  ═══════════════════════════════════════════════ */
+  const State = {
+    // Booking
+    step:      1,
+    selected:  {},          // { [id]: { ad, fiyat } }
+    date:      null,        // "15 Mart"
+    time:      null,        // "10:30"
+    calMonth:  (() => { const d = new Date(); d.setDate(1); return d; })(),
+
+    // Data
+    services:     [],
+    appointments: [],
+
+    // Admin
+    admin: {
+      page:              1,
+      filter:            '',
+      pendingApptId:     null,
+      pendingServiceId:  null,
+    },
+  };
+
+  /* ═══════════════════════════════════════════════
+     STORAGE SERVICE
+  ═══════════════════════════════════════════════ */
+  const Store = {
+    K_SVC:  'arya_v2_services',
+    K_APPT: 'arya_v2_appointments',
+
+    _defaults() {
+      return [
+        { id:1, ad:'Paça Boyu',       fiyat:30, sure:'45 dk', img:'https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=500&q=80' },
+        { id:2, ad:'Bel Daraltma',    fiyat:40, sure:'60 dk', img:'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=500&q=80' },
+        { id:3, ad:'Takım Elbise',    fiyat:50, sure:'2 gün', img:'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500&q=80' },
+        { id:4, ad:'Perde Tem.',      fiyat:60, sure:'3 gün', img:'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=500&q=80' },
+        { id:5, ad:'Ütü',             fiyat:20, sure:'30 dk', img:'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=500&q=80' },
+        { id:6, ad:'Yıkama',          fiyat:35, sure:'1 gün', img:'https://images.unsplash.com/photo-1567274996148-2b09c6512dc2?w=500&q=80' },
+      ];
+    },
+
+    load() {
+      try {
+        const s = localStorage.getItem(this.K_SVC);
+        State.services = s ? JSON.parse(s) : this._defaults();
+        const a = localStorage.getItem(this.K_APPT);
+        State.appointments = a ? JSON.parse(a) : [];
+      } catch {
+        State.services     = this._defaults();
+        State.appointments = [];
+        Toast.err('Veriler yüklenirken hata oluştu.');
+      }
+    },
+
+    save() {
+      try {
+        localStorage.setItem(this.K_SVC,  JSON.stringify(State.services));
+        localStorage.setItem(this.K_APPT, JSON.stringify(State.appointments));
+      } catch {
+        Toast.err('Veriler kaydedilemedi (depolama dolu olabilir).');
+      }
+    },
+  };
+
+  /* ═══════════════════════════════════════════════
+     TOAST SERVICE
+  ═══════════════════════════════════════════════ */
+  const Toast = {
+    _el:  null,
+    _tid: null,
+
+    _el_() { return this._el || (this._el = document.getElementById('toast')); },
+
+    _show(html, cls) {
+      const el = this._el_();
+      el.innerHTML = html;
+      el.className = `toast show ${cls}`;
+      clearTimeout(this._tid);
+      this._tid = setTimeout(() => { el.className = 'toast'; }, 2900);
+    },
+
+    ok(msg)  { this._show(`${IC.check} ${msg}`,  'ok'); },
+    err(msg) { this._show(`${IC.alert} ${msg}`,  'err'); },
+  };
+
+  /* ═══════════════════════════════════════════════
+     VALIDATION
+  ═══════════════════════════════════════════════ */
+  const V = {
+    required: v => !!(v && v.trim()),
+    phone:    v => /^0?5\d{9}$/.test(v.replace(/\D/g, '')),
+    email:    v => !v || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v),
+  };
+
+  /* ═══════════════════════════════════════════════
+     MODAL MANAGER
+  ═══════════════════════════════════════════════ */
+  const Modal = {
+    open(id)  { document.getElementById(id).classList.add('open'); },
+    close(id) { document.getElementById(id).classList.remove('open'); },
+  };
+
+  /* ═══════════════════════════════════════════════
+     AUTH
+  ═══════════════════════════════════════════════ */
+  const Auth = {
+    PW:  'arya2025',
+    KEY: 'arya_admin_auth',
+    TTL: 30 * 60 * 1000,
+
+    check() {
+      try {
+        const d = JSON.parse(sessionStorage.getItem(this.KEY) || 'null');
+        if (d && Date.now() - d.t < this.TTL) return true;
+        sessionStorage.removeItem(this.KEY);
+      } catch { /* */ }
+      return false;
+    },
+
+    grant() { sessionStorage.setItem(this.KEY, JSON.stringify({ t: Date.now() })); },
+    revoke() { sessionStorage.removeItem(this.KEY); },
+  };
+
+  /* ═══════════════════════════════════════════════
+     CALENDAR UTILITIES
+  ═══════════════════════════════════════════════ */
+  const Cal = {
+    MONTHS: ['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'],
+
+    label:   d  => `${Cal.MONTHS[d.getMonth()]} ${d.getFullYear()}`,
+    dateStr: (n, m) => `${n} ${m}`,
+    isToday: (y, m, d) => { const n = new Date(); return n.getFullYear() === y && n.getMonth() === m && n.getDate() === d; },
+    isPast:  (y, m, d) => { const n = new Date(); n.setHours(0,0,0,0); return new Date(y,m,d) < n; },
+  };
+
+  /* ═══════════════════════════════════════════════
+     BOOKING MODULE
+  ═══════════════════════════════════════════════ */
+  const Booking = {
+
+    /* Render service grid */
+    renderServices() {
+      const g = document.getElementById('hizmetGrid');
+      if (!State.services.length) {
+        g.innerHTML = '<div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg><p>Henüz hizmet eklenmedi.</p></div>';
+        return;
+      }
+      g.innerHTML = State.services.map(s => {
+        const sel = !!State.selected[s.id];
+        return `
+          <div class="hizmet-card ${sel ? 'sel' : ''}" data-hid="${s.id}" role="button" tabindex="0" aria-pressed="${sel}">
+            <div class="hc-check">${IC.check}</div>
+            <div class="hc-img-wrap">
+              <img src="${s.img}" class="hc-img" alt="${s.ad}" loading="lazy">
             </div>
-          </div>`).join('')}
-      </div>`;
-  },
-
-  _musteriler() {
-    const map = new Map();
-    State.appointments.forEach(a => {
-      if (!map.has(a.phone)) map.set(a.phone, { name:a.name, phone:a.phone, count:0, total:0, lastDate:a.date });
-      const entry = map.get(a.phone);
-      entry.count++;
-      entry.total += a.total;
-      entry.lastDate = a.date;
-    });
-    const customers = [...map.values()];
-    return `
-      <div class="admin-topbar">
-        <div class="admin-page-title">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-          Müşteriler <span style="font-size:18px;color:var(--text-muted);">(${customers.length})</span>
-        </div>
-      </div>
-      <div class="data-table-wrap">
-        <div class="data-table-head tbl-musteri">
-          <div>Müşteri</div><div class="col-hide">Telefon</div><div class="col-hide">Randevu</div><div>Harcama</div><div></div>
-        </div>
-        ${customers.length ? customers.map(c => `
-          <div class="data-table-row tbl-musteri">
-            <div>
-              <div style="font-weight:500;">${c.name}</div>
-              <div style="font-size:11px;color:var(--text-muted);">${c.lastDate || '—'}</div>
+            <div class="hc-body">
+              <div class="hc-name">${s.ad}</div>
+              <div class="hc-meta">
+                <span class="hc-dur">${IC.clock} ${s.sure}</span>
+                <span class="hc-price">${s.fiyat} TL</span>
+              </div>
+              <button class="btn-toggle ${sel ? 'on' : ''}" data-hid="${s.id}">
+                ${sel ? `${IC.check} Seçildi` : `${IC.plus} Ekle`}
+              </button>
             </div>
-            <div class="col-hide" style="font-family:'DM Mono',monospace;font-size:12px;">${c.phone}</div>
-            <div class="col-hide" style="font-size:13px;">${c.count} randevu</div>
-            <div style="color:var(--gold);font-weight:600;">${c.total} ₺</div>
-            <div><button class="action-btn wa" onclick="Admin.whatsapp('${c.phone}')">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
-            </button></div>
-          </div>`).join('') : '<div style="padding:32px;text-align:center;color:var(--text-muted);">Henüz müşteri yok</div>'}
-      </div>`;
-  },
+          </div>`;
+      }).join('');
+      this._syncSelBar();
+    },
 
-  _ayarlar() {
-    return `
-      <div class="admin-topbar">
-        <div class="admin-page-title">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-          Ayarlar
+    _syncSelBar() {
+      const bar   = document.getElementById('selBar');
+      const chips = document.getElementById('selChips');
+      const ids   = Object.keys(State.selected);
+      if (!ids.length) { bar.classList.remove('show'); return; }
+      bar.classList.add('show');
+      chips.innerHTML = ids.map(id =>
+        `<span class="chip">${State.selected[id].ad} — ${State.selected[id].fiyat} TL</span>`
+      ).join('');
+    },
+
+    toggleService(id) {
+      id = +id;
+      const svc = State.services.find(s => s.id === id);
+      if (!svc) return;
+      if (State.selected[id]) delete State.selected[id];
+      else State.selected[id] = { ad: svc.ad, fiyat: svc.fiyat };
+      this.renderServices();
+    },
+
+    /* Calendar */
+    renderCalendar() {
+      const y = State.calMonth.getFullYear();
+      const m = State.calMonth.getMonth();
+      document.getElementById('calMonth').textContent = Cal.label(State.calMonth);
+
+      const firstDow  = new Date(y, m, 1).getDay();   // 0=Sun
+      const daysTotal = new Date(y, m + 1, 0).getDate();
+      const offset    = (firstDow + 6) % 7;           // Monday-first
+
+      let html = '';
+      for (let i = 0; i < offset; i++) html += '<div class="day empty"></div>';
+      for (let d = 1; d <= daysTotal; d++) {
+        const disabled = Cal.isPast(y, m, d) || new Date(y, m, d).getDay() === 0;
+        const today    = Cal.isToday(y, m, d);
+        const sel      = State.date === Cal.dateStr(d, Cal.MONTHS[m]);
+        html += `<div class="day${disabled?' disabled':''}${today?' today':''}${sel?' sel':''}" data-d="${d}" data-mo="${Cal.MONTHS[m]}">${d}</div>`;
+      }
+      document.getElementById('daysGrid').innerHTML = html;
+    },
+
+    /* Time slots */
+    renderTimes() {
+      const slots = ['09:00','09:30','10:00','10:30','11:00','11:30','13:00','13:30','14:00','14:30','15:00','15:30','16:00','16:30'];
+      document.getElementById('timesGrid').innerHTML = slots.map(t =>
+        `<div class="t-slot${State.time===t?' sel':''}" data-t="${t}">${t}</div>`
+      ).join('');
+    },
+
+    updateSummary() {
+      const svcs  = Object.values(State.selected);
+      const total = svcs.reduce((a, v) => a + v.fiyat, 0);
+      document.getElementById('ozHizmet').textContent = svcs.map(s=>s.ad).join(', ') || '—';
+      document.getElementById('ozTarih').textContent  = State.date || '—';
+      document.getElementById('ozSaat').textContent   = State.time || '—';
+      document.getElementById('ozToplam').textContent = `${total} TL`;
+    },
+
+    /* Final booking submission */
+    submit() {
+      const ad   = document.getElementById('musteriAd').value.trim();
+      const tel  = document.getElementById('musteriTel').value.trim();
+      const mail = document.getElementById('musteriMail').value.trim();
+
+      if (!V.required(ad))  { Toast.err('Ad Soyad alanı zorunludur.');                        return false; }
+      if (!V.phone(tel))    { Toast.err('Geçerli telefon numarası girin (05xxxxxxxxx).');      return false; }
+      if (!V.email(mail))   { Toast.err('Geçerli bir e-posta girin ya da boş bırakın.');       return false; }
+
+      const svcs  = Object.values(State.selected);
+      const total = svcs.reduce((a,v) => a + v.fiyat, 0);
+      const no    = 'ARY-' + Math.floor(1000 + Math.random() * 9000);
+
+      const appt = {
+        id:         Date.now(),
+        no,
+        musteriAd:  ad,
+        tel:        tel.replace(/\D/g,''),
+        mail,
+        services:   svcs,
+        total,
+        tarih:      State.date,
+        saat:       State.time,
+        paid:       false,
+        createdAt:  new Date().toISOString(),
+      };
+
+      State.appointments.push(appt);
+      Store.save();
+
+      // WhatsApp notification log
+      console.info('[ARYA] WhatsApp payload:', {
+        to: '+90' + appt.tel,
+        body: `🆕 Randevu\nMüşteri: ${ad}\nHizmet: ${svcs.map(s=>s.ad).join(', ')}\nTarih: ${State.date} ${State.time}\nTutar: ${total} TL\nNo: ${no}`,
+      });
+
+      document.getElementById('randevuNo').textContent = no;
+      return true;
+    },
+  };
+
+  /* ═══════════════════════════════════════════════
+     STEP MANAGER
+  ═══════════════════════════════════════════════ */
+  const Steps = {
+    _contentMap: { 1:'s1', 2:'s2', 3:'s3', 5:'s5' },
+    _navMap:     { 1:'sn1', 2:'sn2', 3:'sn3', 5:'sn5' },
+
+    next() {
+      if (State.step === 1 && !Object.keys(State.selected).length) { Toast.err('Lütfen en az bir hizmet seçin.'); return; }
+      if (State.step === 2 && !State.date)  { Toast.err('Lütfen tarih seçin.');   return; }
+      if (State.step === 2 && !State.time)  { Toast.err('Lütfen saat seçin.');    return; }
+      if (State.step === 3) { if (!Booking.submit()) return; State.step = 5; }
+      else State.step++;
+      this._render();
+    },
+
+    prev() {
+      if (State.step > 1 && State.step !== 5) { State.step--; this._render(); }
+    },
+
+    _render() {
+      // Hide all step content
+      document.querySelectorAll('.step-content').forEach(el => el.classList.remove('on'));
+      const cid = this._contentMap[State.step];
+      if (cid) document.getElementById(cid).classList.add('on');
+
+      // Step nav
+      document.querySelectorAll('.step-item').forEach(el => el.classList.remove('on'));
+      const nid = this._navMap[State.step];
+      if (nid) document.getElementById(nid).classList.add('on');
+
+      // Footer
+      const footer = document.getElementById('cardFooter');
+      const geri   = document.getElementById('btnGeri');
+      if (State.step === 5) {
+        footer.style.display = 'none';
+      } else {
+        footer.style.display = '';
+        geri.style.display = State.step > 1 ? '' : 'none';
+      }
+
+      // Per-step lazy renders
+      if (State.step === 2) { Booking.renderCalendar(); Booking.renderTimes(); }
+      if (State.step === 3) { Booking.updateSummary(); }
+    },
+  };
+
+  /* ═══════════════════════════════════════════════
+     ADMIN MODULE
+  ═══════════════════════════════════════════════ */
+  const Admin = {
+    PAGE_SZ: 8,
+
+    _setNav(page) {
+      document.querySelectorAll('#adminNav .nav-item').forEach(n => n.classList.remove('on'));
+      const el = document.querySelector(`#adminNav .nav-item[data-page="${page}"]`);
+      if (el) el.classList.add('on');
+    },
+
+    render(page) {
+      this._setNav(page);
+      const c = document.getElementById('adminContent');
+      try {
+        switch (page) {
+          case 'dashboard':  c.innerHTML = this._dashboard();  break;
+          case 'randevular': c.innerHTML = this._randevular(); this._bindSearch('randevular'); break;
+          case 'hizmetler':  c.innerHTML = this._hizmetler();  break;
+          case 'musteriler': c.innerHTML = this._musteriler(); break;
+          case 'ayarlar':    c.innerHTML = this._ayarlar();    break;
+        }
+      } catch (e) {
+        c.innerHTML = '<div class="empty-state"><p>İçerik yüklenemedi.</p></div>';
+        console.error('[ARYA Admin] Render error:', e);
+      }
+    },
+
+    _activePage() {
+      const on = document.querySelector('#adminNav .nav-item.on');
+      return on ? on.dataset.page : 'dashboard';
+    },
+
+    /* ——— Dashboard ——— */
+    _dashboard() {
+      const A = State.appointments;
+      const todayLabel = (() => {
+        const n = new Date();
+        return `${n.getDate()} ${Cal.MONTHS[n.getMonth()]}`;
+      })();
+      const todayCnt = A.filter(a => a.tarih === todayLabel).length;
+      const paidCnt  = A.filter(a => a.paid).length;
+      const pendCnt  = A.filter(a => !a.paid).length;
+      const revenue  = A.filter(a => a.paid).reduce((t,a) => t + a.total, 0);
+      const recent   = [...A].reverse().slice(0, 6);
+
+      return `
+        <div class="page-hdr">
+          <div class="page-title serif">Pano</div>
         </div>
-      </div>
-      <div class="settings-card">
-        <div class="settings-head">İletişim Bilgileri</div>
-        <div class="settings-body">
-          <div class="settings-row"><span class="settings-row-label">WhatsApp 1</span><span class="settings-row-value">+90 555 182 37 76</span></div>
-          <div class="settings-row"><span class="settings-row-label">WhatsApp 2</span><span class="settings-row-value">+90 552 267 81 92</span></div>
-          <div class="settings-row"><span class="settings-row-label">E-posta</span><span class="settings-row-value">info@arya.com.tr</span></div>
-          <div class="settings-row"><span class="settings-row-label">Adres</span><span class="settings-row-value">Bursa, Türkiye</span></div>
+        <div class="stats-row">
+          ${this._statCard('Bugün',    IC.cal,    todayCnt,          'randevu')}
+          ${this._statCard('Ödendi',   IC.check,  paidCnt,           'randevu')}
+          ${this._statCard('Bekleyen', IC.clock,  pendCnt,           'randevu')}
+          ${this._statCard('Gelir',    IC.dollar, revenue + ' TL',   '')}
         </div>
-      </div>
-      <div class="settings-card">
-        <div class="settings-head">Güvenlik</div>
-        <div class="settings-body">
-          <div class="settings-row">
-            <span class="settings-row-label">Oturum</span>
-            <button class="btn btn-ghost btn-sm" onclick="Admin.logout()">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-              Çıkış Yap
+        <div class="sec-title serif">Son Randevular</div>
+        <div class="tbl-wrap">
+          <div class="tbl-scroll">
+            <table class="tbl">
+              <thead><tr>
+                <th>Müşteri</th><th>Hizmetler</th><th>Tarih / Saat</th><th>Durum</th><th>İşlem</th>
+              </tr></thead>
+              <tbody>${recent.length ? recent.map(a => this._apptRow(a)).join('') : this._emptyRow(5)}</tbody>
+            </table>
+          </div>
+        </div>`;
+    },
+
+    _statCard(lbl, icon, val, sub) {
+      return `
+        <div class="stat">
+          <div class="stat-lbl">${icon} ${lbl}</div>
+          <div class="stat-val">${val}</div>
+          ${sub ? `<div class="stat-sub">${sub}</div>` : ''}
+        </div>`;
+    },
+
+    _apptRow(a) {
+      const badge = a.paid
+        ? `<span class="badge badge-paid">${IC.check} Ödendi</span>`
+        : `<span class="badge badge-pending">${IC.clock} Bekliyor</span>`;
+      return `
+        <tr>
+          <td>${a.musteriAd}<small>${a.tel}</small></td>
+          <td>${a.services.map(s=>s.ad).join(', ')}<small>${a.total} TL</small></td>
+          <td>${a.tarih}<small>${a.saat}</small></td>
+          <td>
+            <button class="pay-btn${a.paid?' paid':''}" data-aid="${a.id}">
+              ${a.paid ? `${IC.check} Ödendi` : 'Ödeme Al'}
             </button>
+          </td>
+          <td>
+            <div class="actions">
+              <button class="icon-btn wa"     data-wa="${a.tel}"    title="WhatsApp">${IC.wa}</button>
+              <button class="icon-btn"        data-move="${a.id}"   title="Taşı">${IC.move}</button>
+            </div>
+          </td>
+        </tr>`;
+    },
+
+    _emptyRow(cols) {
+      return `<tr><td colspan="${cols}"><div class="empty-state">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        <p>Kayıt bulunamadı.</p></div></td></tr>`;
+    },
+
+    /* ——— Randevular ——— */
+    _randevular() {
+      const filter = State.admin.filter.toLowerCase();
+      const all    = [...State.appointments]
+        .reverse()
+        .filter(a => a.musteriAd.toLowerCase().includes(filter) || a.tel.includes(filter));
+      const total  = all.length;
+      const pages  = Math.max(1, Math.ceil(total / this.PAGE_SZ));
+      const page   = Math.min(Math.max(1, State.admin.page), pages);
+      const slice  = all.slice((page-1)*this.PAGE_SZ, page*this.PAGE_SZ);
+
+      return `
+        <div class="page-hdr">
+          <div class="page-title serif">Randevular</div>
+          <div class="search-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input class="finput" id="adminSearch" placeholder="Ara…" value="${State.admin.filter}" autocomplete="off">
           </div>
         </div>
-      </div>`;
-  },
+        <div class="tbl-wrap">
+          <div class="tbl-scroll">
+            <table class="tbl">
+              <thead><tr>
+                <th>Müşteri</th><th>Hizmetler</th><th>Tarih / Saat</th><th>Durum</th><th>İşlem</th>
+              </tr></thead>
+              <tbody>${slice.length ? slice.map(a => this._apptRow(a)).join('') : this._emptyRow(5)}</tbody>
+            </table>
+          </div>
+          <div class="pagination">
+            <button class="pg-btn" data-pg="${page-1}" ${page===1?'disabled':''}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+            </button>
+            <span class="pg-info">${page} / ${pages}</span>
+            <button class="pg-btn" data-pg="${page+1}" ${page>=pages?'disabled':''}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+          </div>
+        </div>`;
+    },
 
-  _bindSearch() {
-    const el = document.getElementById('admin-search');
-    if (el) el.addEventListener('input', (e) => {
-      State.adminFilter = e.target.value;
-      State.adminPage = 1;
-      this.render('randevular');
-    });
-  },
+    _bindSearch(page) {
+      const el = document.getElementById('adminSearch');
+      if (!el) return;
+      el.addEventListener('input', e => {
+        State.admin.filter = e.target.value;
+        State.admin.page   = 1;
+        this.render(page);
+      });
+    },
 
-  changePage(p) { State.adminPage = p; this.render('randevular'); },
+    /* ——— Hizmetler ——— */
+    _hizmetler() {
+      return `
+        <div class="page-hdr">
+          <div class="page-title serif">Hizmetler</div>
+          <button class="btn btn-primary" id="btnYeniHizmet">
+            ${IC.plus} Yeni Hizmet
+          </button>
+        </div>
+        <div class="hizmet-grid" style="grid-template-columns:repeat(auto-fill,minmax(190px,1fr));">
+          ${State.services.map(s => `
+            <div class="hizmet-card" style="cursor:default;">
+              <div class="hc-img-wrap">
+                <img src="${s.img}" class="hc-img" alt="${s.ad}" loading="lazy">
+              </div>
+              <div class="hc-body">
+                <div class="hc-name">${s.ad}</div>
+                <div class="hc-meta">
+                  <span class="hc-dur">${IC.clock} ${s.sure}</span>
+                  <span class="hc-price">${s.fiyat} TL</span>
+                </div>
+                <div style="display:flex;gap:6px;margin-top:8px;">
+                  <button class="icon-btn" data-edit="${s.id}" title="Düzenle" style="flex:1;">${IC.edit}</button>
+                  <button class="icon-btn danger" data-del="${s.id}" title="Sil">${IC.trash}</button>
+                </div>
+              </div>
+            </div>`).join('')}
+        </div>`;
+    },
 
-  whatsapp(phone) {
-    window.open(`https://wa.me/90${phone.replace(/\D/g,'')}`, '_blank');
-  },
+    /* ——— Müşteriler ——— */
+    _musteriler() {
+      const map = new Map();
+      State.appointments.forEach(a => {
+        if (!map.has(a.tel)) map.set(a.tel, { name: a.musteriAd, tel: a.tel, cnt: 0, spent: 0, last: a.tarih });
+        const m = map.get(a.tel);
+        m.cnt++; m.spent += a.total; m.last = a.tarih;
+      });
+      const list = [...map.values()];
+      return `
+        <div class="page-hdr"><div class="page-title serif">Müşteriler</div></div>
+        <div class="tbl-wrap">
+          <div class="tbl-scroll">
+            <table class="tbl">
+              <thead><tr>
+                <th>Müşteri</th><th>Telefon</th><th>Son Randevu</th><th>Randevu</th><th>Toplam</th><th></th>
+              </tr></thead>
+              <tbody>
+                ${list.length ? list.map(m => `
+                  <tr>
+                    <td>${m.name}</td>
+                    <td>${m.tel}</td>
+                    <td>${m.last}</td>
+                    <td>${m.cnt}</td>
+                    <td style="color:var(--gold);font-weight:600;">${m.spent} TL</td>
+                    <td><button class="icon-btn wa" data-wa="${m.tel}">${IC.wa}</button></td>
+                  </tr>`).join('') : this._emptyRow(6)}
+              </tbody>
+            </table>
+          </div>
+        </div>`;
+    },
 
-  togglePaid(id) {
-    const a = State.appointments.find(a => a.id === id);
-    if (a) { a.paid = !a.paid; Store.save(); Toast.show(a.paid ? 'Ödeme alındı' : 'Ödeme geri alındı'); this.render(this.currentPage); }
-  },
+    /* ——— Ayarlar ——— */
+    _ayarlar() {
+      return `
+        <div class="page-hdr"><div class="page-title serif">Ayarlar</div></div>
+        <div class="settings-block">
+          <h3>WhatsApp Bildirimleri</h3>
+          <p>Randevu bildirimleri aşağıdaki numaralara gönderilir:</p>
+          <p><strong>+90 555 182 37 76</strong></p>
+          <p><strong>+90 552 267 81 92</strong></p>
+          <hr style="border:none;border-top:1px solid var(--bdr-s);margin:20px 0;">
+          <h3>Oturum</h3>
+          <p style="margin-bottom:12px;">Admin panelinden güvenli çıkış yapın.</p>
+          <button class="btn btn-danger" id="btnLogout">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+            Oturumu Kapat
+          </button>
+        </div>`;
+    },
 
-  deleteAppt(id) {
-    if (!confirm('Bu randevuyu silmek istiyor musunuz?')) return;
-    State.appointments = State.appointments.filter(a => a.id !== id);
-    Store.save();
-    Toast.show('Randevu silindi');
-    this.render(this.currentPage);
-  },
-
-  moveOpen(id) {
-    State.movingId = id;
-    const today = new Date().toISOString().split('T')[0];
-    document.getElementById('move-date').min = today;
-    Modals.open('modal-move');
-  },
-
-  moveConfirm() {
-    const date = document.getElementById('move-date').value;
-    const time = document.getElementById('move-time').value;
-    if (!date) { Toast.show('Tarih seçin', 'error'); return; }
-    const a = State.appointments.find(a => a.id === State.movingId);
-    if (a) {
-      const parts = date.split('-');
-      const MONTHS = ['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
-      a.date = `${parseInt(parts[2])} ${MONTHS[parseInt(parts[1])-1]}`;
-      a.time = time;
+    /* ——— Actions ——— */
+    togglePayment(id) {
+      const a = State.appointments.find(a => a.id === +id);
+      if (!a) return;
+      a.paid = !a.paid;
       Store.save();
-      Modals.close('modal-move');
-      Toast.show('Randevu taşındı');
-      this.render(this.currentPage);
-    }
-  },
+      Toast.ok(a.paid ? 'Ödeme alındı.' : 'Ödeme geri alındı.');
+      this.render(this._activePage());
+    },
 
-  serviceModal(id = null) {
-    State.editingServiceId = id;
-    State._pendingImg = null;  // önceki bekleyen görsel temizle
-    const titleEl = document.getElementById('modal-service-title');
-    const preview = document.getElementById('svc-preview');
-    preview.style.display = 'none';
-    preview.src = '';
-    document.getElementById('svc-img-url').value  = '';
-    document.getElementById('svc-img-data').value = '';  // sadece işaretçi, base64 değil
-    document.getElementById('svc-id').value       = id || '';
-    document.getElementById('svc-name').value     = '';
-    document.getElementById('svc-price').value    = '';
-    document.getElementById('svc-duration').value = '';
-    // Dosya input'unu sıfırla
-    const fileInput = document.getElementById('svc-file');
-    if (fileInput) fileInput.value = '';
+    openReschedule(id) {
+      State.admin.pendingApptId = +id;
+      Modal.open('modalTasi');
+    },
 
-    if (id) {
-      const s = State.services.find(sv => sv.id === id);
-      if (!s) return;
-      titleEl.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.8"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> Hizmeti Düzenle`;
-      document.getElementById('svc-name').value     = s.name;
-      document.getElementById('svc-price').value    = s.price;
-      document.getElementById('svc-duration').value = s.duration;
-      // Mevcut fotoğrafı önizlemede göster (input'a base64 yazma!)
-      if (s.img && s.img !== '__idb__') {
-        if (s.img.startsWith('data:image')) {
-          preview.src = s.img; preview.style.display = 'block';
-          // NOT: svc-img-data'ya yazmıyoruz — sadece State'te tutuyoruz
-          // saveService, imgData boş görünce mevcut img'i koruyacak
-        } else {
-          preview.src = s.img; preview.style.display = 'block';
-          document.getElementById('svc-img-url').value = s.img;
-        }
+    confirmReschedule() {
+      const tarih = document.getElementById('tasiTarih').value;
+      const saat  = document.getElementById('tasiSaat').value;
+      if (!tarih) { Toast.err('Lütfen tarih seçin.'); return; }
+      const a = State.appointments.find(a => a.id === State.admin.pendingApptId);
+      if (a) {
+        const d = new Date(tarih);
+        a.tarih = `${d.getDate()} ${Cal.MONTHS[d.getMonth()]}`;
+        a.saat  = saat;
+        Store.save();
+        Toast.ok('Randevu başarıyla taşındı.');
+        Modal.close('modalTasi');
+        this.render(this._activePage());
       }
-    } else {
-      titleEl.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.8"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Yeni Hizmet`;
-    }
+    },
 
-    // Kaydet butonunu aktif et (önceki donmadan kalmış olabilir)
-    const saveBtn = document.querySelector('#modal-service .btn-gold');
-    if (saveBtn) { saveBtn.disabled = false; saveBtn.innerHTML = 'Kaydet'; }
-
-    Modals.open('modal-service');
-  },
-
-  handleImageUpload(e) {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = (ev) => {
-      // Canvas ile sıkıştır (max 900px, %82 JPEG)
-      const rawImg = new Image();
-      rawImg.onload = () => {
-        try {
-          const MAX_W = 900;
-          const ratio  = Math.min(1, MAX_W / rawImg.width);
-          const canvas = document.createElement('canvas');
-          canvas.width  = Math.round(rawImg.width  * ratio);
-          canvas.height = Math.round(rawImg.height * ratio);
-          canvas.getContext('2d').drawImage(rawImg, 0, 0, canvas.width, canvas.height);
-          const compressed = canvas.toDataURL('image/jpeg', 0.82);
-
-          // ÖNEMLİ: base64'ü input.value'ya YAZMA — tarayıcıyı dondurur
-          // Bunun yerine direkt State'e al
-          State._pendingImg = compressed;
-
-          // Sadece önizleme göster
-          const preview = document.getElementById('svc-preview');
-          if (preview) { preview.src = compressed; preview.style.display = 'block'; }
-
-          // input'a küçük bir işaretçi yaz (varlık kontrolü için)
-          const dataInput = document.getElementById('svc-img-data');
-          if (dataInput) dataInput.value = '__pending__';
-
-          Toast.show('Fotoğraf hazır, kaydedebilirsiniz');
-        } catch(err) {
-          console.error('[handleImageUpload canvas]', err);
-          // Canvas başarısız olursa ham veriyi kullan
-          State._pendingImg = ev.target.result;
-          const preview = document.getElementById('svc-preview');
-          if (preview) { preview.src = ev.target.result; preview.style.display = 'block'; }
-          const dataInput = document.getElementById('svc-img-data');
-          if (dataInput) dataInput.value = '__pending__';
-        }
-      };
-      rawImg.onerror = () => Toast.show('Görsel okunamadı', 'error');
-      rawImg.src = ev.target.result;
-    };
-    reader.onerror = () => Toast.show('Dosya okunamadı', 'error');
-    reader.readAsDataURL(file);
-  },
-
-  handleImageUrl(url) {
-    if (!url) return;
-    const preview = document.getElementById('svc-preview');
-    preview.src = url; preview.style.display = 'block';
-  },
-
-  async saveService() {
-    const name     = document.getElementById('svc-name').value.trim();
-    const price    = parseInt(document.getElementById('svc-price').value);
-    const duration = document.getElementById('svc-duration').value.trim();
-    const imgUrl   = document.getElementById('svc-img-url').value.trim();
-    const imgData  = document.getElementById('svc-img-data').value.trim();
-
-    if (!name || isNaN(price) || !duration) {
-      Toast.show('Ad, fiyat ve süre zorunludur', 'error'); return;
-    }
-
-    // Butonu kilitle
-    const saveBtn = document.querySelector('#modal-service .btn-gold');
-    const resetBtn = () => {
-      if (saveBtn) { saveBtn.disabled = false; saveBtn.innerHTML = 'Kaydet'; }
-    };
-    if (saveBtn) { saveBtn.disabled = true; saveBtn.innerHTML = 'Kaydediliyor…'; }
-
-    try {
-      // Görsel kaynağını belirle:
-      // 1) State._pendingImg (PC'den yüklenen, canvas sıkıştırılmış)
-      // 2) imgData input'u (eski yöntemle gelmiş base64)
-      // 3) imgUrl (harici link)
-      // 4) Mevcut görseli koru
-      const newImgBase64 = State._pendingImg
-        || (imgData && imgData !== '__pending__' && imgData.startsWith('data:') ? imgData : null);
-      const newImgUrl    = imgUrl || null;
-
-      let serviceId;
-
-      if (State.editingServiceId) {
-        serviceId = State.editingServiceId;
-        const s   = State.services.find(sv => sv.id === serviceId);
-        if (s) {
-          s.name     = name;
-          s.price    = price;
-          s.duration = duration;
-          if (newImgBase64)      s.img = newImgBase64;  // state önizleme için
-          else if (newImgUrl)    s.img = newImgUrl;
-          // else → mevcut img korunur
-        }
+    /* ——— Image helper: set preview ——— */
+    _setImgPreview(src) {
+      const wrap    = document.getElementById('mhPreviewWrap');
+      const imgEl   = document.getElementById('mhPreviewImg');
+      const zone    = document.getElementById('mhUploadZone');
+      const hidden  = document.getElementById('mhImgData');
+      if (src) {
+        imgEl.src         = src;
+        hidden.value      = src;
+        wrap.classList.add('show');
+        zone.style.display = 'none';
       } else {
-        serviceId = Math.max(0, ...State.services.map(s => s.id)) + 1;
-        const img = newImgBase64 || newImgUrl || SERVICE_IMAGES.tailor;
-        State.services.push({ id: serviceId, name, price, duration, img });
+        imgEl.src         = '';
+        hidden.value      = '';
+        wrap.classList.remove('show');
+        zone.style.display = '';
+      }
+    },
+
+    /* ——— Image helper: reset modal image state ——— */
+    _clearImgState() {
+      document.getElementById('mhFile').value    = '';
+      document.getElementById('mhImgUrl').value  = '';
+      this._setImgPreview('');
+    },
+
+    openAdd() {
+      State.admin.pendingServiceId = null;
+      document.getElementById('mhTitle').textContent = 'Yeni Hizmet';
+      document.getElementById('mhAd').value    = '';
+      document.getElementById('mhFiyat').value = '';
+      document.getElementById('mhSure').value  = '';
+      document.getElementById('mhId').value    = '';
+      this._clearImgState();
+      Modal.open('modalHizmet');
+    },
+
+    openEdit(id) {
+      const s = State.services.find(s => s.id === +id);
+      if (!s) return;
+      State.admin.pendingServiceId = +id;
+      document.getElementById('mhTitle').textContent = 'Hizmeti Düzenle';
+      document.getElementById('mhAd').value    = s.ad;
+      document.getElementById('mhFiyat').value = s.fiyat;
+      document.getElementById('mhSure').value  = s.sure;
+      document.getElementById('mhId').value    = id;
+      this._clearImgState();
+      if (s.img) this._setImgPreview(s.img);
+      Modal.open('modalHizmet');
+    },
+
+    saveService() {
+      const ad    = document.getElementById('mhAd').value.trim();
+      const fiyat = parseInt(document.getElementById('mhFiyat').value, 10);
+      const sure  = document.getElementById('mhSure').value.trim();
+      const img   = document.getElementById('mhImgData').value.trim()
+                    || 'https://images.unsplash.com/photo-1591196703216-85c2b8ddb3b0?w=400&q=75';
+
+      if (!ad || isNaN(fiyat) || fiyat < 0 || !sure) {
+        Toast.err('Ad, fiyat ve süre alanları zorunludur.');
+        return;
       }
 
-      // IndexedDB'ye fotoğrafı kaydet (asıl kalıcı depolama)
-      if (newImgBase64) {
-        await Store.saveImage(serviceId, newImgBase64);
-      } else if (newImgUrl) {
-        // URL tabanlı görselde IndexedDB'ye gerek yok, meta'ya yaz
-        Store.saveMeta();
+      if (State.admin.pendingServiceId) {
+        const s = State.services.find(s => s.id === State.admin.pendingServiceId);
+        if (s) Object.assign(s, { ad, fiyat, sure, img });
+      } else {
+        const newId = (Math.max(0, ...State.services.map(s => s.id)) + 1);
+        State.services.push({ id: newId, ad, fiyat, sure, img });
       }
 
-      // Meta (ad/fiyat/süre) kaydet
-      Store.saveMeta();
-
-      // Temizle
-      State._pendingImg = null;
-
-      Modals.close('modal-service');
-      Toast.show('✓ Hizmet ve fotoğraf kaydedildi');
+      Store.save();
+      Modal.close('modalHizmet');
+      Toast.ok('Hizmet kaydedildi.');
       this.render('hizmetler');
       Booking.renderServices();
+    },
 
-    } catch(err) {
-      console.error('[saveService]', err);
-      Toast.show('Kayıt sırasında hata oluştu', 'error');
-      resetBtn();
-    }
-  },
+    deleteService(id) {
+      if (!confirm('Bu hizmeti silmek istediğinizden emin misiniz?')) return;
+      State.services = State.services.filter(s => s.id !== +id);
+      Store.save();
+      Toast.ok('Hizmet silindi.');
+      this.render('hizmetler');
+      Booking.renderServices();
+    },
 
-  async deleteService(id) {
-    if (!confirm('Bu hizmeti silmek istiyor musunuz?')) return;
-    State.services = State.services.filter(s => s.id !== id);
-    // IndexedDB'den de görseli sil
-    await Store.deleteImage(id);
-    Store.saveMeta();
-    Toast.show('Hizmet silindi');
-    this.render('hizmetler');
-    Booking.renderServices();
-  },
+    whatsapp(tel) {
+      window.open(`https://wa.me/90${tel.replace(/\D/g,'')}`, '_blank', 'noopener');
+    },
 
-  logout() {
-    Auth.revoke();
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    document.getElementById('musteri-screen').classList.add('active');
-    document.querySelectorAll('.sw-btn').forEach(b => b.classList.toggle('active', b.dataset.tab==='musteri'));
-    Toast.show('Çıkış yapıldı');
+    logout() {
+      Auth.revoke();
+      UI.show('musteri');
+      Toast.ok('Oturum güvenli şekilde kapatıldı.');
+    },
+  };
+
+  /* ═══════════════════════════════════════════════
+     UI — TAB / SCREEN MANAGER
+  ═══════════════════════════════════════════════ */
+  const UI = {
+    show(tab) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('on'));
+      document.getElementById(tab + '-screen').classList.add('on');
+      document.querySelectorAll('.sw-btn').forEach(b => b.classList.remove('on'));
+      document.getElementById(tab === 'musteri' ? 'swMusteri' : 'swAdmin').classList.add('on');
+    },
+  };
+
+  /* ═══════════════════════════════════════════════
+     EVENT BINDING
+  ═══════════════════════════════════════════════ */
+  function bindEvents() {
+
+    /* —— Switcher —— */
+    document.getElementById('swMusteri').addEventListener('click', () => UI.show('musteri'));
+
+    document.getElementById('swAdmin').addEventListener('click', () => {
+      if (Auth.check()) {
+        UI.show('admin');
+        Admin.render('dashboard');
+      } else {
+        document.getElementById('loginPass').value = '';
+        document.getElementById('loginErr').classList.remove('show');
+        Modal.open('modalLogin');
+      }
+    });
+
+    /* —— Login modal —— */
+    document.getElementById('loginSubmit').addEventListener('click', () => {
+      const pw = document.getElementById('loginPass').value;
+      if (pw === Auth.PW) {
+        Auth.grant();
+        Modal.close('modalLogin');
+        UI.show('admin');
+        Admin.render('dashboard');
+      } else {
+        document.getElementById('loginErr').classList.add('show');
+        document.getElementById('loginPass').value = '';
+        document.getElementById('loginPass').focus();
+      }
+    });
+
+    document.getElementById('loginPass').addEventListener('keydown', e => {
+      if (e.key === 'Enter') document.getElementById('loginSubmit').click();
+    });
+    document.getElementById('loginCancel').addEventListener('click', () => Modal.close('modalLogin'));
+
+    /* —— Booking navigation —— */
+    document.getElementById('btnDevam').addEventListener('click', () => Steps.next());
+    document.getElementById('btnGeri').addEventListener('click',  () => Steps.prev());
+
+    /* —— New appointment reset —— */
+    document.getElementById('btnYeniRandevu').addEventListener('click', () => {
+      State.selected = {};
+      State.date     = null;
+      State.time     = null;
+      State.step     = 1;
+      ['musteriAd','musteriTel','musteriMail'].forEach(id => {
+        document.getElementById(id).value = '';
+      });
+      document.getElementById('cardFooter').style.display = '';
+      Booking.renderServices();
+      Steps._render();
+    });
+
+    /* —— Service cards (delegation) —— */
+    document.getElementById('hizmetGrid').addEventListener('click', e => {
+      const btn  = e.target.closest('[data-hid]');
+      const card = e.target.closest('.hizmet-card[data-hid]');
+      const id   = btn?.dataset.hid || card?.dataset.hid;
+      if (id) { e.stopPropagation(); Booking.toggleService(id); }
+    });
+    document.getElementById('hizmetGrid').addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        const card = e.target.closest('.hizmet-card[data-hid]');
+        if (card) { e.preventDefault(); Booking.toggleService(card.dataset.hid); }
+      }
+    });
+
+    /* —— Calendar —— */
+    document.getElementById('calPrev').addEventListener('click', () => {
+      State.calMonth.setMonth(State.calMonth.getMonth() - 1);
+      Booking.renderCalendar();
+    });
+    document.getElementById('calNext').addEventListener('click', () => {
+      State.calMonth.setMonth(State.calMonth.getMonth() + 1);
+      Booking.renderCalendar();
+    });
+    document.getElementById('daysGrid').addEventListener('click', e => {
+      const d = e.target.closest('.day:not(.disabled):not(.empty)');
+      if (d) { State.date = Cal.dateStr(d.dataset.d, d.dataset.mo); Booking.renderCalendar(); }
+    });
+    document.getElementById('timesGrid').addEventListener('click', e => {
+      const s = e.target.closest('.t-slot');
+      if (s) { State.time = s.dataset.t; Booking.renderTimes(); }
+    });
+
+    /* —— Admin nav (delegation) —— */
+    document.getElementById('adminNav').addEventListener('click', e => {
+      const item = e.target.closest('.nav-item[data-page]');
+      if (!item) return;
+      if (!Auth.check()) { Modal.open('modalLogin'); return; }
+      Admin.render(item.dataset.page);
+    });
+
+    /* —— Admin content (event delegation) —— */
+    document.getElementById('adminContent').addEventListener('click', e => {
+      // Payment toggle
+      const pay = e.target.closest('[data-aid]');
+      if (pay) { Admin.togglePayment(pay.dataset.aid); return; }
+
+      // WhatsApp
+      const wa = e.target.closest('[data-wa]');
+      if (wa) { Admin.whatsapp(wa.dataset.wa); return; }
+
+      // Reschedule
+      const move = e.target.closest('[data-move]');
+      if (move) { Admin.openReschedule(move.dataset.move); return; }
+
+      // Edit service
+      const edit = e.target.closest('[data-edit]');
+      if (edit) { Admin.openEdit(edit.dataset.edit); return; }
+
+      // Delete service
+      const del = e.target.closest('[data-del]');
+      if (del) { Admin.deleteService(del.dataset.del); return; }
+
+      // New service button
+      if (e.target.closest('#btnYeniHizmet')) { Admin.openAdd(); return; }
+
+      // Pagination
+      const pg = e.target.closest('[data-pg]:not([disabled])');
+      if (pg && !e.target.closest('button[disabled]')) {
+        State.admin.page = +pg.dataset.pg;
+        Admin.render('randevular');
+        return;
+      }
+
+      // Logout
+      if (e.target.closest('#btnLogout')) { Admin.logout(); return; }
+    });
+
+    /* —— Reschedule modal —— */
+    document.getElementById('tasiConfirm').addEventListener('click', () => Admin.confirmReschedule());
+    document.getElementById('tasiCancel').addEventListener('click',  () => Modal.close('modalTasi'));
+
+    /* —— Service modal —— */
+    document.getElementById('mhSave').addEventListener('click',   () => Admin.saveService());
+    document.getElementById('mhCancel').addEventListener('click', () => Modal.close('modalHizmet'));
+
+    /* —— Image: file pick via FileReader (no server) —— */
+    document.getElementById('mhFile').addEventListener('change', e => {
+      const file = e.target.files[0];
+      if (!file) return;
+      if (file.size > 4 * 1024 * 1024) { Toast.err('Dosya 4 MB\'dan büyük olamaz.'); return; }
+      const reader = new FileReader();
+      reader.onload = ev => Admin._setImgPreview(ev.target.result);
+      reader.onerror = () => Toast.err('Dosya okunamadı.');
+      reader.readAsDataURL(file);
+    });
+
+    /* —— Image: drag-over highlight —— */
+    const zone = document.getElementById('mhUploadZone');
+    zone.addEventListener('dragover',  e => { e.preventDefault(); zone.classList.add('drag'); });
+    zone.addEventListener('dragleave', ()  => zone.classList.remove('drag'));
+    zone.addEventListener('drop', e => {
+      e.preventDefault(); zone.classList.remove('drag');
+      const file = e.dataTransfer.files[0];
+      if (!file || !file.type.startsWith('image/')) { Toast.err('Lütfen bir görsel dosyası bırakın.'); return; }
+      if (file.size > 4 * 1024 * 1024) { Toast.err('Dosya 4 MB\'dan büyük olamaz.'); return; }
+      const reader = new FileReader();
+      reader.onload = ev => Admin._setImgPreview(ev.target.result);
+      reader.readAsDataURL(file);
+    });
+
+    /* —— Image: URL load button —— */
+    document.getElementById('mhUrlLoad').addEventListener('click', () => {
+      const url = document.getElementById('mhImgUrl').value.trim();
+      if (!url) { Toast.err('Lütfen bir URL girin.'); return; }
+      // Quick test: create an img element, on load set preview
+      const tester = new Image();
+      tester.onload  = () => Admin._setImgPreview(url);
+      tester.onerror = () => Toast.err('URL\'den görsel yüklenemedi. Adresi kontrol edin.');
+      tester.src = url;
+    });
+
+    /* —— Image: remove preview —— */
+    document.getElementById('mhImgRemove').addEventListener('click', () => Admin._clearImgState());
+
+    /* —— Close modal on overlay click (except login) —— */
+    document.querySelectorAll('.modal-bg').forEach(overlay => {
+      overlay.addEventListener('click', e => {
+        if (e.target === overlay && overlay.id !== 'modalLogin') Modal.close(overlay.id);
+      });
+    });
+
+    /* —— Escape key closes modals —— */
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') {
+        document.querySelectorAll('.modal-bg.open').forEach(m => {
+          if (m.id !== 'modalLogin') Modal.close(m.id);
+        });
+      }
+    });
   }
-};
 
-/* ─────────────────────────────────────────
-   INIT
-───────────────────────────────────────────*/
-async function init() {
-  // IndexedDB'den fotoğraflar dahil tüm verileri yükle
-  await Store.load();
+  /* ═══════════════════════════════════════════════
+     BOOT
+  ═══════════════════════════════════════════════ */
+  function boot() {
+    try {
+      Store.load();
+      // Refresh images if they still point to old placeholder
+      const OLD_IMGS = [
+        'photo-1591196703216','photo-1598033128079',
+        'photo-1601924638867','photo-1544620347',
+      ];
+      let refreshed = false;
+      const defaults = Store._defaults();
+      State.services.forEach(s => {
+        if (OLD_IMGS.some(o => s.img && s.img.includes(o))) {
+          const d = defaults.find(d => d.id === s.id);
+          if (d) { s.img = d.img; refreshed = true; }
+        }
+      });
+      if (refreshed) Store.save();
+      Booking.renderServices();
+      Steps._render();
+      bindEvents();
+      console.info('%c ARYA Atelier OS v2.0 ', 'background:#c4973a;color:#07080f;font-weight:700;padding:4px 14px;border-radius:20px;font-size:13px;');
+    } catch (e) {
+      console.error('[ARYA] Boot failed:', e);
+      document.body.insertAdjacentHTML('afterbegin',
+        '<div style="position:fixed;top:0;left:0;right:0;background:#e05050;color:#fff;text-align:center;padding:10px;z-index:99999;font-size:13px;">Uygulama başlatılamadı. Konsolu kontrol edin.</div>'
+      );
+    }
+  }
 
-  // Initial step render
-  Steps.renderTrack();
-  Steps.showPanel(1);
-  Booking.renderServices();
-  Cal.render();
-  State.calMonth.setDate(1);
-  Hero.start();
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot);
+  } else {
+    boot();
+  }
 
-  // Expose to global for inline handlers
-  window.UI      = UI;
-  window.Booking = Booking;
-  window.Cal     = Cal;
-  window.Admin   = Admin;
-  window.Modals  = Modals;
-}
-
-// Kick off
-init();
-
-})(); // end IIFE
+})();
 </script>
 </body>
 </html>
