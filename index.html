@@ -7,11 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
-    /* -----------------------------------------------
-       RESET & CSS CUSTOM PROPERTIES
-    ----------------------------------------------- */
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-
     :root {
       --bg0: #07080f;
       --bg1: #0e0f18;
@@ -46,7 +42,6 @@
       --t2: 260ms;
       --t3: 460ms;
     }
-
     html { font-size: 16px; scroll-behavior: smooth; }
     body {
       font-family: 'DM Sans', system-ui, sans-serif;
@@ -66,8 +61,6 @@
     ::-webkit-scrollbar { width: 4px; height: 4px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: var(--bg4); border-radius: 4px; }
-
-    /* Switcher */
     .switcher {
       position: fixed; top: 14px; left: 50%; transform: translateX(-50%);
       z-index: 9999; background: rgba(14,15,24,.92);
@@ -88,8 +81,6 @@
       background: linear-gradient(135deg, var(--gold), var(--gold-hi));
       color: var(--bg0); font-weight: 600; box-shadow: 0 4px 18px rgba(196,151,58,.42);
     }
-
-    /* Toast */
     #toast {
       position: fixed; bottom: 22px; right: 22px; z-index: 99999;
       background: var(--bg2); border-radius: var(--r-pill); padding: 11px 18px;
@@ -101,12 +92,8 @@
     #toast.ok  { border: 1px solid var(--bdr); color: var(--gold); }
     #toast.err { border: 1px solid rgba(224,80,80,.5); color: #e05050; }
     #toast svg { width: 15px; height: 15px; flex-shrink: 0; }
-
-    /* Screens */
     .screen { display: none; flex-direction: column; min-height: 100vh; }
     .screen.on { display: flex; }
-
-    /* Hero */
     .hero {
       position: relative; height: 420px; overflow: hidden; flex-shrink: 0;
     }
@@ -188,8 +175,6 @@
       width: 4px; height: 4px; border-radius: 50%; background: var(--gold);
       display: inline-block; box-shadow: 0 0 6px var(--gold);
     }
-
-    /* Booking card */
     .booking-wrap {
       max-width: 900px; margin: 0 auto; padding: 0 14px 60px; width: 100%;
       margin-top: -32px; position: relative; z-index: 3;
@@ -256,8 +241,6 @@
       font-weight: 600; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;
     }
     .sec-label::after { content: ''; flex: 1; height: 1px; background: var(--bdr-s); }
-
-    /* Service grid */
     .hizmet-grid {
       display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;
     }
@@ -293,9 +276,13 @@
       background: linear-gradient(0deg, var(--bg2), transparent);
     }
     .hc-body { padding: 10px 12px 12px; }
-    .hc-name { font-family: 'Playfair Display', serif; font-weight: 400; font-size: 14px; color: var(--tx1); line-height: 1.3; }
+    .hc-name {
+      font-family: 'Playfair Display', serif; font-weight: 400; font-size: 14px; color: var(--tx1); line-height: 1.3;
+    }
     .hc-meta { display: flex; justify-content: space-between; align-items: center; margin-top: 5px; }
-    .hc-dur { font-size: 11px; color: var(--tx3); display: flex; align-items: center; gap: 3px; }
+    .hc-dur {
+      font-size: 11px; color: var(--tx3); display: flex; align-items: center; gap: 3px;
+    }
     .hc-dur svg { width: 9px; height: 9px; }
     .hc-price { font-size: 14px; color: var(--gold); font-weight: 700; letter-spacing: .3px; }
     .btn-toggle {
@@ -310,11 +297,14 @@
     .btn-toggle.on { background: var(--gold); border-color: var(--gold); color: var(--bg0); }
     .sel-bar { margin-top: 18px; background: var(--gold-t08); border: 1px solid var(--bdr); border-radius: var(--r-md); padding: 12px 14px; display: none; }
     .sel-bar.show { display: block; }
-    .sel-bar-lbl { font-size: 9px; text-transform: uppercase; letter-spacing: 2px; color: var(--tx3); font-weight: 600; margin-bottom: 8px; }
+    .sel-bar-lbl {
+      font-size: 9px; text-transform: uppercase; letter-spacing: 2px; color: var(--tx3); font-weight: 600; margin-bottom: 8px;
+    }
     .chips { display: flex; flex-wrap: wrap; gap: 6px; }
-    .chip { background: var(--gold-t15); border: 1px solid var(--gold-t30); border-radius: var(--r-pill); padding: 3px 10px; font-size: 11px; color: var(--gold); font-weight: 500; }
-
-    /* Calendar */
+    .chip {
+      background: var(--gold-t15); border: 1px solid var(--gold-t30); border-radius: var(--r-pill);
+      padding: 3px 10px; font-size: 11px; color: var(--gold); font-weight: 500;
+    }
     .takvim-grid { display: grid; grid-template-columns: 1fr; gap: 22px; }
     @media (min-width: 520px) { .takvim-grid { grid-template-columns: 1fr 1fr; } }
     .cal-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
@@ -344,7 +334,10 @@
     .day.empty { pointer-events: none; }
     .day.disabled { opacity: .22; pointer-events: none; }
     .day.today { border-color: var(--gold-t30); color: var(--gold); }
-    .day.sel { background: var(--gold); color: var(--bg0); font-weight: 700; border-color: var(--gold); box-shadow: 0 3px 12px rgba(196,151,58,.42); }
+    .day.sel {
+      background: var(--gold); color: var(--bg0); font-weight: 700; border-color: var(--gold);
+      box-shadow: 0 3px 12px rgba(196,151,58,.42);
+    }
     .time-sec-title { font-family: 'Playfair Display', serif; font-size: 16px; margin-bottom: 12px; color: var(--tx1); }
     .times-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
     @media (min-width: 360px) { .times-grid { grid-template-columns: repeat(4, 1fr); } }
@@ -355,8 +348,6 @@
     }
     .t-slot:hover { background: var(--bg3); border-color: var(--bdr-m); color: var(--tx1); }
     .t-slot.sel { background: var(--gold-t15); border-color: var(--gold); color: var(--gold); font-weight: 600; }
-
-    /* Forms */
     .finput {
       width: 100%; padding: 13px 15px; background: var(--bg2); border: 1px solid var(--bdr-s);
       border-radius: var(--r-md); color: var(--tx1); font-family: 'DM Sans', sans-serif;
@@ -367,17 +358,22 @@
     .finput::placeholder { color: var(--tx3); }
     select.finput { cursor: pointer; }
     .field-stack { display: flex; flex-direction: column; gap: 10px; }
-    .summary-card { background: var(--bg2); border: 1px solid var(--bdr-s); border-radius: var(--r-lg); padding: 16px; margin-top: 16px; }
-    .sum-row { display: flex; justify-content: space-between; align-items: center; padding: 7px 0; font-size: 13px; }
+    .summary-card {
+      background: var(--bg2); border: 1px solid var(--bdr-s); border-radius: var(--r-lg); padding: 16px; margin-top: 16px;
+    }
+    .sum-row {
+      display: flex; justify-content: space-between; align-items: center; padding: 7px 0; font-size: 13px;
+    }
     .sum-row:not(:last-child) { border-bottom: 1px solid var(--bdr-s); }
     .sum-lbl { display: flex; align-items: center; gap: 6px; color: var(--tx3); }
     .sum-lbl svg { width: 11px; height: 11px; }
     .sum-val { color: var(--tx1); font-weight: 500; }
     .sum-row.total .sum-val { color: var(--gold); font-size: 16px; font-weight: 600; }
-    .sum-note { margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--bdr); font-size: 11px; color: var(--tx3); display: flex; align-items: center; gap: 6px; }
+    .sum-note {
+      margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--bdr);
+      font-size: 11px; color: var(--tx3); display: flex; align-items: center; gap: 6px;
+    }
     .sum-note svg { width: 11px; height: 11px; color: var(--gold); }
-
-    /* Success */
     .success-wrap { text-align: center; padding: 36px 16px; }
     .success-ring {
       width: 74px; height: 74px; margin: 0 auto 20px; border: 1px solid var(--bdr);
@@ -389,17 +385,18 @@
       from { box-shadow: 0 0 0 0 rgba(196,151,58,.3); }
       to   { box-shadow: 0 0 24px 8px rgba(196,151,58,.12); }
     }
-    .success-no-card { background: var(--bg2); border: 1px solid var(--bdr); border-radius: var(--r-lg); padding: 18px 24px; margin: 20px auto; max-width: 240px; }
-    .success-no-lbl { font-size: 9.5px; text-transform: uppercase; letter-spacing: 2px; color: var(--tx3); margin-bottom: 6px; }
+    .success-no-card {
+      background: var(--bg2); border: 1px solid var(--bdr); border-radius: var(--r-lg);
+      padding: 18px 24px; margin: 20px auto; max-width: 240px;
+    }
+    .success-no-lbl {
+      font-size: 9.5px; text-transform: uppercase; letter-spacing: 2px; color: var(--tx3); margin-bottom: 6px;
+    }
     .success-no { font-family: 'Playfair Display', serif; font-size: 30px; color: var(--gold); letter-spacing: 2px; }
-
-    /* Footer */
     .card-footer {
       padding: 14px 22px; border-top: 1px solid var(--bdr-s);
       display: flex; align-items: center; justify-content: flex-end; gap: 10px;
     }
-
-    /* Buttons */
     .btn {
       display: inline-flex; align-items: center; gap: 7px; padding: 10px 22px;
       border-radius: var(--r-pill); border: none; font-family: 'DM Sans', sans-serif;
@@ -417,8 +414,6 @@
     .btn-ghost:hover { border-color: var(--bdr); color: var(--tx2); background: var(--bg2); }
     .btn-danger { background: transparent; border: 1px solid rgba(224,80,80,.25); color: #e05050; }
     .btn-danger:hover { background: rgba(224,80,80,.08); }
-
-    /* Admin layout */
     .admin-shell { display: flex; flex-direction: column; min-height: 100vh; }
     .admin-topbar {
       display: flex; overflow-x: auto; gap: 3px; background: rgba(10,11,20,.95);
@@ -438,9 +433,13 @@
     .nav-item.on { background: var(--gold-t08); color: var(--gold); border-color: var(--gold-t30); }
     .nav-item:hover:not(.on) { background: var(--bg2); color: var(--tx2); }
     .admin-main { flex: 1; padding: 22px 18px; overflow-x: hidden; }
-    .page-hdr { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 22px; }
+    .page-hdr {
+      display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 22px;
+    }
     .page-title { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 400; color: var(--tx1); }
-    .stats-row { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 26px; scrollbar-width: none; }
+    .stats-row {
+      display: flex; gap: 10px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 26px; scrollbar-width: none;
+    }
     .stats-row::-webkit-scrollbar { display: none; }
     .stat {
       background: var(--bg1); border: 1px solid var(--bdr-s); border-radius: var(--r-lg);
@@ -454,7 +453,10 @@
     }
     .stat:hover { border-color: var(--bdr); }
     .stat:hover::after { opacity: .6; }
-    .stat-lbl { font-size: 9.5px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--tx3); font-weight: 600; margin-bottom: 6px; display: flex; align-items: center; gap: 5px; }
+    .stat-lbl {
+      font-size: 9.5px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--tx3);
+      font-weight: 600; margin-bottom: 6px; display: flex; align-items: center; gap: 5px;
+    }
     .stat-lbl svg { width: 10px; height: 10px; }
     .stat-val { font-family: 'Playfair Display', serif; font-size: 30px; color: var(--gold); line-height: 1; }
     .stat-sub { font-size: 10px; color: var(--tx3); margin-top: 3px; }
@@ -469,9 +471,14 @@
     .tbl tbody tr { border-bottom: 1px solid var(--bdr-s); transition: background var(--t1) var(--ease); }
     .tbl tbody tr:last-child { border-bottom: none; }
     .tbl tbody tr:hover { background: rgba(255,255,255,.015); }
-    .tbl td { padding: 11px 15px; font-size: 13px; color: var(--tx1); vertical-align: middle; }
+    .tbl td {
+      padding: 11px 15px; font-size: 13px; color: var(--tx1); vertical-align: middle;
+    }
     .tbl td small { color: var(--tx3); font-size: 11px; display: block; margin-top: 2px; }
-    .badge { display: inline-flex; align-items: center; gap: 3px; padding: 3px 9px; border-radius: var(--r-pill); font-size: 11px; font-weight: 600; }
+    .badge {
+      display: inline-flex; align-items: center; gap: 3px; padding: 3px 9px; border-radius: var(--r-pill);
+      font-size: 11px; font-weight: 600;
+    }
     .badge svg { width: 9px; height: 9px; }
     .badge-paid { background: var(--gold-t08); color: var(--gold); border: 1px solid var(--gold-t30); }
     .badge-pending { background: rgba(224,80,80,.08); color: #e05050; border: 1px solid rgba(224,80,80,.18); }
@@ -502,7 +509,10 @@
       width: 12px; height: 12px; color: var(--tx3); pointer-events: none;
     }
     .search-wrap .finput { padding-left: 30px; font-size: 13px; }
-    .pagination { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 14px; border-top: 1px solid var(--bdr-s); }
+    .pagination {
+      display: flex; align-items: center; justify-content: center; gap: 6px; padding: 14px;
+      border-top: 1px solid var(--bdr-s);
+    }
     .pg-btn {
       width: 30px; height: 30px; border: 1px solid var(--bdr-s); border-radius: 7px;
       background: transparent; color: var(--tx2); cursor: pointer; display: flex;
@@ -517,12 +527,12 @@
     .empty-state { text-align: center; padding: 40px 20px; color: var(--tx3); }
     .empty-state svg { width: 36px; height: 36px; margin: 0 auto 10px; opacity: .25; }
     .empty-state p { font-size: 13px; }
-    .settings-block { background: var(--bg1); border: 1px solid var(--bdr-s); border-radius: var(--r-lg); padding: 22px; }
+    .settings-block {
+      background: var(--bg1); border: 1px solid var(--bdr-s); border-radius: var(--r-lg); padding: 22px;
+    }
     .settings-block h3 { font-family: 'Playfair Display', serif; font-size: 16px; margin-bottom: 12px; color: var(--tx1); }
     .settings-block p { font-size: 13px; color: var(--tx2); margin-bottom: 6px; }
     .settings-block strong { color: var(--tx1); font-weight: 600; }
-
-    /* Modals */
     .modal-bg {
       position: fixed; inset: 0; background: rgba(7,8,15,.87);
       backdrop-filter: blur(14px) saturate(1.3); -webkit-backdrop-filter: blur(14px) saturate(1.3);
@@ -556,8 +566,6 @@
     #modalLogin .modal-actions { justify-content: center; }
     #modalSetPassword .modal-box { text-align: center; }
     #modalSetPassword .modal-actions { justify-content: center; }
-
-    /* Upload zone */
     .upload-zone {
       border: 1px dashed var(--bdr); border-radius: var(--r-md); padding: 18px 12px;
       text-align: center; cursor: pointer; transition: border-color var(--t1) var(--ease), background var(--t1) var(--ease);
@@ -599,13 +607,11 @@
     }
     .img-src-divider::before, .img-src-divider::after { content: ''; flex: 1; height: 1px; background: var(--bdr-s); }
   </style>
-  <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
 
-<!-- Switcher -->
 <div class="switcher">
   <button class="sw-btn on" id="swMusteri">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg>
@@ -617,10 +623,8 @@
   </button>
 </div>
 
-<!-- Toast -->
 <div id="toast"></div>
 
-<!-- Müşteri Screen -->
 <div class="screen on" id="musteri-screen">
   <div class="hero">
     <div class="hero-bg">
@@ -671,7 +675,6 @@
         <span><strong>Ödeme bilgisi:</strong> Tüm ödemeler hizmet tesliminde nakit veya kart ile alınır. Ön ödeme talep edilmez.</span>
       </div>
 
-      <!-- Step 1 -->
       <div class="step-content on" id="s1">
         <div class="sec-label">Hizmet Seçin</div>
         <div class="hizmet-grid" id="hizmetGrid"></div>
@@ -681,7 +684,6 @@
         </div>
       </div>
 
-      <!-- Step 2 -->
       <div class="step-content" id="s2">
         <div class="sec-label">Tarih &amp; Saat Seçin</div>
         <div class="takvim-grid">
@@ -703,7 +705,6 @@
         </div>
       </div>
 
-      <!-- Step 3 -->
       <div class="step-content" id="s3">
         <div class="sec-label">İletişim Bilgileri</div>
         <div class="field-stack">
@@ -720,7 +721,6 @@
         </div>
       </div>
 
-      <!-- Step 5 Success -->
       <div class="step-content" id="s5">
         <div class="success-wrap">
           <div class="success-ring"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div>
@@ -731,7 +731,6 @@
         </div>
       </div>
 
-      <!-- Footer -->
       <div class="card-footer" id="cardFooter">
         <button class="btn btn-ghost" id="btnGeri" style="display:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg> Geri</button>
         <button class="btn btn-primary" id="btnDevam">Devam <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></button>
@@ -740,7 +739,6 @@
   </div>
 </div>
 
-<!-- Admin Screen -->
 <div class="screen" id="admin-screen">
   <div class="admin-shell">
     <nav class="admin-topbar" id="adminNav">
@@ -754,9 +752,6 @@
   </div>
 </div>
 
-<!-- Modals -->
-
-<!-- Login -->
 <div class="modal-bg" id="modalLogin">
   <div class="modal-box">
     <div style="width:50px;height:50px;border:1px solid var(--bdr);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;background:var(--gold-t08);"><svg viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2" width="22" height="22"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></div>
@@ -771,7 +766,6 @@
   </div>
 </div>
 
-<!-- Set Password -->
 <div class="modal-bg" id="modalSetPassword">
   <div class="modal-box">
     <div style="width:50px;height:50px;border:1px solid var(--bdr);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;background:var(--gold-t08);"><svg viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2" width="22" height="22"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></div>
@@ -787,7 +781,6 @@
   </div>
 </div>
 
-<!-- Reschedule -->
 <div class="modal-bg" id="modalTasi">
   <div class="modal-box">
     <div class="modal-title">Randevu Taşı</div>
@@ -803,7 +796,6 @@
   </div>
 </div>
 
-<!-- Service Add/Edit -->
 <div class="modal-bg" id="modalHizmet">
   <div class="modal-box" style="max-width:440px;">
     <div class="modal-title" id="mhTitle">Yeni Hizmet</div>
@@ -831,7 +823,6 @@
   </div>
 </div>
 
-<!-- Change Password -->
 <div class="modal-bg" id="modalChangePassword">
   <div class="modal-box">
     <div class="modal-title">Şifre Değiştir</div>
@@ -847,12 +838,10 @@
   </div>
 </div>
 
-<!-- JavaScript -->
 <script>
 (function () {
   'use strict';
 
-  // Icons
   const IC = {
     check:   `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="12" height="12"><polyline points="20 6 9 17 4 12"/></svg>`,
     plus:    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="10" height="10"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>`,
@@ -867,7 +856,6 @@
     alert:   `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`,
   };
 
-  // Escape HTML
   const escapeHtml = (unsafe) => {
     if (unsafe === undefined || unsafe === null) return '';
     return String(unsafe)
@@ -878,7 +866,6 @@
       .replace(/'/g, '&#039;');
   };
 
-  // State
   const State = {
     step: 1,
     selected: {},
@@ -891,7 +878,6 @@
     auth: { hash: null }
   };
 
-  // Store
   const Store = {
     K_SVC: 'arya_v2_services',
     K_APPT: 'arya_v2_appointments',
@@ -961,7 +947,6 @@
     isFirebaseConnected() { return !!this._db; }
   };
 
-  // Toast
   const Toast = {
     _el: null, _tid: null,
     _el_() { return this._el || (this._el = document.getElementById('toast')); },
@@ -972,21 +957,18 @@
       clearTimeout(this._tid);
       this._tid = setTimeout(() => { el.className = 'toast'; }, 2900);
     },
-    ok(msg) { this._show(`${IC.check} ${escapeHtml(msg)}`, 'ok'); },
+    ok(msg)  { this._show(`${IC.check} ${escapeHtml(msg)}`, 'ok'); },
     err(msg) { this._show(`${IC.alert} ${escapeHtml(msg)}`, 'err'); }
   };
 
-  // Validation
   const V = {
     required: v => !!(v && v.trim()),
-    phone: v => /^0?5\d{9}$/.test(v.replace(/\D/g, '')),
-    email: v => !v || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)
+    phone:    v => /^0?5\d{9}$/.test(v.replace(/\D/g, '')),
+    email:    v => !v || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)
   };
 
-  // Modal
   const Modal = { open(id) { document.getElementById(id).classList.add('open'); }, close(id) { document.getElementById(id).classList.remove('open'); } };
 
-  // Auth
   const Auth = {
     KEY_HASH: 'arya_admin_hash', KEY_SESSION: 'arya_admin_auth', TTL: 30 * 60 * 1000,
     async sha256(str) {
@@ -1042,7 +1024,6 @@
     logout() { sessionStorage.removeItem(this.KEY_SESSION); }
   };
 
-  // Calendar
   const Cal = {
     MONTHS: ['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'],
     label: d => `${Cal.MONTHS[d.getMonth()]} ${d.getFullYear()}`,
@@ -1051,7 +1032,6 @@
     isPast: (y,m,d) => { const n = new Date(); n.setHours(0,0,0,0); return new Date(y,m,d) < n; }
   };
 
-  // Booking
   const Booking = {
     renderServices() {
       const g = document.getElementById('hizmetGrid');
@@ -1117,7 +1097,6 @@
     }
   };
 
-  // Steps
   const Steps = {
     _contentMap: {1:'s1',2:'s2',3:'s3',5:'s5'}, _navMap: {1:'sn1',2:'sn2',3:'sn3',5:'sn5'},
     next() {
@@ -1141,7 +1120,6 @@
     }
   };
 
-  // Vercel Blob Upload
   async function uploadToVercelBlob(file) {
     const formData = new FormData();
     formData.append('file', file);
@@ -1154,7 +1132,6 @@
     return data.url;
   }
 
-  // Admin Module
   const Admin = {
     PAGE_SZ: 8,
     _setNav(page) {
@@ -1253,7 +1230,6 @@
     }
   };
 
-  // UI
   const UI = {
     show(tab) {
       document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));
@@ -1263,7 +1239,6 @@
     }
   };
 
-  // Handle Image File
   async function handleImageFile(file) {
     if (!file || !file.type.startsWith('image/')) { Toast.err('Lütfen bir görsel dosyası seçin.'); return; }
     if (file.size > 8 * 1024 * 1024) { Toast.err('Dosya 8 MB\'dan büyük olamaz.'); return; }
@@ -1281,7 +1256,6 @@
     }
   }
 
-  // Event Bindings
   function bindEvents() {
     document.getElementById('swMusteri').addEventListener('click', ()=>UI.show('musteri'));
     document.getElementById('swAdmin').addEventListener('click', async ()=>{
@@ -1383,7 +1357,6 @@
     });
   }
 
-  // Boot
   async function boot() {
     try {
       await Store.load();
