@@ -1,3 +1,4 @@
+// api/upload.js
 import { put } from '@vercel/blob';
 
 export const config = {
@@ -5,7 +6,6 @@ export const config = {
 };
 
 export default async function handler(request) {
-  // CORS preflight
   if (request.method === 'OPTIONS') {
     return new Response(null, {
       headers: {
