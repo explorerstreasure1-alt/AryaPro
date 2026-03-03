@@ -2037,6 +2037,51 @@
     _ayarlar() {
       return `
         <div class="page-hdr"><div class="page-title serif">Ayarlar</div></div>
+
+        <!-- SYNC CARD -->
+        <div class="settings-block" style="margin-bottom:14px;">
+          <h3 style="display:flex;align-items:center;gap:8px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2" width="16" height="16"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+            Cihazlar Arası Senkronizasyon
+          </h3>
+          <div style="background:rgba(196,151,58,.06);border:1px solid rgba(196,151,58,.18);border-radius:10px;padding:12px 14px;margin:10px 0 14px;font-size:12.5px;color:var(--tx2);line-height:1.7;">
+            <strong style="color:var(--gold-hi);">Neden görseller başka cihazda görünmüyor?</strong><br>
+            Tüm değişiklikler bu tarayıcının hafızasında (localStorage) saklanıyor. Telefon veya başka bir bilgisayar bu veriyi göremez.<br>
+            <strong style="color:var(--tx1);">Çözüm:</strong> Aşağıdan verileri dışa aktar, diğer cihazda içe aktar.
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
+            <div>
+              <p style="font-size:11px;color:var(--tx3);margin-bottom:7px;text-transform:uppercase;letter-spacing:1px;font-weight:600;">1. Bu cihazdan dışa aktar</p>
+              <button class="btn btn-primary" id="btnExport" style="width:100%;justify-content:center;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Veriyi Kopyala
+              </button>
+            </div>
+            <div>
+              <p style="font-size:11px;color:var(--tx3);margin-bottom:7px;text-transform:uppercase;letter-spacing:1px;font-weight:600;">2. Diğer cihazda içe aktar</p>
+              <button class="btn btn-ghost" id="btnImport" style="width:100%;justify-content:center;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                Veri Yapıştır
+              </button>
+            </div>
+          </div>
+
+          <!-- Import textarea (hidden by default) -->
+          <div id="importArea" style="display:none;">
+            <textarea id="importJson" class="finput" rows="5"
+              placeholder="Kopyaladığınız veriyi buraya yapıştırın ve Uygula'ya tıklayın..."
+              style="font-size:11px;font-family:monospace;resize:vertical;"></textarea>
+            <div style="display:flex;gap:8px;margin-top:8px;">
+              <button class="btn btn-primary" id="btnImportApply" style="flex:1;justify-content:center;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><polyline points="20 6 9 17 4 12"/></svg>
+                Uygula &amp; Kaydet
+              </button>
+              <button class="btn btn-ghost" id="btnImportCancel">İptal</button>
+            </div>
+          </div>
+        </div>
+
         <div class="settings-block">
           <h3>WhatsApp Bildirimleri</h3>
           <p>Randevu bildirimleri aşağıdaki numaralara gönderilir:</p>
@@ -2172,6 +2217,60 @@
 
     whatsapp(tel) {
       window.open(`https://wa.me/90${tel.replace(/\D/g,'')}`, '_blank', 'noopener');
+    },
+
+    exportData() {
+      const payload = JSON.stringify({
+        v: 2,
+        ts: Date.now(),
+        services:     State.services,
+        appointments: State.appointments,
+      });
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(payload)
+          .then(() => Toast.ok('Veri panoya kopyalandı! Diğer cihazda Ayarlar → İçe Aktar yapın.'))
+          .catch(() => this._fallbackCopy(payload));
+      } else {
+        this._fallbackCopy(payload);
+      }
+    },
+
+    _fallbackCopy(text) {
+      // Fallback: put data in textarea and select it
+      const ta = document.getElementById('importJson');
+      const area = document.getElementById('importArea');
+      if (ta && area) {
+        area.style.display = 'block';
+        ta.value = text;
+        ta.select();
+        Toast.ok('Veri aşağıdaki kutuya yazıldı — manuel kopyalayın.');
+      }
+    },
+
+    importData() {
+      const area = document.getElementById('importArea');
+      if (area) area.style.display = area.style.display === 'none' ? 'block' : 'none';
+    },
+
+    applyImport() {
+      const raw = (document.getElementById('importJson')?.value || '').trim();
+      if (!raw) { Toast.err('Lütfen veri yapıştırın.'); return; }
+      try {
+        const parsed = JSON.parse(raw);
+        if (!parsed.services || !Array.isArray(parsed.services)) {
+          Toast.err('Geçersiz veri formatı.'); return;
+        }
+        State.services     = parsed.services     || [];
+        State.appointments = parsed.appointments || [];
+        Store.save();
+        Booking.renderServices();
+        document.getElementById('importArea').style.display = 'none';
+        document.getElementById('importJson').value = '';
+        Toast.ok('Veriler başarıyla içe aktarıldı!');
+        this.render('ayarlar');
+      } catch (e) {
+        Toast.err('Veri okunamadı. Kopyalamayı tekrar deneyin.');
+      }
     },
 
     logout() {
@@ -2321,6 +2420,15 @@
         State.admin.page = +pg.dataset.pg;
         Admin.render('randevular');
         return;
+      }
+
+      // Sync export/import
+      if (e.target.closest('#btnExport'))       { Admin.exportData();  return; }
+      if (e.target.closest('#btnImport'))       { Admin.importData();  return; }
+      if (e.target.closest('#btnImportApply'))  { Admin.applyImport(); return; }
+      if (e.target.closest('#btnImportCancel')) {
+        const a = document.getElementById('importArea');
+        if (a) a.style.display = 'none'; return;
       }
 
       // Logout
