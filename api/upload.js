@@ -34,7 +34,6 @@ export default async function handler(request) {
       });
     }
 
-    // Dosyayı Vercel Blob'a yükle
     const blob = await put(file.name, file, {
       access: 'public',
       token: process.env.BLOB_READ_WRITE_TOKEN,
