@@ -1,169 +1,557 @@
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ARYA — Atelier &amp; Kuru Temizleme</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <style>
-    /* Tüm CSS aynen korundu – buraya kopyalamak yerine kısaltıyorum, ama sen mevcut CSS'i olduğu gibi bırak */
-    /* ... */
-  </style>
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
-</head>
-<body>
-
-<!-- Tüm HTML yapısı aynen korundu – MODALLAR, SCREEN'LER vs. -->
-
 <script>
 (function () {
   'use strict';
 
-  /* ICONS aynen */
-  const IC = { /* ... */ };
+  /* ==================== ICONS ==================== */
+  const IC = {
+    check:   `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="12" height="12"><polyline points="20 6 9 17 4 12"/></svg>`,
+    plus:    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="10" height="10"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>`,
+    trash:   `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6m3 0V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg>`,
+    edit:    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>`,
+    move:    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="5 9 2 12 5 15"/><polyline points="9 5 12 2 15 5"/><line x1="2" y1="12" x2="22" y2="12"/><polyline points="15 19 12 22 9 19"/><polyline points="19 9 22 12 19 15"/><line x1="12" y1="2" x2="12" y2="22"/></svg>`,
+    clock:   `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="10" height="10"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`,
+    wa:      `<svg viewBox="0 0 24 24" fill="currentColor" width="13" height="13"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M11.99 2C6.468 2 2 6.467 2 11.99c0 1.975.578 3.837 1.594 5.414L2.05 22l4.694-1.497C8.213 21.437 10.064 22 11.99 22c5.523 0 9.99-4.468 9.99-9.99C21.98 6.467 17.513 2 11.99 2z"/></svg>`,
+    cal:     `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="10" height="10"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>`,
+    dollar:  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="10" height="10"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>`,
+    users:   `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="10" height="10"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>`,
+    alert:   `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`,
+  };
 
-  /* STATE aynen */
-  const State = { /* ... */ };
+  /* ==================== STATE ==================== */
+  const State = {
+    step: 1,
+    selected: {},
+    date: null,
+    time: null,
+    calMonth: (() => { const d = new Date(); d.setDate(1); return d; })(),
+    services: [],
+    appointments: [],
+    admin: {
+      page: 1,
+      filter: '',
+      pendingApptId: null,
+      pendingServiceId: null,
+    },
+  };
 
-  /* STORE aynen (Firebase yapılandırması aynı) */
-  const Store = { /* ... */ };
+  /* ==================== STORE ==================== */
+  const Store = {
+    K_SVC: 'arya_v2_services',
+    K_APPT: 'arya_v2_appointments',
+    _db: null,
 
-  /* TOAST, VALIDATION, MODAL, AUTH, CALENDAR aynen */
-  /* ... */
+    _defaults() {
+      return [
+        { id:1, ad:'Paca Boyu',    fiyat:30, sure:'45 dk', img:'https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=500&q=80' },
+        { id:2, ad:'Bel Daraltma', fiyat:40, sure:'60 dk', img:'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=500&q=80' },
+        { id:3, ad:'Takim Elbise', fiyat:50, sure:'2 gun', img:'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500&q=80' },
+        { id:4, ad:'Perde Tem.',   fiyat:60, sure:'3 gun', img:'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=500&q=80' },
+        { id:5, ad:'Utu',          fiyat:20, sure:'30 dk', img:'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=500&q=80' },
+        { id:6, ad:'Yikama',       fiyat:35, sure:'1 gun', img:'https://images.unsplash.com/photo-1567274996148-2b09c6512dc2?w=500&q=80' },
+      ];
+    },
 
-  /* BOOKING, STEP MANAGER aynen */
-  /* ... */
+    _FIREBASE_CFG: {
+      apiKey: "AIzaSyAHVWHnVbV-bl4sr5C-T87wGKdjnoMvltc",
+      authDomain: "aryapro-84c3b.firebaseapp.com",
+      projectId: "aryapro-84c3b",
+      storageBucket: "aryapro-84c3b.firebasestorage.app",
+      messagingSenderId: "664020657397",
+      appId: "1:664020657397:web:a69cf1408437cdf19c11bc",
+    },
 
-  /* ************************************************************ */
-  /* YENİ: VERCEL BLOB UPLOAD FONKSİYONU                         */
-  /* ************************************************************ */
+    initFirebase() {
+      try {
+        if (!firebase.apps.length) {
+          firebase.initializeApp(this._FIREBASE_CFG);
+        }
+        this._db = firebase.firestore();
+        return true;
+      } catch(e) {
+        console.warn('Firebase init failed:', e);
+        return false;
+      }
+    },
+
+    async load() {
+      const fbOk = this.initFirebase();
+      if (fbOk) {
+        try {
+          const svcDoc = await this._db.collection('arya').doc('services').get();
+          State.services = (svcDoc.exists && svcDoc.data().list) ? svcDoc.data().list : this._defaults();
+          const apptDoc = await this._db.collection('arya').doc('appointments').get();
+          State.appointments = (apptDoc.exists && apptDoc.data().list) ? apptDoc.data().list : [];
+
+          this._unsubSvc = this._db.collection('arya').doc('services').onSnapshot(snap => {
+            if (snap.exists && snap.data().list) {
+              State.services = snap.data().list;
+              Booking.renderServices();
+            }
+          });
+          this._unsubAppt = this._db.collection('arya').doc('appointments').onSnapshot(snap => {
+            if (snap.exists && snap.data().list) {
+              State.appointments = snap.data().list;
+            }
+          });
+          return;
+        } catch(e) {
+          console.warn('Firestore read failed, fallback to localStorage', e);
+        }
+      }
+      try {
+        const s = localStorage.getItem(this.K_SVC);
+        State.services = s ? JSON.parse(s) : this._defaults();
+        const a = localStorage.getItem(this.K_APPT);
+        State.appointments = a ? JSON.parse(a) : [];
+      } catch {
+        State.services = this._defaults();
+        State.appointments = [];
+      }
+    },
+
+    async save() {
+      try {
+        localStorage.setItem(this.K_SVC, JSON.stringify(State.services));
+        localStorage.setItem(this.K_APPT, JSON.stringify(State.appointments));
+      } catch(e) {}
+      if (this._db) {
+        try {
+          await this._db.collection('arya').doc('services').set({ list: State.services });
+          await this._db.collection('arya').doc('appointments').set({ list: State.appointments });
+        } catch(e) {
+          console.warn('Firestore write failed:', e);
+          Toast.err('Bulut kaydı başarısız. Yerel olarak kaydedildi.');
+        }
+      }
+    },
+  };
+
+  /* ==================== TOAST ==================== */
+  const Toast = {
+    _el: null,
+    _tid: null,
+    _el_() { return this._el || (this._el = document.getElementById('toast')); },
+    _show(html, cls) {
+      const el = this._el_();
+      el.innerHTML = html;
+      el.className = `toast show ${cls}`;
+      clearTimeout(this._tid);
+      this._tid = setTimeout(() => { el.className = 'toast'; }, 2900);
+    },
+    ok(msg) { this._show(`${IC.check} ${msg}`, 'ok'); },
+    err(msg) { this._show(`${IC.alert} ${msg}`, 'err'); },
+  };
+
+  /* ==================== VALIDATION ==================== */
+  const V = {
+    required: v => !!(v && v.trim()),
+    phone: v => /^0?5\d{9}$/.test(v.replace(/\D/g, '')),
+    email: v => !v || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v),
+  };
+
+  /* ==================== MODAL ==================== */
+  const Modal = {
+    open(id) { document.getElementById(id).classList.add('open'); },
+    close(id) { document.getElementById(id).classList.remove('open'); },
+  };
+
+  /* ==================== AUTH ==================== */
+  const Auth = {
+    PW: 'arya2025',
+    KEY: 'arya_admin_auth',
+    TTL: 30 * 60 * 1000,
+    check() {
+      try {
+        const d = JSON.parse(sessionStorage.getItem(this.KEY) || 'null');
+        if (d && Date.now() - d.t < this.TTL) return true;
+        sessionStorage.removeItem(this.KEY);
+      } catch {}
+      return false;
+    },
+    grant() { sessionStorage.setItem(this.KEY, JSON.stringify({ t: Date.now() })); },
+    revoke() { sessionStorage.removeItem(this.KEY); },
+  };
+
+  /* ==================== CALENDAR ==================== */
+  const Cal = {
+    MONTHS: ['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'],
+    label: d => `${Cal.MONTHS[d.getMonth()]} ${d.getFullYear()}`,
+    dateStr: (n, m) => `${n} ${m}`,
+    isToday: (y, m, d) => { const n = new Date(); return n.getFullYear() === y && n.getMonth() === m && n.getDate() === d; },
+    isPast: (y, m, d) => { const n = new Date(); n.setHours(0,0,0,0); return new Date(y,m,d) < n; },
+  };
+
+  /* ==================== BOOKING ==================== */
+  const Booking = {
+    renderServices() {
+      const g = document.getElementById('hizmetGrid');
+      if (!State.services.length) {
+        g.innerHTML = '<div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg><p>Henüz hizmet eklenmedi.</p></div>';
+        return;
+      }
+      g.innerHTML = State.services.map(s => {
+        const sel = !!State.selected[s.id];
+        return `
+          <div class="hizmet-card ${sel ? 'sel' : ''}" data-hid="${s.id}" role="button" tabindex="0" aria-pressed="${sel}">
+            <div class="hc-check">${IC.check}</div>
+            <div class="hc-img-wrap">
+              <img src="${s.img}" class="hc-img" alt="${s.ad}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1591196703216-85c2b8ddb3b0?w=400&q=75'">
+            </div>
+            <div class="hc-body">
+              <div class="hc-name">${s.ad}</div>
+              <div class="hc-meta">
+                <span class="hc-dur">${IC.clock} ${s.sure}</span>
+                <span class="hc-price">${s.fiyat} TL</span>
+              </div>
+              <button class="btn-toggle ${sel ? 'on' : ''}" data-hid="${s.id}">
+                ${sel ? `${IC.check} Seçildi` : `${IC.plus} Ekle`}
+              </button>
+            </div>
+          </div>`;
+      }).join('');
+      this._syncSelBar();
+    },
+    _syncSelBar() {
+      const bar = document.getElementById('selBar');
+      const chips = document.getElementById('selChips');
+      const ids = Object.keys(State.selected);
+      if (!ids.length) { bar.classList.remove('show'); return; }
+      bar.classList.add('show');
+      chips.innerHTML = ids.map(id => `<span class="chip">${State.selected[id].ad} — ${State.selected[id].fiyat} TL</span>`).join('');
+    },
+    toggleService(id) {
+      id = +id;
+      const svc = State.services.find(s => s.id === id);
+      if (!svc) return;
+      if (State.selected[id]) delete State.selected[id];
+      else State.selected[id] = { ad: svc.ad, fiyat: svc.fiyat };
+      this.renderServices();
+    },
+    renderCalendar() {
+      const y = State.calMonth.getFullYear();
+      const m = State.calMonth.getMonth();
+      document.getElementById('calMonth').textContent = Cal.label(State.calMonth);
+      const firstDow = new Date(y, m, 1).getDay();
+      const daysTotal = new Date(y, m + 1, 0).getDate();
+      const offset = (firstDow + 6) % 7;
+      let html = '';
+      for (let i = 0; i < offset; i++) html += '<div class="day empty"></div>';
+      for (let d = 1; d <= daysTotal; d++) {
+        const disabled = Cal.isPast(y, m, d) || new Date(y, m, d).getDay() === 0;
+        const today = Cal.isToday(y, m, d);
+        const sel = State.date === Cal.dateStr(d, Cal.MONTHS[m]);
+        html += `<div class="day${disabled?' disabled':''}${today?' today':''}${sel?' sel':''}" data-d="${d}" data-mo="${Cal.MONTHS[m]}">${d}</div>`;
+      }
+      document.getElementById('daysGrid').innerHTML = html;
+    },
+    renderTimes() {
+      const slots = ['09:00','09:30','10:00','10:30','11:00','11:30','13:00','13:30','14:00','14:30','15:00','15:30','16:00','16:30'];
+      document.getElementById('timesGrid').innerHTML = slots.map(t => `<div class="t-slot${State.time===t?' sel':''}" data-t="${t}">${t}</div>`).join('');
+    },
+    updateSummary() {
+      const svcs = Object.values(State.selected);
+      const total = svcs.reduce((a, v) => a + v.fiyat, 0);
+      document.getElementById('ozHizmet').textContent = svcs.map(s=>s.ad).join(', ') || '—';
+      document.getElementById('ozTarih').textContent = State.date || '—';
+      document.getElementById('ozSaat').textContent = State.time || '—';
+      document.getElementById('ozToplam').textContent = `${total} TL`;
+    },
+    submit() {
+      const ad = document.getElementById('musteriAd').value.trim();
+      const tel = document.getElementById('musteriTel').value.trim();
+      const mail = document.getElementById('musteriMail').value.trim();
+      if (!V.required(ad)) { Toast.err('Ad Soyad alanı zorunludur.'); return false; }
+      if (!V.phone(tel)) { Toast.err('Geçerli telefon numarası girin (05xxxxxxxxx).'); return false; }
+      if (!V.email(mail)) { Toast.err('Geçerli bir e-posta girin ya da boş bırakın.'); return false; }
+      const svcs = Object.values(State.selected);
+      const total = svcs.reduce((a,v) => a + v.fiyat, 0);
+      const no = 'ARY-' + Math.floor(1000 + Math.random() * 9000);
+      const appt = {
+        id: Date.now(),
+        no,
+        musteriAd: ad,
+        tel: tel.replace(/\D/g,''),
+        mail,
+        services: svcs,
+        total,
+        tarih: State.date,
+        saat: State.time,
+        paid: false,
+        createdAt: new Date().toISOString(),
+      };
+      State.appointments.push(appt);
+      Store.save();
+      console.info('[ARYA] WhatsApp payload:', { to: '+90' + appt.tel, body: `🆕 Randevu\nMüşteri: ${ad}\nHizmet: ${svcs.map(s=>s.ad).join(', ')}\nTarih: ${State.date} ${State.time}\nTutar: ${total} TL\nNo: ${no}` });
+      document.getElementById('randevuNo').textContent = no;
+      return true;
+    },
+  };
+
+  /* ==================== STEPS ==================== */
+  const Steps = {
+    _contentMap: { 1:'s1', 2:'s2', 3:'s3', 5:'s5' },
+    _navMap: { 1:'sn1', 2:'sn2', 3:'sn3', 5:'sn5' },
+    next() {
+      if (State.step === 1 && !Object.keys(State.selected).length) { Toast.err('Lütfen en az bir hizmet seçin.'); return; }
+      if (State.step === 2 && !State.date) { Toast.err('Lütfen tarih seçin.'); return; }
+      if (State.step === 2 && !State.time) { Toast.err('Lütfen saat seçin.'); return; }
+      if (State.step === 3) { if (!Booking.submit()) return; State.step = 5; }
+      else State.step++;
+      this._render();
+    },
+    prev() {
+      if (State.step > 1 && State.step !== 5) { State.step--; this._render(); }
+    },
+    _render() {
+      document.querySelectorAll('.step-content').forEach(el => el.classList.remove('on'));
+      const cid = this._contentMap[State.step];
+      if (cid) document.getElementById(cid).classList.add('on');
+      document.querySelectorAll('.step-item').forEach(el => el.classList.remove('on'));
+      const nid = this._navMap[State.step];
+      if (nid) document.getElementById(nid).classList.add('on');
+      const footer = document.getElementById('cardFooter');
+      const geri = document.getElementById('btnGeri');
+      if (State.step === 5) {
+        footer.style.display = 'none';
+      } else {
+        footer.style.display = '';
+        geri.style.display = State.step > 1 ? '' : 'none';
+      }
+      if (State.step === 2) { Booking.renderCalendar(); Booking.renderTimes(); }
+      if (State.step === 3) { Booking.updateSummary(); }
+    },
+  };
+
+  /* ==================== VERCEL BLOB UPLOAD ==================== */
   async function uploadToVercelBlob(file) {
     const formData = new FormData();
     formData.append('file', file);
-
-    const response = await fetch('/api/upload', {
-      method: 'POST',
-      body: formData,
-    });
-
+    const response = await fetch('/api/upload', { method: 'POST', body: formData });
     if (!response.ok) {
       const error = await response.json();
       throw new Error(error.error || 'Yükleme başarısız');
     }
-
     const data = await response.json();
-    return data.url; // public URL
+    return data.url;
   }
 
-  /* ************************************************************ */
-  /* ADMIN MODULE – ImgBB ile ilgili her şey kaldırıldı          */
-  /* ************************************************************ */
+  /* ==================== ADMIN ==================== */
   const Admin = {
     PAGE_SZ: 8,
-
-    _setNav(page) { /* aynen */ },
-
+    _setNav(page) {
+      document.querySelectorAll('#adminNav .nav-item').forEach(n => n.classList.remove('on'));
+      const el = document.querySelector(`#adminNav .nav-item[data-page="${page}"]`);
+      if (el) el.classList.add('on');
+    },
     render(page) {
       this._setNav(page);
       const c = document.getElementById('adminContent');
       try {
         switch (page) {
-          case 'dashboard':  c.innerHTML = this._dashboard();  break;
+          case 'dashboard': c.innerHTML = this._dashboard(); break;
           case 'randevular': c.innerHTML = this._randevular(); this._bindSearch('randevular'); break;
-          case 'hizmetler':  c.innerHTML = this._hizmetler();  break;
+          case 'hizmetler': c.innerHTML = this._hizmetler(); break;
           case 'musteriler': c.innerHTML = this._musteriler(); break;
-          case 'ayarlar':    c.innerHTML = this._ayarlar();    break; // ayarlar sayfası güncellendi (ImgBB yok)
+          case 'ayarlar': c.innerHTML = this._ayarlar(); break;
         }
       } catch (e) {
         c.innerHTML = '<div class="empty-state"><p>İçerik yüklenemedi.</p></div>';
-        console.error('[ARYA Admin] Render error:', e);
+        console.error('Admin render error:', e);
       }
     },
-
-    _activePage() { /* aynen */ },
-
-    _dashboard() { /* aynen */ },
-    _statCard(lbl, icon, val, sub) { /* aynen */ },
-    _apptRow(a) { /* aynen */ },
-    _emptyRow(cols) { /* aynen */ },
-    _randevular() { /* aynen */ },
-    _bindSearch(page) { /* aynen */ },
-    _hizmetler() { /* aynen (hizmet kartları aynı) */ },
-    _musteriler() { /* aynen */ },
-
-    /* ——— Ayarlar (ImgBB kısmı tamamen çıkarıldı) ——— */
-    _ayarlar() {
-      const fbConnected = Store.isFirebaseConnected();
-      const fbCfgRaw    = localStorage.getItem('arya_firebase_config') || '';
-      let fbProjectId   = '';
-      try { fbProjectId = JSON.parse(fbCfgRaw).projectId || ''; } catch(e) {}
-
+    _activePage() {
+      const on = document.querySelector('#adminNav .nav-item.on');
+      return on ? on.dataset.page : 'dashboard';
+    },
+    _dashboard() {
+      const A = State.appointments;
+      const todayLabel = (() => { const n = new Date(); return `${n.getDate()} ${Cal.MONTHS[n.getMonth()]}`; })();
+      const todayCnt = A.filter(a => a.tarih === todayLabel).length;
+      const paidCnt = A.filter(a => a.paid).length;
+      const pendCnt = A.filter(a => !a.paid).length;
+      const revenue = A.filter(a => a.paid).reduce((t,a) => t + a.total, 0);
+      const recent = [...A].reverse().slice(0, 6);
       return `
-        <div class="page-hdr"><div class="page-title serif">Ayarlar</div></div>
-
-        <!-- FIREBASE SETUP (aynen) -->
-        <div class="settings-block" style="margin-bottom:14px; border-color:rgba(196,151,58,.4);">
-          <h3 style="display:flex;align-items:center;gap:8px;">
-            <svg viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2" width="17" height="17"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-            Firebase Bulut Veritabani
-          </h3>
-          ${fbConnected
-            ? '<div style="display:flex;align-items:center;gap:8px;background:rgba(76,175,80,.08);border:1px solid rgba(76,175,80,.3);border-radius:10px;padding:11px 14px;margin:10px 0;font-size:13px;color:#4caf50;">&#10003; Firebase bagli — <strong>' + fbProjectId + '</strong> &nbsp;|&nbsp; Tum degisiklikler anlik herkese yansir.</div>'
-            : '<div style="background:rgba(196,151,58,.07);border:1px solid rgba(196,151,58,.2);border-radius:10px;padding:12px 14px;margin:10px 0 14px;font-size:13px;color:var(--tx2);line-height:1.8;"><strong style=\"color:var(--gold-hi);\">Neden herkes goremez?</strong><br>Uygulama su an bu tarayicinin hafizasini (localStorage) kullaniyor. Telefon, baska bilgisayar bunlari goremez.<br><strong style=\"color:var(--tx1);\">Cozum:</strong> Ucretsiz Firebase ekle — bundan sonra admin panelinden yaptigin her degisiklik anlik olarak Vercel sitende herkese yansir.</div>'
-          }
-          <p style="font-size:11px;color:var(--tx3);margin-bottom:8px;text-transform:uppercase;letter-spacing:1.2px;font-weight:600;">Firebase Config (JSON)</p>
-          <textarea class="finput" id="fbConfigInput" rows="6"
-            placeholder='{&#10;  "apiKey": "AIza...",&#10;  "authDomain": "proje.firebaseapp.com",&#10;  "projectId": "proje-adi",&#10;  "storageBucket": "proje.appspot.com",&#10;  "messagingSenderId": "1234...",&#10;  "appId": "1:1234..."&#10;}'
-            style="font-family:monospace;font-size:11.5px;resize:vertical;">${fbCfgRaw}</textarea>
-          <button class="btn btn-primary" id="btnSaveFbConfig" style="width:100%;justify-content:center;margin-top:10px;">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-            Firebase Baglantisini Kaydet &amp; Aktar
-          </button>
-          <div style="background:var(--bg3);border-radius:10px;padding:14px;margin-top:14px;">
-            <p style="font-size:12px;color:var(--tx2);font-weight:600;margin-bottom:8px;">Firebase nasil kurulur? (3 adim)</p>
-            <div style="font-size:11.5px;color:var(--tx3);line-height:2;">
-              <b style="color:var(--tx2);">1.</b> <a href="https://console.firebase.google.com" target="_blank" style="color:var(--gold);">console.firebase.google.com</a> &rarr; <b>Proje olustur</b><br>
-              <b style="color:var(--tx2);">2.</b> Sol menu &rarr; <b>Firestore Database</b> &rarr; <b>Create database</b> &rarr; <b>Test mode</b><br>
-              <b style="color:var(--tx2);">3.</b> Sol menu &rarr; <b>Proje Ayarlari (dis li)</b> &rarr; <b>Web uygulamasi ekle (&lt;/&gt;)</b> &rarr; Config JSON'u kopyala &rarr; buraya yapistir
-            </div>
-          </div>
+        <div class="page-hdr"><div class="page-title serif">Pano</div></div>
+        <div class="stats-row">
+          ${this._statCard('Bugün', IC.cal, todayCnt, 'randevu')}
+          ${this._statCard('Ödendi', IC.check, paidCnt, 'randevu')}
+          ${this._statCard('Bekleyen', IC.clock, pendCnt, 'randevu')}
+          ${this._statCard('Gelir', IC.dollar, revenue + ' TL', '')}
         </div>
-
-        <!-- LOGOUT (aynen) -->
-        <div class="settings-block">
-          <h3>Oturum</h3>
-          <button class="btn btn-danger" id="btnLogout" style="margin-top:4px;">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
-            Oturumu Kapat
-          </button>
+        <div class="sec-title serif">Son Randevular</div>
+        <div class="tbl-wrap"><div class="tbl-scroll"><table class="tbl"><thead><tr><th>Müşteri</th><th>Hizmetler</th><th>Tarih / Saat</th><th>Durum</th><th>İşlem</th></tr></thead><tbody>${recent.length ? recent.map(a => this._apptRow(a)).join('') : this._emptyRow(5)}</tbody></table></div></div>`;
+    },
+    _statCard(lbl, icon, val, sub) {
+      return `<div class="stat"><div class="stat-lbl">${icon} ${lbl}</div><div class="stat-val">${val}</div>${sub ? `<div class="stat-sub">${sub}</div>` : ''}</div>`;
+    },
+    _apptRow(a) {
+      const badge = a.paid ? `<span class="badge badge-paid">${IC.check} Ödendi</span>` : `<span class="badge badge-pending">${IC.clock} Bekliyor</span>`;
+      return `<tr><td>${a.musteriAd}<small>${a.tel}</small></td><td>${a.services.map(s=>s.ad).join(', ')}<small>${a.total} TL</small></td><td>${a.tarih}<small>${a.saat}</small></td><td><button class="pay-btn${a.paid?' paid':''}" data-aid="${a.id}">${a.paid ? `${IC.check} Ödendi` : 'Ödeme Al'}</button></td><td><div class="actions"><button class="icon-btn wa" data-wa="${a.tel}" title="WhatsApp">${IC.wa}</button><button class="icon-btn" data-move="${a.id}" title="Taşı">${IC.move}</button></div></td></tr>`;
+    },
+    _emptyRow(cols) {
+      return `<tr><td colspan="${cols}"><div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg><p>Kayıt bulunamadı.</p></div></td></tr>`;
+    },
+    _randevular() {
+      const filter = State.admin.filter.toLowerCase();
+      const all = [...State.appointments].reverse().filter(a => a.musteriAd.toLowerCase().includes(filter) || a.tel.includes(filter));
+      const total = all.length;
+      const pages = Math.max(1, Math.ceil(total / this.PAGE_SZ));
+      const page = Math.min(Math.max(1, State.admin.page), pages);
+      const slice = all.slice((page-1)*this.PAGE_SZ, page*this.PAGE_SZ);
+      return `
+        <div class="page-hdr">
+          <div class="page-title serif">Randevular</div>
+          <div class="search-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input class="finput" id="adminSearch" placeholder="Ara…" value="${State.admin.filter}" autocomplete="off"></div>
+        </div>
+        <div class="tbl-wrap"><div class="tbl-scroll"><table class="tbl"><thead><tr><th>Müşteri</th><th>Hizmetler</th><th>Tarih / Saat</th><th>Durum</th><th>İşlem</th></tr></thead><tbody>${slice.length ? slice.map(a => this._apptRow(a)).join('') : this._emptyRow(5)}</tbody></table></div><div class="pagination"><button class="pg-btn" data-pg="${page-1}" ${page===1?'disabled':''}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></button><span class="pg-info">${page} / ${pages}</span><button class="pg-btn" data-pg="${page+1}" ${page>=pages?'disabled':''}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></button></div></div>`;
+    },
+    _bindSearch(page) {
+      const el = document.getElementById('adminSearch');
+      if (!el) return;
+      el.addEventListener('input', e => {
+        State.admin.filter = e.target.value;
+        State.admin.page = 1;
+        this.render(page);
+      });
+    },
+    _hizmetler() {
+      return `
+        <div class="page-hdr"><div class="page-title serif">Hizmetler</div><button class="btn btn-primary" id="btnYeniHizmet">${IC.plus} Yeni Hizmet</button></div>
+        <div class="hizmet-grid" style="grid-template-columns:repeat(auto-fill,minmax(190px,1fr));">
+          ${State.services.map(s => `
+            <div class="hizmet-card" style="cursor:default;">
+              <div class="hc-img-wrap"><img src="${s.img}" class="hc-img" alt="${s.ad}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1591196703216-85c2b8ddb3b0?w=400&q=75'"></div>
+              <div class="hc-body">
+                <div class="hc-name">${s.ad}</div>
+                <div class="hc-meta"><span class="hc-dur">${IC.clock} ${s.sure}</span><span class="hc-price">${s.fiyat} TL</span></div>
+                <div style="display:flex;gap:6px;margin-top:8px;"><button class="icon-btn" data-edit="${s.id}" title="Düzenle" style="flex:1;">${IC.edit}</button><button class="icon-btn danger" data-del="${s.id}" title="Sil">${IC.trash}</button></div>
+              </div>
+            </div>`).join('')}
         </div>`;
     },
-
-    /* ——— Diğer admin metodları (togglePayment, openReschedule, confirmReschedule, deleteService, whatsapp, logout) aynen ——— */
-    togglePayment(id) { /* aynen */ },
-    openReschedule(id) { /* aynen */ },
-    confirmReschedule() { /* aynen */ },
-    deleteService(id) { /* aynen */ },
-    whatsapp(tel) { /* aynen */ },
-    logout() { /* aynen */ },
-
-    /* ——— Görsel yardımcıları aynen ——— */
-    _setImgPreview(src) { /* aynen */ },
-    _clearImgState() { /* aynen */ },
-
-    openAdd() { /* aynen */ },
-    openEdit(id) { /* aynen */ },
-
-    /* ——— YENİ: saveService artık img değerini doğrudan hidden'dan alır ——— */
+    _musteriler() {
+      const map = new Map();
+      State.appointments.forEach(a => {
+        if (!map.has(a.tel)) map.set(a.tel, { name: a.musteriAd, tel: a.tel, cnt: 0, spent: 0, last: a.tarih });
+        const m = map.get(a.tel);
+        m.cnt++; m.spent += a.total; m.last = a.tarih;
+      });
+      const list = [...map.values()];
+      return `
+        <div class="page-hdr"><div class="page-title serif">Müşteriler</div></div>
+        <div class="tbl-wrap"><div class="tbl-scroll"><table class="tbl"><thead><tr><th>Müşteri</th><th>Telefon</th><th>Son Randevu</th><th>Randevu</th><th>Toplam</th><th></th></tr></thead><tbody>${list.length ? list.map(m => `<tr><td>${m.name}</td><td>${m.tel}</td><td>${m.last}</td><td>${m.cnt}</td><td style="color:var(--gold);font-weight:600;">${m.spent} TL</td><td><button class="icon-btn wa" data-wa="${m.tel}">${IC.wa}</button></td></tr>`).join('') : this._emptyRow(6)}</tbody></table></div></div>`;
+    },
+    _ayarlar() {
+      const fbConnected = !!Store._db;
+      const fbCfgRaw = localStorage.getItem('arya_firebase_config') || '';
+      let fbProjectId = '';
+      try { fbProjectId = JSON.parse(fbCfgRaw).projectId || ''; } catch(e) {}
+      return `
+        <div class="page-hdr"><div class="page-title serif">Ayarlar</div></div>
+        <div class="settings-block" style="margin-bottom:14px; border-color:rgba(196,151,58,.4);">
+          <h3 style="display:flex;align-items:center;gap:8px;"><svg viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2" width="17" height="17"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Firebase Bulut Veritabani</h3>
+          ${fbConnected ? '<div style="display:flex;align-items:center;gap:8px;background:rgba(76,175,80,.08);border:1px solid rgba(76,175,80,.3);border-radius:10px;padding:11px 14px;margin:10px 0;font-size:13px;color:#4caf50;">&#10003; Firebase bagli — <strong>' + fbProjectId + '</strong> &nbsp;|&nbsp; Tum degisiklikler anlik herkese yansir.</div>' : '<div style="background:rgba(196,151,58,.07);border:1px solid rgba(196,151,58,.2);border-radius:10px;padding:12px 14px;margin:10px 0 14px;font-size:13px;color:var(--tx2);line-height:1.8;"><strong style=\"color:var(--gold-hi);\">Neden herkes goremez?</strong><br>Uygulama su an bu tarayicinin hafizasini (localStorage) kullaniyor. Telefon, baska bilgisayar bunlari goremez.<br><strong style=\"color:var(--tx1);\">Cozum:</strong> Ucretsiz Firebase ekle — bundan sonra admin panelinden yaptigin her degisiklik anlik olarak Vercel sitende herkese yansir.</div>'}
+          <p style="font-size:11px;color:var(--tx3);margin-bottom:8px;text-transform:uppercase;letter-spacing:1.2px;font-weight:600;">Firebase Config (JSON)</p>
+          <textarea class="finput" id="fbConfigInput" rows="6" placeholder='{&#10;  "apiKey": "AIza...",&#10;  "authDomain": "proje.firebaseapp.com",&#10;  "projectId": "proje-adi",&#10;  "storageBucket": "proje.appspot.com",&#10;  "messagingSenderId": "1234...",&#10;  "appId": "1:1234..."&#10;}' style="font-family:monospace;font-size:11.5px;resize:vertical;">${fbCfgRaw}</textarea>
+          <button class="btn btn-primary" id="btnSaveFbConfig" style="width:100%;justify-content:center;margin-top:10px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Firebase Baglantisini Kaydet &amp; Aktar</button>
+          <div style="background:var(--bg3);border-radius:10px;padding:14px;margin-top:14px;"><p style="font-size:12px;color:var(--tx2);font-weight:600;margin-bottom:8px;">Firebase nasil kurulur? (3 adim)</p><div style="font-size:11.5px;color:var(--tx3);line-height:2;"><b style="color:var(--tx2);">1.</b> <a href="https://console.firebase.google.com" target="_blank" style="color:var(--gold);">console.firebase.google.com</a> &rarr; <b>Proje olustur</b><br><b style="color:var(--tx2);">2.</b> Sol menu &rarr; <b>Firestore Database</b> &rarr; <b>Create database</b> &rarr; <b>Test mode</b><br><b style="color:var(--tx2);">3.</b> Sol menu &rarr; <b>Proje Ayarlari (dis li)</b> &rarr; <b>Web uygulamasi ekle (&lt;/&gt;)</b> &rarr; Config JSON'u kopyala &rarr; buraya yapistir</div></div>
+        </div>
+        <div class="settings-block"><h3>Oturum</h3><button class="btn btn-danger" id="btnLogout" style="margin-top:4px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg> Oturumu Kapat</button></div>`;
+    },
+    togglePayment(id) {
+      const a = State.appointments.find(a => a.id === +id);
+      if (!a) return;
+      a.paid = !a.paid;
+      Store.save();
+      Toast.ok(a.paid ? 'Ödeme alındı.' : 'Ödeme geri alındı.');
+      this.render(this._activePage());
+    },
+    openReschedule(id) {
+      State.admin.pendingApptId = +id;
+      Modal.open('modalTasi');
+    },
+    confirmReschedule() {
+      const tarih = document.getElementById('tasiTarih').value;
+      const saat = document.getElementById('tasiSaat').value;
+      if (!tarih) { Toast.err('Lütfen tarih seçin.'); return; }
+      const a = State.appointments.find(a => a.id === State.admin.pendingApptId);
+      if (a) {
+        const d = new Date(tarih);
+        a.tarih = `${d.getDate()} ${Cal.MONTHS[d.getMonth()]}`;
+        a.saat = saat;
+        Store.save();
+        Toast.ok('Randevu başarıyla taşındı.');
+        Modal.close('modalTasi');
+        this.render(this._activePage());
+      }
+    },
+    deleteService(id) {
+      if (!confirm('Bu hizmeti silmek istediğinizden emin misiniz?')) return;
+      State.services = State.services.filter(s => s.id !== +id);
+      Store.save();
+      Toast.ok('Hizmet silindi.');
+      this.render('hizmetler');
+      Booking.renderServices();
+    },
+    whatsapp(tel) {
+      window.open(`https://wa.me/90${tel.replace(/\D/g,'')}`, '_blank', 'noopener');
+    },
+    logout() {
+      Auth.revoke();
+      UI.show('musteri');
+      Toast.ok('Oturum güvenli şekilde kapatıldı.');
+    },
+    _setImgPreview(src) {
+      const wrap = document.getElementById('mhPreviewWrap');
+      const imgEl = document.getElementById('mhPreviewImg');
+      const zone = document.getElementById('mhUploadZone');
+      const hidden = document.getElementById('mhImgData');
+      if (src) {
+        imgEl.src = src;
+        hidden.value = src;
+        wrap.classList.add('show');
+        zone.style.display = 'none';
+      } else {
+        imgEl.src = '';
+        hidden.value = '';
+        wrap.classList.remove('show');
+        zone.style.display = '';
+      }
+    },
+    _clearImgState() {
+      document.getElementById('mhFile').value = '';
+      document.getElementById('mhImgUrl').value = '';
+      this._setImgPreview('');
+    },
+    openAdd() {
+      State.admin.pendingServiceId = null;
+      document.getElementById('mhTitle').textContent = 'Yeni Hizmet';
+      document.getElementById('mhAd').value = '';
+      document.getElementById('mhFiyat').value = '';
+      document.getElementById('mhSure').value = '';
+      document.getElementById('mhId').value = '';
+      this._clearImgState();
+      Modal.open('modalHizmet');
+    },
+    openEdit(id) {
+      const s = State.services.find(s => s.id === +id);
+      if (!s) return;
+      State.admin.pendingServiceId = +id;
+      document.getElementById('mhTitle').textContent = 'Hizmeti Düzenle';
+      document.getElementById('mhAd').value = s.ad;
+      document.getElementById('mhFiyat').value = s.fiyat;
+      document.getElementById('mhSure').value = s.sure;
+      document.getElementById('mhId').value = id;
+      this._clearImgState();
+      if (s.img) this._setImgPreview(s.img);
+      Modal.open('modalHizmet');
+    },
     saveService() {
-      const ad    = document.getElementById('mhAd').value.trim();
+      const ad = document.getElementById('mhAd').value.trim();
       const fiyat = parseInt(document.getElementById('mhFiyat').value, 10);
-      const sure  = document.getElementById('mhSure').value.trim();
-      const img   = document.getElementById('mhImgData').value.trim()
-                    || 'https://images.unsplash.com/photo-1591196703216-85c2b8ddb3b0?w=400&q=75';
+      const sure = document.getElementById('mhSure').value.trim();
+      const img = document.getElementById('mhImgData').value.trim() || 'https://images.unsplash.com/photo-1591196703216-85c2b8ddb3b0?w=400&q=75';
 
       if (!ad || isNaN(fiyat) || fiyat < 0 || !sure) {
         Toast.err('Ad, fiyat ve süre alanları zorunludur.');
@@ -186,9 +574,17 @@
     },
   };
 
-  /* ************************************************************ */
-  /* HANDLE IMAGE FILE – VERCEL BLOB KULLANIMI                   */
-  /* ************************************************************ */
+  /* ==================== UI ==================== */
+  const UI = {
+    show(tab) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('on'));
+      document.getElementById(tab + '-screen').classList.add('on');
+      document.querySelectorAll('.sw-btn').forEach(b => b.classList.remove('on'));
+      document.getElementById(tab === 'musteri' ? 'swMusteri' : 'swAdmin').classList.add('on');
+    },
+  };
+
+  /* ==================== EVENT HANDLERS ==================== */
   async function handleImageFile(file) {
     if (!file || !file.type.startsWith('image/')) {
       Toast.err('Lütfen bir görsel dosyası seçin.');
@@ -201,9 +597,7 @@
 
     const zone = document.getElementById('mhUploadZone');
     const origHTML = zone.innerHTML;
-    zone.innerHTML = '<div style="padding:8px;color:var(--gold);font-size:12px;text-align:center;">' +
-      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20" style="animation:spin 1s linear infinite;display:block;margin:0 auto 6px;">' +
-      '<path d="M21 12a9 9 0 11-6.219-8.56"/></svg> Yükleniyor...</div>';
+    zone.innerHTML = '<div style="padding:8px;color:var(--gold);font-size:12px;text-align:center;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20" style="animation:spin 1s linear infinite;display:block;margin:0 auto 6px;"><path d="M21 12a9 9 0 11-6.219-8.56"/></svg> Yükleniyor...</div>';
 
     try {
       const url = await uploadToVercelBlob(file);
@@ -217,13 +611,88 @@
     }
   }
 
-  /* ************************************************************ */
-  /* EVENT BINDING (güncellendi)                                 */
-  /* ************************************************************ */
   function bindEvents() {
-    // Switcher, login, booking, calendar, admin nav aynen...
+    document.getElementById('swMusteri').addEventListener('click', () => UI.show('musteri'));
+    document.getElementById('swAdmin').addEventListener('click', () => {
+      if (Auth.check()) {
+        UI.show('admin');
+        Admin.render('dashboard');
+      } else {
+        document.getElementById('loginPass').value = '';
+        document.getElementById('loginErr').classList.remove('show');
+        Modal.open('modalLogin');
+      }
+    });
 
-    // Admin content event listener – ImgBB ile ilgili kısım kaldırıldı
+    document.getElementById('loginSubmit').addEventListener('click', () => {
+      const pw = document.getElementById('loginPass').value;
+      if (pw === Auth.PW) {
+        Auth.grant();
+        Modal.close('modalLogin');
+        UI.show('admin');
+        Admin.render('dashboard');
+      } else {
+        document.getElementById('loginErr').classList.add('show');
+        document.getElementById('loginPass').value = '';
+        document.getElementById('loginPass').focus();
+      }
+    });
+    document.getElementById('loginPass').addEventListener('keydown', e => {
+      if (e.key === 'Enter') document.getElementById('loginSubmit').click();
+    });
+    document.getElementById('loginCancel').addEventListener('click', () => Modal.close('modalLogin'));
+
+    document.getElementById('btnDevam').addEventListener('click', () => Steps.next());
+    document.getElementById('btnGeri').addEventListener('click', () => Steps.prev());
+
+    document.getElementById('btnYeniRandevu').addEventListener('click', () => {
+      State.selected = {};
+      State.date = null;
+      State.time = null;
+      State.step = 1;
+      ['musteriAd','musteriTel','musteriMail'].forEach(id => document.getElementById(id).value = '');
+      document.getElementById('cardFooter').style.display = '';
+      Booking.renderServices();
+      Steps._render();
+    });
+
+    document.getElementById('hizmetGrid').addEventListener('click', e => {
+      const btn = e.target.closest('[data-hid]');
+      const card = e.target.closest('.hizmet-card[data-hid]');
+      const id = btn?.dataset.hid || card?.dataset.hid;
+      if (id) { e.stopPropagation(); Booking.toggleService(id); }
+    });
+    document.getElementById('hizmetGrid').addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        const card = e.target.closest('.hizmet-card[data-hid]');
+        if (card) { e.preventDefault(); Booking.toggleService(card.dataset.hid); }
+      }
+    });
+
+    document.getElementById('calPrev').addEventListener('click', () => {
+      State.calMonth.setMonth(State.calMonth.getMonth() - 1);
+      Booking.renderCalendar();
+    });
+    document.getElementById('calNext').addEventListener('click', () => {
+      State.calMonth.setMonth(State.calMonth.getMonth() + 1);
+      Booking.renderCalendar();
+    });
+    document.getElementById('daysGrid').addEventListener('click', e => {
+      const d = e.target.closest('.day:not(.disabled):not(.empty)');
+      if (d) { State.date = Cal.dateStr(d.dataset.d, d.dataset.mo); Booking.renderCalendar(); }
+    });
+    document.getElementById('timesGrid').addEventListener('click', e => {
+      const s = e.target.closest('.t-slot');
+      if (s) { State.time = s.dataset.t; Booking.renderTimes(); }
+    });
+
+    document.getElementById('adminNav').addEventListener('click', e => {
+      const item = e.target.closest('.nav-item[data-page]');
+      if (!item) return;
+      if (!Auth.check()) { Modal.open('modalLogin'); return; }
+      Admin.render(item.dataset.page);
+    });
+
     document.getElementById('adminContent').addEventListener('click', e => {
       const pay = e.target.closest('[data-aid]');
       if (pay) { Admin.togglePayment(pay.dataset.aid); return; }
@@ -249,7 +718,6 @@
         return;
       }
 
-      // Firebase config kaydetme (aynen)
       if (e.target.closest('#btnSaveFbConfig')) {
         try {
           const cfg = JSON.parse(document.getElementById('fbConfigInput').value);
@@ -261,46 +729,38 @@
         return;
       }
 
-      // Logout
       if (e.target.closest('#btnLogout')) { Admin.logout(); return; }
     });
 
-    // Reschedule modal
     document.getElementById('tasiConfirm').addEventListener('click', () => Admin.confirmReschedule());
-    document.getElementById('tasiCancel').addEventListener('click',  () => Modal.close('modalTasi'));
+    document.getElementById('tasiCancel').addEventListener('click', () => Modal.close('modalTasi'));
 
-    // Service modal
-    document.getElementById('mhSave').addEventListener('click',   () => Admin.saveService());
+    document.getElementById('mhSave').addEventListener('click', () => Admin.saveService());
     document.getElementById('mhCancel').addEventListener('click', () => Modal.close('modalHizmet'));
 
-    // Image: file pick
     document.getElementById('mhFile').addEventListener('change', e => {
       handleImageFile(e.target.files[0]);
     });
 
-    // Image: drag & drop
     const zone = document.getElementById('mhUploadZone');
-    zone.addEventListener('dragover',  e => { e.preventDefault(); zone.classList.add('drag'); });
-    zone.addEventListener('dragleave', ()  => zone.classList.remove('drag'));
+    zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag'); });
+    zone.addEventListener('dragleave', () => zone.classList.remove('drag'));
     zone.addEventListener('drop', e => {
       e.preventDefault(); zone.classList.remove('drag');
       handleImageFile(e.dataTransfer.files[0]);
     });
 
-    // Image: URL load button (artık ImgBB yok, sadece URL girme)
     document.getElementById('mhUrlLoad').addEventListener('click', () => {
       const url = document.getElementById('mhImgUrl').value.trim();
       if (!url) { Toast.err('Lütfen bir URL girin.'); return; }
       const tester = new Image();
-      tester.onload  = () => Admin._setImgPreview(url);
+      tester.onload = () => Admin._setImgPreview(url);
       tester.onerror = () => Toast.err('URL\'den görsel yüklenemedi.');
       tester.src = url;
     });
 
-    // Image: remove preview
     document.getElementById('mhImgRemove').addEventListener('click', () => Admin._clearImgState());
 
-    // Modal close (aynen)
     document.querySelectorAll('.modal-bg').forEach(overlay => {
       overlay.addEventListener('click', e => {
         if (e.target === overlay && overlay.id !== 'modalLogin') Modal.close(overlay.id);
@@ -316,15 +776,23 @@
     });
   }
 
-  /* BOOT aynen */
   async function boot() {
     try {
       await Store.load();
-      // Refresh images if needed...
+      const OLD_IMGS = ['photo-1591196703216','photo-1598033128079','photo-1601924638867','photo-1544620347'];
+      let refreshed = false;
+      const defaults = Store._defaults();
+      State.services.forEach(s => {
+        if (OLD_IMGS.some(o => s.img && s.img.includes(o))) {
+          const d = defaults.find(d => d.id === s.id);
+          if (d) { s.img = d.img; refreshed = true; }
+        }
+      });
+      if (refreshed) Store.save();
       Booking.renderServices();
       Steps._render();
       bindEvents();
-      console.info('%c ARYA Atelier OS v2.0 (Vercel Blob)', 'background:#c4973a;color:#07080f;font-weight:700;padding:4px 14px;border-radius:20px;font-size:13px;');
+      console.info('%c ARYA Atelier OS v2.1 (Vercel Blob)', 'background:#c4973a;color:#07080f;font-weight:700;padding:4px 14px;border-radius:20px;font-size:13px;');
     } catch (e) {
       console.error('[ARYA] Boot failed:', e);
     }
@@ -337,7 +805,3 @@
   }
 })();
 </script>
-
-<!-- Eski script modülü kaldırıldı, artık gerek yok -->
-</body>
-</html>
