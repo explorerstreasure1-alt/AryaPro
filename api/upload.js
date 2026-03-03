@@ -1,4 +1,3 @@
-// api/upload.js
 import { put } from '@vercel/blob';
 
 export const config = {
@@ -6,6 +5,7 @@ export const config = {
 };
 
 export default async function handler(request) {
+  // CORS preflight
   if (request.method === 'OPTIONS') {
     return new Response(null, {
       headers: {
@@ -34,9 +34,10 @@ export default async function handler(request) {
       });
     }
 
+    // Token parametresi yok – SDK environment variable'dan otomatik alır
     const blob = await put(file.name, file, {
       access: 'public',
-      token: process.env.BLOB_READ_WRITE_TOKEN,
+      addRandomSuffix: true, // benzersiz isim ekler, çakışmayı önler
     });
 
     return new Response(JSON.stringify({ url: blob.url }), {
