@@ -471,6 +471,7 @@
     }
     .hizmet-card.sel .hc-check { display: flex; }
     .hc-check svg { width: 11px; height: 11px; color: var(--bg0); }
+    @keyframes spin { to { transform: rotate(360deg); } }
     @keyframes popIn {
       from { transform: scale(.4); opacity: 0; }
       to   { transform: scale(1);  opacity: 1; }
@@ -1113,6 +1114,9 @@
       content: ''; flex: 1; height: 1px; background: var(--bdr-s);
     }
   </style>
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 </head>
 
 <body>
@@ -1519,24 +1523,86 @@
   };
 
   /* ═══════════════════════════════════════════════
-     STORAGE SERVICE
+     DB — Firebase Firestore veya localStorage fallback
   ═══════════════════════════════════════════════ */
   const Store = {
-    K_SVC:  'arya_v2_services',
-    K_APPT: 'arya_v2_appointments',
+    K_SVC:     'arya_v2_services',
+    K_APPT:    'arya_v2_appointments',
+    K_FB_CFG:  'arya_firebase_config',
+    _db:       null,
+    _unsubSvc: null,
+    _unsubAppt:null,
 
     _defaults() {
       return [
-        { id:1, ad:'Paça Boyu',       fiyat:30, sure:'45 dk', img:'https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=500&q=80' },
-        { id:2, ad:'Bel Daraltma',    fiyat:40, sure:'60 dk', img:'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=500&q=80' },
-        { id:3, ad:'Takım Elbise',    fiyat:50, sure:'2 gün', img:'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500&q=80' },
-        { id:4, ad:'Perde Tem.',      fiyat:60, sure:'3 gün', img:'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=500&q=80' },
-        { id:5, ad:'Ütü',             fiyat:20, sure:'30 dk', img:'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=500&q=80' },
-        { id:6, ad:'Yıkama',          fiyat:35, sure:'1 gün', img:'https://images.unsplash.com/photo-1567274996148-2b09c6512dc2?w=500&q=80' },
+        { id:1, ad:'Paca Boyu',    fiyat:30, sure:'45 dk', img:'https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=500&q=80' },
+        { id:2, ad:'Bel Daraltma', fiyat:40, sure:'60 dk', img:'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=500&q=80' },
+        { id:3, ad:'Takim Elbise', fiyat:50, sure:'2 gun', img:'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500&q=80' },
+        { id:4, ad:'Perde Tem.',   fiyat:60, sure:'3 gun', img:'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=500&q=80' },
+        { id:5, ad:'Utu',          fiyat:20, sure:'30 dk', img:'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=500&q=80' },
+        { id:6, ad:'Yikama',       fiyat:35, sure:'1 gun', img:'https://images.unsplash.com/photo-1567274996148-2b09c6512dc2?w=500&q=80' },
       ];
     },
 
-    load() {
+    /* Try to init Firebase from saved config */
+    initFirebase() {
+      try {
+        const raw = localStorage.getItem(this.K_FB_CFG);
+        if (!raw) return false;
+        const cfg = JSON.parse(raw);
+        if (!cfg.projectId) return false;
+        // Init only once
+        if (!firebase.apps.length) {
+          firebase.initializeApp(cfg);
+        }
+        this._db = firebase.firestore();
+        console.info('[ARYA] Firebase connected:', cfg.projectId);
+        return true;
+      } catch(e) {
+        console.warn('[ARYA] Firebase init failed:', e);
+        return false;
+      }
+    },
+
+    /* Load from Firestore, fallback localStorage */
+    async load() {
+      const fbOk = this.initFirebase();
+
+      if (fbOk) {
+        try {
+          // Services
+          const svcDoc = await this._db.collection('arya').doc('services').get();
+          if (svcDoc.exists && svcDoc.data().list && svcDoc.data().list.length) {
+            State.services = svcDoc.data().list;
+          } else {
+            State.services = this._defaults();
+            await this._db.collection('arya').doc('services').set({ list: State.services });
+          }
+          // Appointments
+          const apptDoc = await this._db.collection('arya').doc('appointments').get();
+          State.appointments = (apptDoc.exists && apptDoc.data().list) ? apptDoc.data().list : [];
+
+          // Real-time listeners — any change in Firestore updates UI instantly
+          this._unsubSvc = this._db.collection('arya').doc('services').onSnapshot(snap => {
+            if (snap.exists && snap.data().list) {
+              State.services = snap.data().list;
+              Booking.renderServices();
+            }
+          });
+          this._unsubAppt = this._db.collection('arya').doc('appointments').onSnapshot(snap => {
+            if (snap.exists && snap.data().list) {
+              State.appointments = snap.data().list;
+            }
+          });
+
+          console.info('[ARYA] Data loaded from Firebase');
+          return;
+        } catch(e) {
+          console.warn('[ARYA] Firestore read failed, falling back to localStorage:', e);
+        }
+      }
+
+      // Fallback: localStorage
       try {
         const s = localStorage.getItem(this.K_SVC);
         State.services = s ? JSON.parse(s) : this._defaults();
@@ -1545,17 +1611,31 @@
       } catch {
         State.services     = this._defaults();
         State.appointments = [];
-        Toast.err('Veriler yüklenirken hata oluştu.');
       }
     },
 
-    save() {
+    /* Save to Firestore + localStorage */
+    async save() {
+      // Always save to localStorage as backup
       try {
         localStorage.setItem(this.K_SVC,  JSON.stringify(State.services));
         localStorage.setItem(this.K_APPT, JSON.stringify(State.appointments));
-      } catch {
-        Toast.err('Veriler kaydedilemedi (depolama dolu olabilir).');
+      } catch(e) { /* storage full */ }
+
+      // Also save to Firestore if connected
+      if (this._db) {
+        try {
+          await this._db.collection('arya').doc('services').set({ list: State.services });
+          await this._db.collection('arya').doc('appointments').set({ list: State.appointments });
+        } catch(e) {
+          console.warn('[ARYA] Firestore write failed:', e);
+          Toast.err('Bulut kaydı başarısız. Yerel olarak kaydedildi.');
+        }
       }
+    },
+
+    isFirebaseConnected() {
+      return !!this._db;
     },
   };
 
@@ -2035,62 +2115,67 @@
 
     /* ——— Ayarlar ——— */
     _ayarlar() {
+      const fbConnected = Store.isFirebaseConnected();
+      const fbCfgRaw    = localStorage.getItem('arya_firebase_config') || '';
+      let fbProjectId   = '';
+      try { fbProjectId = JSON.parse(fbCfgRaw).projectId || ''; } catch(e) {}
+      const imgbbKey    = localStorage.getItem('arya_imgbb_key') || '';
+
       return `
         <div class="page-hdr"><div class="page-title serif">Ayarlar</div></div>
 
-        <!-- SYNC CARD -->
-        <div class="settings-block" style="margin-bottom:14px;">
+        <!-- FIREBASE SETUP -->
+        <div class="settings-block" style="margin-bottom:14px; border-color:rgba(196,151,58,.4);">
           <h3 style="display:flex;align-items:center;gap:8px;">
-            <svg viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2" width="16" height="16"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
-            Cihazlar Arası Senkronizasyon
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2" width="17" height="17"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            Firebase Bulut Veritabani
           </h3>
-          <div style="background:rgba(196,151,58,.06);border:1px solid rgba(196,151,58,.18);border-radius:10px;padding:12px 14px;margin:10px 0 14px;font-size:12.5px;color:var(--tx2);line-height:1.7;">
-            <strong style="color:var(--gold-hi);">Neden görseller başka cihazda görünmüyor?</strong><br>
-            Tüm değişiklikler bu tarayıcının hafızasında (localStorage) saklanıyor. Telefon veya başka bir bilgisayar bu veriyi göremez.<br>
-            <strong style="color:var(--tx1);">Çözüm:</strong> Aşağıdan verileri dışa aktar, diğer cihazda içe aktar.
-          </div>
 
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
-            <div>
-              <p style="font-size:11px;color:var(--tx3);margin-bottom:7px;text-transform:uppercase;letter-spacing:1px;font-weight:600;">1. Bu cihazdan dışa aktar</p>
-              <button class="btn btn-primary" id="btnExport" style="width:100%;justify-content:center;">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                Veriyi Kopyala
-              </button>
-            </div>
-            <div>
-              <p style="font-size:11px;color:var(--tx3);margin-bottom:7px;text-transform:uppercase;letter-spacing:1px;font-weight:600;">2. Diğer cihazda içe aktar</p>
-              <button class="btn btn-ghost" id="btnImport" style="width:100%;justify-content:center;">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-                Veri Yapıştır
-              </button>
-            </div>
-          </div>
+          ${fbConnected
+            ? '<div style="display:flex;align-items:center;gap:8px;background:rgba(76,175,80,.08);border:1px solid rgba(76,175,80,.3);border-radius:10px;padding:11px 14px;margin:10px 0;font-size:13px;color:#4caf50;">&#10003; Firebase bagli — <strong>' + fbProjectId + '</strong> &nbsp;|&nbsp; Tum degisiklikler anlik herkese yansir.</div>'
+            : '<div style="background:rgba(196,151,58,.07);border:1px solid rgba(196,151,58,.2);border-radius:10px;padding:12px 14px;margin:10px 0 14px;font-size:13px;color:var(--tx2);line-height:1.8;"><strong style=\"color:var(--gold-hi);\">Neden herkes goremez?</strong><br>Uygulama su an bu tarayicinin hafizasini (localStorage) kullaniyor. Telefon, baska bilgisayar bunlari goremez.<br><strong style=\"color:var(--tx1);\">Cozum:</strong> Ucretsiz Firebase ekle — bundan sonra admin panelinden yaptigin her degisiklik anlik olarak Vercel sitende herkese yansir.</div>'
+          }
 
-          <!-- Import textarea (hidden by default) -->
-          <div id="importArea" style="display:none;">
-            <textarea id="importJson" class="finput" rows="5"
-              placeholder="Kopyaladığınız veriyi buraya yapıştırın ve Uygula'ya tıklayın..."
-              style="font-size:11px;font-family:monospace;resize:vertical;"></textarea>
-            <div style="display:flex;gap:8px;margin-top:8px;">
-              <button class="btn btn-primary" id="btnImportApply" style="flex:1;justify-content:center;">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><polyline points="20 6 9 17 4 12"/></svg>
-                Uygula &amp; Kaydet
-              </button>
-              <button class="btn btn-ghost" id="btnImportCancel">İptal</button>
+          <p style="font-size:11px;color:var(--tx3);margin-bottom:8px;text-transform:uppercase;letter-spacing:1.2px;font-weight:600;">Firebase Config (JSON)</p>
+          <textarea class="finput" id="fbConfigInput" rows="6"
+            placeholder='{&#10;  "apiKey": "AIza...",&#10;  "authDomain": "proje.firebaseapp.com",&#10;  "projectId": "proje-adi",&#10;  "storageBucket": "proje.appspot.com",&#10;  "messagingSenderId": "1234...",&#10;  "appId": "1:1234..."&#10;}'
+            style="font-family:monospace;font-size:11.5px;resize:vertical;">${fbCfgRaw}</textarea>
+          <button class="btn btn-primary" id="btnSaveFbConfig" style="width:100%;justify-content:center;margin-top:10px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            Firebase Baglantisini Kaydet &amp; Aktar
+          </button>
+
+          <div style="background:var(--bg3);border-radius:10px;padding:14px;margin-top:14px;">
+            <p style="font-size:12px;color:var(--tx2);font-weight:600;margin-bottom:8px;">Firebase nasil kurulur? (3 adim)</p>
+            <div style="font-size:11.5px;color:var(--tx3);line-height:2;">
+              <b style="color:var(--tx2);">1.</b> <a href="https://console.firebase.google.com" target="_blank" style="color:var(--gold);">console.firebase.google.com</a> &rarr; <b>Proje olustur</b> (Google hesabin yeterli)<br>
+              <b style="color:var(--tx2);">2.</b> Sol menu &rarr; <b>Firestore Database</b> &rarr; <b>Create database</b> &rarr; <b>Test mode</b><br>
+              <b style="color:var(--tx2);">3.</b> Sol menu &rarr; <b>Proje Ayarlari (dis li)</b> &rarr; <b>Web uygulamasi ekle (&lt;/&gt;)</b> &rarr; Config JSON'u kopyala &rarr; buraya yapistir
             </div>
           </div>
         </div>
 
+        <!-- IMGBB -->
+        <div class="settings-block" style="margin-bottom:14px;">
+          <h3 style="display:flex;align-items:center;gap:8px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2" width="15" height="15"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            Gorsel CDN (ImgBB)
+          </h3>
+          <p style="font-size:12.5px;color:var(--tx3);margin-bottom:10px;">Gorsel yuklediginde internete (ImgBB) yuklesin, herkese gorunsun.</p>
+          <div style="display:flex;gap:8px;">
+            <input type="text" class="finput" id="imgbbKeyInput" placeholder="ImgBB API anahtari..." value="${imgbbKey}" style="font-family:monospace;font-size:12px;">
+            <button class="btn btn-primary" id="btnSaveImgbbKey" style="white-space:nowrap;">Kaydet</button>
+          </div>
+          <p style="font-size:11px;color:var(--tx3);margin-top:8px;">
+            <a href="https://imgbb.com" target="_blank" style="color:var(--gold);">imgbb.com</a>
+            &rarr; Kayit ol &rarr; Sol menu API &rarr; Add API key
+          </p>
+        </div>
+
+        <!-- LOGOUT -->
         <div class="settings-block">
-          <h3>WhatsApp Bildirimleri</h3>
-          <p>Randevu bildirimleri aşağıdaki numaralara gönderilir:</p>
-          <p><strong>+90 555 182 37 76</strong></p>
-          <p><strong>+90 552 267 81 92</strong></p>
-          <hr style="border:none;border-top:1px solid var(--bdr-s);margin:20px 0;">
           <h3>Oturum</h3>
-          <p style="margin-bottom:12px;">Admin panelinden güvenli çıkış yapın.</p>
-          <button class="btn btn-danger" id="btnLogout">
+          <button class="btn btn-danger" id="btnLogout" style="margin-top:4px;">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
             Oturumu Kapat
           </button>
@@ -2125,6 +2210,31 @@
         Toast.ok('Randevu başarıyla taşındı.');
         Modal.close('modalTasi');
         this.render(this._activePage());
+      }
+    },
+
+    /* ——— ImgBB CDN upload ——— */
+    async _uploadToImgbb(base64Data) {
+      const key = localStorage.getItem('arya_imgbb_key') || '';
+      if (!key) return null; // no key → skip CDN, keep base64
+
+      // Strip data:image/xxx;base64, prefix
+      const b64 = base64Data.replace(/^data:image\/[a-z]+;base64,/, '');
+      const body = new FormData();
+      body.append('key', key);
+      body.append('image', b64);
+
+      try {
+        const resp = await fetch('https://api.imgbb.com/1/upload', {
+          method: 'POST', body,
+        });
+        if (!resp.ok) throw new Error('HTTP ' + resp.status);
+        const json = await resp.json();
+        if (json.success) return json.data.url;
+        throw new Error(json.error?.message || 'Upload failed');
+      } catch (e) {
+        console.error('[ImgBB]', e);
+        return null; // fallback to base64
       }
     },
 
@@ -2217,60 +2327,6 @@
 
     whatsapp(tel) {
       window.open(`https://wa.me/90${tel.replace(/\D/g,'')}`, '_blank', 'noopener');
-    },
-
-    exportData() {
-      const payload = JSON.stringify({
-        v: 2,
-        ts: Date.now(),
-        services:     State.services,
-        appointments: State.appointments,
-      });
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(payload)
-          .then(() => Toast.ok('Veri panoya kopyalandı! Diğer cihazda Ayarlar → İçe Aktar yapın.'))
-          .catch(() => this._fallbackCopy(payload));
-      } else {
-        this._fallbackCopy(payload);
-      }
-    },
-
-    _fallbackCopy(text) {
-      // Fallback: put data in textarea and select it
-      const ta = document.getElementById('importJson');
-      const area = document.getElementById('importArea');
-      if (ta && area) {
-        area.style.display = 'block';
-        ta.value = text;
-        ta.select();
-        Toast.ok('Veri aşağıdaki kutuya yazıldı — manuel kopyalayın.');
-      }
-    },
-
-    importData() {
-      const area = document.getElementById('importArea');
-      if (area) area.style.display = area.style.display === 'none' ? 'block' : 'none';
-    },
-
-    applyImport() {
-      const raw = (document.getElementById('importJson')?.value || '').trim();
-      if (!raw) { Toast.err('Lütfen veri yapıştırın.'); return; }
-      try {
-        const parsed = JSON.parse(raw);
-        if (!parsed.services || !Array.isArray(parsed.services)) {
-          Toast.err('Geçersiz veri formatı.'); return;
-        }
-        State.services     = parsed.services     || [];
-        State.appointments = parsed.appointments || [];
-        Store.save();
-        Booking.renderServices();
-        document.getElementById('importArea').style.display = 'none';
-        document.getElementById('importJson').value = '';
-        Toast.ok('Veriler başarıyla içe aktarıldı!');
-        this.render('ayarlar');
-      } catch (e) {
-        Toast.err('Veri okunamadı. Kopyalamayı tekrar deneyin.');
-      }
     },
 
     logout() {
@@ -2431,6 +2487,15 @@
         if (a) a.style.display = 'none'; return;
       }
 
+      // Save ImgBB API key
+      if (e.target.closest('#btnSaveImgbbKey')) {
+        const k = document.getElementById('imgbbKeyInput')?.value.trim() || '';
+        if (!k) { Toast.err('API anahtarı boş olamaz.'); return; }
+        localStorage.setItem('arya_imgbb_key', k);
+        Toast.ok('API anahtari kaydedildi! Artik gorseller CDN ye yuklenir.');
+        Admin.render('ayarlar'); return;
+      }
+
       // Logout
       if (e.target.closest('#btnLogout')) { Admin.logout(); return; }
     });
@@ -2443,15 +2508,49 @@
     document.getElementById('mhSave').addEventListener('click',   () => Admin.saveService());
     document.getElementById('mhCancel').addEventListener('click', () => Modal.close('modalHizmet'));
 
-    /* —— Image: file pick via FileReader (no server) —— */
-    document.getElementById('mhFile').addEventListener('change', e => {
-      const file = e.target.files[0];
-      if (!file) return;
-      if (file.size > 4 * 1024 * 1024) { Toast.err('Dosya 4 MB\'dan büyük olamaz.'); return; }
+    /* ——— Shared: read file → try CDN upload, fallback base64 ——— */
+    async function handleImageFile(file) {
+      if (!file || !file.type.startsWith('image/')) { Toast.err('Lütfen bir görsel dosyası seçin.'); return; }
+      if (file.size > 8 * 1024 * 1024) { Toast.err('Dosya 8 MB den buyuk olamaz.'); return; }
+
+      // Show upload indicator
+      const zone = document.getElementById('mhUploadZone');
+      const origHTML = zone.innerHTML;
+      zone.innerHTML = '<div style="padding:8px;color:var(--gold);font-size:12px;text-align:center;">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20" style="animation:spin 1s linear infinite;display:block;margin:0 auto 6px;">' +
+        '<path d="M21 12a9 9 0 11-6.219-8.56"/></svg>' +
+        ( localStorage.getItem('arya_imgbb_key') ? 'CDN ye yukleniyor...' : 'Gorsel hazirlaniyor...') +
+        '</div>';
+
       const reader = new FileReader();
-      reader.onload = ev => Admin._setImgPreview(ev.target.result);
-      reader.onerror = () => Toast.err('Dosya okunamadı.');
+      reader.onload = async ev => {
+        const b64 = ev.target.result;
+        const key = localStorage.getItem('arya_imgbb_key') || '';
+
+        if (key) {
+          // Try CDN upload
+          const url = await Admin._uploadToImgbb(b64);
+          zone.innerHTML = origHTML; // restore
+          if (url) {
+            Admin._setImgPreview(url);
+            Toast.ok('Gorsel CDN ye yuklendi — tum cihazlarda gorunur!');
+          } else {
+            Admin._setImgPreview(b64);
+            Toast.err('CDN yuklemesi basarisiz. Gorsel sadece bu cihazda gorunur.');
+          }
+        } else {
+          zone.innerHTML = origHTML;
+          Admin._setImgPreview(b64);
+          Toast.ok('Gorsel eklendi. CDN icin Ayarlar bolumunden API anahtari girin.');
+        }
+      };
+      reader.onerror = function() { zone.innerHTML = origHTML; Toast.err('Dosya okunamadi.'); };
       reader.readAsDataURL(file);
+    }
+
+    /* —— Image: file pick —— */
+    document.getElementById('mhFile').addEventListener('change', e => {
+      handleImageFile(e.target.files[0]);
     });
 
     /* —— Image: drag-over highlight —— */
@@ -2460,12 +2559,7 @@
     zone.addEventListener('dragleave', ()  => zone.classList.remove('drag'));
     zone.addEventListener('drop', e => {
       e.preventDefault(); zone.classList.remove('drag');
-      const file = e.dataTransfer.files[0];
-      if (!file || !file.type.startsWith('image/')) { Toast.err('Lütfen bir görsel dosyası bırakın.'); return; }
-      if (file.size > 4 * 1024 * 1024) { Toast.err('Dosya 4 MB\'dan büyük olamaz.'); return; }
-      const reader = new FileReader();
-      reader.onload = ev => Admin._setImgPreview(ev.target.result);
-      reader.readAsDataURL(file);
+      handleImageFile(e.dataTransfer.files[0]);
     });
 
     /* —— Image: URL load button —— */
@@ -2475,7 +2569,7 @@
       // Quick test: create an img element, on load set preview
       const tester = new Image();
       tester.onload  = () => Admin._setImgPreview(url);
-      tester.onerror = () => Toast.err('URL\'den görsel yüklenemedi. Adresi kontrol edin.');
+      tester.onerror = () => Toast.err('URL den gorsel yuklenemedi. Adresi kontrol edin.');
       tester.src = url;
     });
 
@@ -2502,9 +2596,9 @@
   /* ═══════════════════════════════════════════════
      BOOT
   ═══════════════════════════════════════════════ */
-  function boot() {
+  async function boot() {
     try {
-      Store.load();
+      await Store.load();
       // Refresh images if they still point to old placeholder
       const OLD_IMGS = [
         'photo-1591196703216','photo-1598033128079',
